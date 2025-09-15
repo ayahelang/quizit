@@ -1,0 +1,50 @@
+/* 🎨 Default Theme (Light) */
+:root {
+    --bg-color: #ffffff;
+    --text-color: #222222;
+    --btn-bg: #3498db;
+    --btn-text: #ffffff;
+}
+
+/* 🌙 Dark Theme Override */
+body.dark {
+    --bg-color: #222222;
+    --text-color: #f0f0f0;
+    --btn-bg: #e67e22;
+    --btn-text: #000000;
+}
+
+/* 🔹 Body Style */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 50px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 🔹 Heading & Text */
+h1 {
+    margin-bottom: 20px;
+}
+
+p {
+    margin-bottom: 20px;
+}
+
+/* 🔹 Button */
+button {
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+}
+
+button:hover {
+    opacity: 0.8;
+}
