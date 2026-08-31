@@ -329,7 +329,7 @@ function finishExam(auto = false) {
 }
 
 function formatTime(sec) {
-  const m = Math.floor(sec / 60);
+  const m = Math.floor(sec / );
   const s = sec % 60;
   return `${m} menit ${s} detik`;
 }
