@@ -148,7 +148,7 @@ function startExam() {
   answers = {};
   essayAnswers = {};
   examFinished = false;
-  timeLeft = (config.durationMinutes || 75) * 60;
+  timeLeft = (config.durationMinutes || 60) * 60;
 
   document.getElementById('student-info').textContent = `${studentName} • ${studentClass}`;
   loginScreen.classList.remove('active');
