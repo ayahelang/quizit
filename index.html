@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Silverhawk CBT | Ujian Web Design</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="bg-overlay"></div>
+
+  <!-- LOGIN SCREEN -->
+  <div id="login-screen" class="screen active">
+    <div class="card login-card">
+      <div class="logo-area">
+        <div class="logo-circle">SH</div>
+        <h1>Silverhawk <span>CBT</span></h1>
+        <p class="subtitle">Ujian Interaktif Web Design • Kelas 11</p>
+        <p class="status"><span class="dot"></span> System Ready</p>
+      </div>
+
+      <div class="form-group">
+        <label>Pilih Kelas / Rombel</label>
+        <select id="class-select">
+          <option value="">-- Pilih Kelas --</option>
+          <option value="51">Kelas 51</option>
+          <option value="52">Kelas 52</option>
+        </select>
+      </div>
+
+      <div class="form-group" id="password-group" style="display:none;">
+        <label>Password Ujian</label>
+        <input type="password" id="exam-password" placeholder="Masukkan password rombel" autocomplete="off">
+      </div>
+
+      <div class="form-group" id="name-group" style="display:none;">
+        <label>Pilih Nama Anda</label>
+        <select id="name-select">
+          <option value="">-- Pilih Nama --</option>
+        </select>
+        <p class="hint">Nama yang sudah digunakan tidak akan muncul lagi di perangkat ini.</p>
+      </div>
+
+      <button id="btn-start" class="btn btn-primary" disabled>Mulai Ujian</button>
+      <p class="footer-note">© Silverhawk Network • GitHub Pages<br>25 PG + 5 Essay • Timer 75 menit</p>
+    </div>
+  </div>
+
+  <!-- EXAM SCREEN (MC + Essay) -->
+  <div id="exam-screen" class="screen">
+    <header class="exam-header">
+      <div class="header-left">
+        <div class="logo-mini">SH</div>
+        <span id="student-info">Nama • Kelas</span>
+      </div>
+      <div class="header-center">
+        <div class="progress-wrap">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <span id="question-counter">1 / 30</span>
+      </div>
+      <div class="header-right">
+        <div class="timer" id="timer">75:00</div>
+      </div>
+    </header>
+
+    <main class="exam-main">
+      <div class="question-card" id="mc-card">
+        <div class="q-number">Soal Pilihan Ganda <span id="q-num">1</span></div>
+        <p class="q-text" id="q-text">Pertanyaan akan muncul di sini...</p>
+        <div class="options" id="options-container"></div>
+      </div>
+
+      <div class="question-card" id="essay-card" style="display:none;">
+        <div class="q-number">Soal Essay <span id="e-num">1</span> dari 5</div>
+        <p class="q-text" id="e-text">Pertanyaan essay...</p>
+        <textarea id="essay-answer" class="essay-textarea" rows="8" placeholder="Tulis jawaban essay Anda di sini..."></textarea>
+        <p class="hint" style="margin-top:8px;">Jawaban essay tidak dinilai otomatis. Guru akan menilai secara manual.</p>
+      </div>
+    </main>
+
+    <footer class="exam-footer">
+      <button id="btn-prev" class="btn btn-secondary" disabled>← Sebelumnya</button>
+      <button id="btn-next" class="btn btn-primary">Selanjutnya →</button>
+      <button id="btn-submit" class="btn btn-danger" style="display:none;">Kirim Semua Jawaban</button>
+    </footer>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div id="result-screen" class="screen">
+    <div class="card result-card">
+      <div class="logo-area">
+        <div class="logo-circle">SH</div>
+        <h1>Hasil Ujian</h1>
+      </div>
+      <div class="score-display">
+        <div class="score-circle" id="score-circle">
+          <span id="score-value">0</span>
+          <small>/ 25</small>
+        </div>
+        <p id="score-percent">0%</p>
+        <p id="score-message">Semangat terus!</p>
+      </div>
+      <div class="result-details" id="result-details"></div>
+      <div class="result-actions">
+        <button id="btn-download" class="btn btn-primary">Download Hasil (JSON)</button>
+        <button id="btn-review" class="btn btn-secondary">Lihat Review PG</button>
+      </div>
+      <p class="footer-note">Skor di atas hanya untuk 25 soal Pilihan Ganda.<br>Essay akan dinilai manual oleh guru.<br>Hasil juga dikirim ke Google Sheet jika sudah dikonfigurasi.</p>
+    </div>
+  </div>
+
+  <!-- REVIEW MODAL -->
+  <div id="review-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Review Jawaban Pilihan Ganda</h2>
+        <button id="close-review" class="btn-close">×</button>
+      </div>
+      <div class="modal-body" id="review-body"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
