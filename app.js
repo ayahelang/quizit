@@ -65,7 +65,7 @@ function setupEventListeners() {
   classSelect.addEventListener('change', onClassChange);
   examPassword.addEventListener('input', checkStartReady);
   nameSelect.addEventListener('change', checkStartReady);
-  btnStart.addEventListener('click', startExam);
+  btnStart.addEventListener('click', onStartClick);
   btnPrev.addEventListener('click', () => navigate(-1));
   btnNext.addEventListener('click', () => navigate(1));
   btnSubmit.addEventListener('click', confirmSubmit);
@@ -132,6 +132,44 @@ function prepareExamQuestions() {
   });
 }
 
+async function onStartClick() {
+  const cls = classSelect.value;
+  const name = nameSelect.value;
+  if (!cls || !name) return;
+
+  btnStart.disabled = true;
+  btnStart.textContent = 'Memeriksa...';
+
+  // Cek ke Google Sheet jika URL sudah diisi
+  if (config.googleScriptUrl && config.googleScriptUrl.trim() !== '') {
+    try {
+      const exists = await checkNameInSheet(name, cls);
+      if (exists) {
+        alert('Nama ini sudah pernah mengikuti ujian dan datanya tercatat di sistem.\nAnda tidak dapat mengikuti ujian lagi.');
+        btnStart.disabled = false;
+        btnStart.textContent = 'Mulai Ujian';
+        return;
+      }
+    } catch (err) {
+      console.warn('Gagal cek ke Sheet, lanjut dengan localStorage saja:', err);
+    }
+  }
+
+  startExam();
+  btnStart.textContent = 'Mulai Ujian';
+}
+
+async function checkNameInSheet(name, cls) {
+  const url = config.googleScriptUrl +
+    '?action=check' +
+    '&name=' + encodeURIComponent(name) +
+    '&class=' + encodeURIComponent(cls);
+
+  const res = await fetch(url);
+  const data = await res.json();
+  return data.exists === true;
+}
+
 function startExam() {
   studentClass = classSelect.value;
   studentName = nameSelect.value;
@@ -148,7 +186,7 @@ function startExam() {
   answers = {};
   essayAnswers = {};
   examFinished = false;
-  timeLeft = (config.durationMinutes || 75) * 60;
+  timeLeft = (config.durationMinutes || 60) * 60;
 
   document.getElementById('student-info').textContent = `${studentName} • ${studentClass}`;
   loginScreen.classList.remove('active');

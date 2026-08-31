@@ -70,11 +70,34 @@ function doPost(e) {
 }
 
 function doGet(e) {
+  // Cek apakah nama + kelas sudah pernah submit
+  if (e.parameter.action === 'check') {
+    const name = (e.parameter.name || '').trim().toLowerCase();
+    const cls = (e.parameter.class || '').trim();
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = ss.getSheets()[0];
+    const data = sheet.getDataRange().getValues();
+    let exists = false;
+    // Kolom: 0=Timestamp, 1=Nama, 2=Kelas
+    for (let i = 1; i < data.length; i++) {
+      const rowName = String(data[i][1] || '').trim().toLowerCase();
+      const rowClass = String(data[i][2] || '').trim();
+      if (rowName === name && rowClass === cls) {
+        exists = true;
+        break;
+      }
+    }
+    return ContentService
+      .createTextOutput(JSON.stringify({ exists: exists }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
   return ContentService.createTextOutput('Silverhawk CBT Receiver is Ready');
 }
 ```
 
 4. Klik ikon **disket** (Save) → beri nama project misalnya `SilverhawkCBT`.
+
+> **Penting:** Setiap kali Anda mengubah kode Apps Script (termasuk update doGet untuk cek nama), Anda harus membuat **New deployment** lagi (atau Manage deployments → Edit → Version: New version) agar perubahan aktif.
 
 ### Langkah 3 – Deploy sebagai Web App
 1. Klik tombol biru **Deploy** → **New deployment**
