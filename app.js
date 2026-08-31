@@ -132,10 +132,35 @@ function prepareExamQuestions() {
   });
 }
 
-function startExam() {
+async function startExam() {
   studentClass = classSelect.value;
   studentName = nameSelect.value;
 
+  // === Cek ke Google Sheet dulu ===
+  if (config.googleScriptUrl && config.googleScriptUrl.trim() !== '') {
+    btnStart.disabled = true;
+    btnStart.textContent = 'Mengecek data...';
+
+    try {
+      const checkUrl = `${config.googleScriptUrl}?action=check&name=${encodeURIComponent(studentName)}&class=${encodeURIComponent(studentClass)}`;
+      const res = await fetch(checkUrl);
+      const data = await res.json();
+
+      if (data.exists === true) {
+        alert('Nama ini sudah pernah mengikuti ujian.\nTidak dapat mengerjakan ulang.');
+        btnStart.disabled = false;
+        btnStart.textContent = 'Mulai Ujian';
+        return; // batalkan
+      }
+    } catch (err) {
+      console.warn('Gagal cek ke Sheet, lanjutkan saja:', err);
+      // Kalau gagal koneksi, tetap boleh lanjut (agar tidak macet total)
+    }
+
+    btnStart.textContent = 'Mulai Ujian';
+  }
+
+  // Tandai di localStorage juga (cadangan)
   const usedKey = `shcbt_used_${studentClass}`;
   const used = JSON.parse(localStorage.getItem(usedKey) || '[]');
   if (!used.includes(studentName)) {
