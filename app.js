@@ -84,19 +84,13 @@ function onClassChange() {
   btnStart.disabled = true;
   if (!cls) return;
 
-  const usedKey = `shcbt_used_${cls}`;
-  const used = JSON.parse(localStorage.getItem(usedKey) || '[]');
-  const available = (students[cls] || []).filter(n => !used.includes(n));
-
-  available.forEach(name => {
+  // Tampilkan semua nama (pengecekan sudah ikut hanya via Google Sheet)
+  (students[cls] || []).forEach(name => {
     const opt = document.createElement('option');
     opt.value = name;
     opt.textContent = name;
     nameSelect.appendChild(opt);
   });
-  if (available.length === 0) {
-    nameSelect.innerHTML = '<option value="">Semua nama sudah digunakan di perangkat ini</option>';
-  }
   nameGroup.style.display = 'block';
 }
 
@@ -151,7 +145,7 @@ async function onStartClick() {
         return;
       }
     } catch (err) {
-      console.warn('Gagal cek ke Sheet, lanjut dengan localStorage saja:', err);
+      console.warn('Gagal cek ke Sheet:', err);
     }
   }
 
@@ -174,19 +168,12 @@ function startExam() {
   studentClass = classSelect.value;
   studentName = nameSelect.value;
 
-  const usedKey = `shcbt_used_${studentClass}`;
-  const used = JSON.parse(localStorage.getItem(usedKey) || '[]');
-  if (!used.includes(studentName)) {
-    used.push(studentName);
-    localStorage.setItem(usedKey, JSON.stringify(used));
-  }
-
   prepareExamQuestions();
   currentIndex = 0;
   answers = {};
   essayAnswers = {};
   examFinished = false;
-  timeLeft = (config.durationMinutes || 60) * 60;
+  timeLeft = (config.durationMinutes || 75) * 60;
 
   document.getElementById('student-info').textContent = `${studentName} • ${studentClass}`;
   loginScreen.classList.remove('active');
