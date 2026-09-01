@@ -1,3 +1,66 @@
+
+## Update v2.1 — Admin filter mapel + anti pindah tab
+
+### Admin
+- Pilih filter mapel lalu **Download CSV (sesuai filter)**
+- Data hasil memuat `packId` / `packTitle` (perlu update Apps Script di bawah)
+
+### Anti-cheat
+- Browser **tidak mengizinkan** menutup tab lain milik siswa
+- Yang diimplementasikan: deteksi pindah tab / minimize → peringatan + hitung pelanggaran
+- Jumlah pindah tab dikirim ke Sheet (`tabSwitchCount`)
+
+### Apps Script doPost (tambah kolom pack + tab)
+Urutan appendRow yang disarankan:
+
+`Timestamp | Nama | Kelas | Skor | Total | Persen | WaktuDetik | AutoSubmit | PackId | PackTitle | TabSwitch | Essay1..5`
+
+Ganti bagian `sheet.appendRow([...])` di doPost menjadi:
+
+```javascript
+    sheet.appendRow([
+      new Date(),
+      data.name || '',
+      data.class || '',
+      data.score || 0,
+      data.total || 25,
+      data.percent || 0,
+      data.timeUsedSeconds || 0,
+      data.autoSubmit || 'TIDAK',
+      data.packId || '',
+      data.packTitle || '',
+      data.tabSwitchCount || 0,
+      data.essay1 || '',
+      data.essay2 || '',
+      data.essay3 || '',
+      data.essay4 || '',
+      data.essay5 || ''
+    ]);
+```
+
+Dan di `action=list`, mapping row:
+
+```javascript
+      rows.push({
+        timestamp: data[i][0] ? String(data[i][0]) : '',
+        name: String(data[i][1] || ''),
+        class: String(data[i][2] || ''),
+        score: data[i][3] || 0,
+        total: data[i][4] || 25,
+        percent: data[i][5] || 0,
+        timeUsedSeconds: data[i][6] || 0,
+        autoSubmit: String(data[i][7] || ''),
+        packId: String(data[i][8] || ''),
+        packTitle: String(data[i][9] || ''),
+        tabSwitchCount: data[i][10] || 0
+      });
+```
+
+Header Sheet baris 1 (opsional tapi disarankan):
+`Timestamp, Nama, Kelas, Skor, Total, Persen, WaktuDetik, AutoSubmit, PackId, PackTitle, TabSwitch, Essay1, Essay2, Essay3, Essay4, Essay5`
+
+---
+
 # Silverhawk CBT v2.0 — Multi-Mapel
 
 Aplikasi ujian online berbasis GitHub Pages untuk **banyak mata pelajaran**.

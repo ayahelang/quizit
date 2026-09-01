@@ -41,17 +41,17 @@
               </select>
             </div>
 
+            <div class="form-group" id="password-group" style="display: none">
+              <label>Password Ujian</label>
+              <input type="password" id="exam-password" placeholder="Masukkan password rombel" autocomplete="off" />
+            </div>
+
             <div class="form-group" id="name-group" style="display: none">
               <label>Pilih Nama Anda</label>
               <select id="name-select">
                 <option value="">-- Pilih Nama --</option>
               </select>
               <p class="hint">Nama yang sudah pernah submit akan ditolak (dicek via Google Sheet).</p>
-            </div>
-
-            <div class="form-group" id="password-group" style="display: none">
-              <label>Password Ujian</label>
-              <input type="password" id="exam-password" placeholder="Masukkan password rombel" autocomplete="off" />
             </div>
 
             <button id="btn-start" class="btn btn-primary" disabled>Mulai Ujian</button>
@@ -84,8 +84,8 @@
         </div>
 
         <p class="footer-note">
-          <a href="https://silverhawk.web.id">© Silverhawk Network</a><br />
-          Pilih mapel di atas • Kontak Ted. untuk nambah soal
+          © Silverhawk Network<br />
+          Pilih mapel di atas • Multi-paket soal via catalog.json
         </p>
       </div>
     </div>
@@ -100,9 +100,15 @@
         </div>
         <div class="admin-actions">
           <button id="btn-admin-refresh" class="btn btn-primary">Muat Data dari Sheet</button>
-          <button id="btn-admin-download" class="btn btn-secondary">Download CSV</button>
           <button id="btn-admin-logout" class="btn btn-secondary">Keluar Admin</button>
         </div>
+        <div class="form-group" style="margin-bottom:12px">
+          <label>Filter mapel untuk tampilan &amp; download</label>
+          <select id="admin-pack-filter">
+            <option value="">Semua mapel</option>
+          </select>
+        </div>
+        <button id="btn-admin-download" class="btn btn-primary" style="width:100%;margin-bottom:12px">Download CSV (sesuai filter)</button>
         <div id="admin-status" class="admin-status">Klik "Muat Data" untuk menampilkan daftar.</div>
         <div id="admin-list" class="admin-list"></div>
       </div>
@@ -126,6 +132,9 @@
         </div>
       </header>
 
+      <div id="cheat-banner" class="cheat-banner" style="display:none">
+        Peringatan: Anda meninggalkan tab ujian. Jangan membuka tab/jendela lain.
+      </div>
       <div class="nav-strip" id="nav-strip"></div>
 
       <main class="exam-main">
@@ -184,6 +193,17 @@
           <button id="close-review" class="btn-close">×</button>
         </div>
         <div class="modal-body" id="review-body"></div>
+      </div>
+    </div>
+
+    
+    <!-- Anti-cheat warning overlay -->
+    <div id="anticheat-overlay" class="anticheat-overlay" style="display:none">
+      <div class="anticheat-box">
+        <h2>Peringatan</h2>
+        <p id="anticheat-msg">Anda meninggalkan tab ujian. Kembali ke tab ini untuk melanjutkan.</p>
+        <p class="hint" id="anticheat-count"></p>
+        <button type="button" id="btn-anticheat-ok" class="btn btn-primary">Kembali ke ujian</button>
       </div>
     </div>
 

@@ -54,6 +54,7 @@ async function init() {
     validPacks = await validateCatalog(catalog.packs || []);
     renderPackList();
     setupEventListeners();
+    setupAntiCheatUi();
   } catch (err) {
     console.error(err);
     document.getElementById('pack-list').innerHTML =
@@ -357,6 +358,8 @@ function startExam(name, cls, questionSource, durationMin) {
   examScreen.classList.add('active');
   renderCurrent();
   startTimer();
+  if (!isPracticeMode) startAntiCheat();
+  else stopAntiCheat();
 }
 
 function startTimer() {
@@ -510,6 +513,7 @@ function finishExam(auto = false) {
   if (examFinished) return;
   examFinished = true;
   clearInterval(timerInterval);
+  stopAntiCheat();
   saveCurrentEssay();
 
   let correct = 0;
@@ -550,6 +554,7 @@ function finishExam(auto = false) {
     finishedAt: new Date().toISOString(),
     autoSubmit: auto,
     isPractice: isPracticeMode,
+    tabSwitchCount: tabSwitchCount,
     mcAnswers: detail,
     essays: essaySummary
   };
@@ -578,7 +583,8 @@ function finishExam(auto = false) {
     : `<strong>${studentName}</strong> • Kelas ${studentClass}<br>Paket: ${packLabel}<br>
       PG: ${correct} / ${TOTAL_MC}<br>
       Essay: ${Object.keys(essayAnswers).filter(k => essayAnswers[k]?.trim()).length} / ${TOTAL_ESSAY} diisi<br>
-      Waktu: ${formatTime((durationMin * 60) - timeLeft)}`;
+      Waktu: ${formatTime((durationMin * 60) - timeLeft)}<br>
+      Pindah tab terdeteksi: ${tabSwitchCount}x`;
 
   window._lastResult = resultData;
 }
@@ -624,11 +630,14 @@ function sendToGoogleSheet(data) {
     timestamp: new Date().toISOString(),
     name: data.name,
     class: data.class,
+    packId: data.packId || '',
+    packTitle: data.packTitle || '',
     score: data.score,
     total: data.total,
     percent: data.percent,
     timeUsedSeconds: data.timeUsedSeconds,
     autoSubmit: data.autoSubmit ? 'YA' : 'TIDAK',
+    tabSwitchCount: data.tabSwitchCount || 0,
     essay1: (data.essays[0]?.answer || '').substring(0, 1500),
     essay2: (data.essays[1]?.answer || '').substring(0, 1500),
     essay3: (data.essays[2]?.answer || '').substring(0, 1500),
@@ -652,6 +661,53 @@ function enterAdmin() {
   adminScreen.classList.add('active');
   document.getElementById('admin-list').innerHTML = '';
   document.getElementById('admin-status').textContent = 'Klik "Muat Data dari Sheet".';
+  populateAdminPackFilter();
+}
+
+function populateAdminPackFilter() {
+  const sel = document.getElementById('admin-pack-filter');
+  if (!sel) return;
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">Semua mapel</option>';
+  (validPacks || []).filter(p => p.valid).forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.title || p.id;
+    sel.appendChild(opt);
+  });
+  // juga opsi dari data yang sudah diload
+  sel.value = cur || '';
+}
+
+function getFilteredAdminRows() {
+  const rows = window._adminRows || [];
+  const filter = (document.getElementById('admin-pack-filter')?.value || '').trim();
+  if (!filter) return rows;
+  return rows.filter(r => {
+    const id = String(r.packId || '').trim();
+    const title = String(r.packTitle || '').trim().toLowerCase();
+    if (id === filter) return true;
+    const pack = (validPacks || []).find(p => p.id === filter);
+    if (pack && title && title === String(pack.title || '').toLowerCase()) return true;
+    return false;
+  });
+}
+
+function renderAdminList(rows) {
+  const list = document.getElementById('admin-list');
+  list.innerHTML = '';
+  rows.forEach(row => {
+    const div = document.createElement('div');
+    div.className = 'admin-row';
+    const packLabel = row.packTitle || row.packId || '—';
+    div.innerHTML = `
+      <div class="info"><strong>${escapeHtml(row.name)}</strong> • Kelas ${escapeHtml(row.class)}
+      <br><small>${escapeHtml(packLabel)} • ${escapeHtml(row.timestamp || '')}</small></div>
+      <div class="score">${row.score}/${row.total} (${row.percent}%)</div>
+      <button type="button" class="btn-del">Hapus</button>`;
+    div.querySelector('.btn-del').addEventListener('click', () => adminDeleteRow(row.name, row.class));
+    list.appendChild(div);
+  });
 }
 
 function logoutAdmin() {
@@ -666,9 +722,8 @@ async function adminLoadData() {
     return;
   }
   const status = document.getElementById('admin-status');
-  const list = document.getElementById('admin-list');
   status.textContent = 'Memuat...';
-  list.innerHTML = '';
+  document.getElementById('admin-list').innerHTML = '';
   try {
     const res = await fetch(config.googleScriptUrl + '?action=list');
     const data = await res.json();
@@ -678,17 +733,21 @@ async function adminLoadData() {
       return;
     }
     window._adminRows = data.rows;
-    status.textContent = `Total ${data.rows.length} data.`;
-    data.rows.forEach((row, idx) => {
-      const div = document.createElement('div');
-      div.className = 'admin-row';
-      div.innerHTML = `
-        <div class="info"><strong>${escapeHtml(row.name)}</strong> • Kelas ${escapeHtml(row.class)}<br><small>${escapeHtml(row.timestamp || '')}</small></div>
-        <div class="score">${row.score}/${row.total} (${row.percent}%)</div>
-        <button type="button" class="btn-del">Hapus</button>`;
-      div.querySelector('.btn-del').addEventListener('click', () => adminDeleteRow(row.name, row.class));
-      list.appendChild(div);
+    // tambah opsi mapel dari data sheet
+    const sel = document.getElementById('admin-pack-filter');
+    const seen = new Set([...(sel ? [...sel.options].map(o => o.value) : [])]);
+    data.rows.forEach(r => {
+      if (r.packId && !seen.has(r.packId)) {
+        seen.add(r.packId);
+        const opt = document.createElement('option');
+        opt.value = r.packId;
+        opt.textContent = r.packTitle || r.packId;
+        sel.appendChild(opt);
+      }
     });
+    const filtered = getFilteredAdminRows();
+    status.textContent = `Menampilkan ${filtered.length} dari ${data.rows.length} data.`;
+    renderAdminList(filtered);
   } catch (err) {
     status.textContent = 'Gagal memuat. Pastikan Apps Script action=list sudah di-deploy.';
   }
@@ -712,20 +771,91 @@ async function adminDeleteRow(name, cls) {
 }
 
 function adminDownloadCSV() {
-  const rows = window._adminRows || [];
+  const rows = getFilteredAdminRows();
   if (!rows.length) {
-    alert('Muat data dulu.');
+    alert('Tidak ada data untuk filter ini. Muat data dulu atau pilih filter lain.');
     return;
   }
-  const header = 'Timestamp,Nama,Kelas,Skor,Total,Persen,WaktuDetik,AutoSubmit\n';
+  const filter = document.getElementById('admin-pack-filter')?.value || 'semua';
+  const header = 'Timestamp,Nama,Kelas,PackId,PackTitle,Skor,Total,Persen,WaktuDetik,AutoSubmit,TabSwitch\n';
   const body = rows.map(r =>
-    `"${r.timestamp || ''}","${r.name}","${r.class}",${r.score},${r.total},${r.percent},${r.timeUsedSeconds || ''},"${r.autoSubmit || ''}"`
+    `"${r.timestamp || ''}","${r.name}","${r.class}","${r.packId || ''}","${r.packTitle || ''}",${r.score},${r.total},${r.percent},${r.timeUsedSeconds || ''},"${r.autoSubmit || ''}","${r.tabSwitchCount || 0}"`
   ).join('\n');
   const blob = new Blob([header + body], { type: 'text/csv;charset=utf-8' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `hasil_ujian_${new Date().toISOString().slice(0, 10)}.csv`;
+  a.download = `hasil_${filter}_${new Date().toISOString().slice(0, 10)}.csv`;
   a.click();
 }
+
+/* ========== ANTI-CHEAT (deteksi pindah tab) ==========
+ * Browser TIDAK mengizinkan menutup tab lain milik user.
+ * Yang bisa: deteksi tab disembunyikan / blur, peringatan, catat jumlah.
+ */
+let tabSwitchCount = 0;
+let anticheatActive = false;
+
+function startAntiCheat() {
+  tabSwitchCount = 0;
+  anticheatActive = true;
+  document.addEventListener('visibilitychange', onVisibilityChange);
+  window.addEventListener('blur', onWindowBlur);
+}
+
+function stopAntiCheat() {
+  anticheatActive = false;
+  document.removeEventListener('visibilitychange', onVisibilityChange);
+  window.removeEventListener('blur', onWindowBlur);
+  const ov = document.getElementById('anticheat-overlay');
+  if (ov) ov.style.display = 'none';
+}
+
+function onVisibilityChange() {
+  if (!anticheatActive || examFinished || isPracticeMode) return;
+  if (document.hidden) {
+    tabSwitchCount++;
+    showAntiCheatWarning();
+  }
+}
+
+function onWindowBlur() {
+  if (!anticheatActive || examFinished || isPracticeMode) return;
+  // blur sering ikut saat buka DevTools / alt-tab; visibilitychange lebih andal
+  // hanya tambah jika document masih visible (hindari double count)
+  if (!document.hidden) {
+    // tidak auto-count blur saja agar tidak terlalu sensitif
+  }
+}
+
+function showAntiCheatWarning() {
+  const ov = document.getElementById('anticheat-overlay');
+  const msg = document.getElementById('anticheat-msg');
+  const cnt = document.getElementById('anticheat-count');
+  if (!ov) return;
+  msg.textContent = 'Terdeteksi Anda meninggalkan tab ujian (pindah tab / minimize). Kembali ke tab ini untuk melanjutkan.';
+  cnt.textContent = 'Jumlah pelanggaran: ' + tabSwitchCount;
+  ov.style.display = 'flex';
+}
+
+function setupAntiCheatUi() {
+  const btn = document.getElementById('btn-anticheat-ok');
+  if (btn) {
+    btn.addEventListener('click', () => {
+      const ov = document.getElementById('anticheat-overlay');
+      if (ov) ov.style.display = 'none';
+    });
+  }
+  const packFilter = document.getElementById('admin-pack-filter');
+  if (packFilter) {
+    packFilter.addEventListener('change', () => {
+      if (!window._adminRows) return;
+      const filtered = getFilteredAdminRows();
+      document.getElementById('admin-status').textContent =
+        `Menampilkan ${filtered.length} dari ${window._adminRows.length} data.`;
+      renderAdminList(filtered);
+    });
+  }
+}
+
 
 init();

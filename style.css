@@ -814,3 +814,33 @@ body {
   background: rgba(244, 63, 94, 0.15);
   color: #fda4af;
 }
+
+/* Anti-cheat overlay */
+.anticheat-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.anticheat-box {
+  background: var(--bg-card-solid, #0f1e37);
+  border: 1px solid var(--danger, #f43f5e);
+  border-radius: 16px;
+  padding: 28px 24px;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(244, 63, 94, 0.3);
+}
+.anticheat-box h2 {
+  color: #fda4af;
+  margin-bottom: 12px;
+}
+.anticheat-box p {
+  color: var(--text);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
