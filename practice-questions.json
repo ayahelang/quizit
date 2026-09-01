@@ -1,0 +1,146 @@
+[
+  {
+    "id": "P1",
+    "question": "Shortcut manakah yang digunakan untuk menyimpan dokumen di hampir semua aplikasi Windows?",
+    "options": [
+      "Ctrl + S untuk menyimpan file yang sedang dikerjakan",
+      "Ctrl + P untuk menyimpan file ke folder lain",
+      "Ctrl + N untuk menyimpan versi baru dokumen",
+      "Ctrl + O untuk menyimpan dan menutup dokumen",
+      "Ctrl + W untuk menyimpan otomatis setiap menit"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "P2",
+    "question": "Manakah yang merupakan praktik terbaik saat membuat prompt di ChatGPT untuk hasil yang relevan?",
+    "options": [
+      "Memberikan konteks, tujuan, dan batasan yang jelas dalam prompt",
+      "Menulis prompt sangat pendek agar AI lebih kreatif",
+      "Menyalin prompt orang lain tanpa menyesuaikan kebutuhan",
+      "Menggunakan hanya satu kata kunci tanpa penjelasan",
+      "Mengulang prompt yang sama berkali-kali tanpa perubahan"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "P3",
+    "question": "Fungsi utama Google Docs dalam kerja kolaboratif adalah…",
+    "options": [
+      "Memungkinkan banyak orang mengedit dokumen secara bersamaan secara online",
+      "Mengubah dokumen menjadi video secara otomatis",
+      "Menyimpan file hanya di komputer lokal pengguna",
+      "Menghapus riwayat perubahan agar dokumen lebih ringan",
+      "Membatasi pengeditan hanya pada satu perangkat saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "P4",
+    "question": "Dalam CapCut, masalah audio hilang setelah export paling sering disebabkan oleh…",
+    "options": [
+      "Proyek atau folder media tidak tersimpan dengan benar sebelum export",
+      "Resolusi video terlalu rendah sehingga audio terbuang",
+      "Koneksi internet terlalu cepat saat proses rendering",
+      "Penggunaan filter warna yang berlebihan pada klip",
+      "Judul proyek terlalu panjang sehingga file korup"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "P5",
+    "question": "File utama yang biasanya menjadi halaman depan website di GitHub Pages adalah…",
+    "options": [
+      "index.html sebagai titik masuk utama website",
+      "style.css sebagai file yang menampilkan seluruh konten",
+      "script.js sebagai file yang mengatur struktur halaman",
+      "README.md sebagai halaman yang langsung dibuka pengunjung",
+      "package.json sebagai file yang menampilkan desain visual"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "P6",
+    "question": "CSS terutama digunakan untuk…",
+    "options": [
+      "Mengatur tampilan visual seperti warna, font, dan layout",
+      "Menambahkan logika perhitungan dan database",
+      "Mengirim data ke server secara otomatis",
+      "Membuat struktur konten utama halaman",
+      "Mengelola repository dan commit di GitHub"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "P7",
+    "question": "Agar website bisa diakses online setelah diunggah ke GitHub, langkah penting yang harus dilakukan adalah…",
+    "options": [
+      "Mengaktifkan GitHub Pages pada pengaturan repository",
+      "Mengubah semua file menjadi format PDF terlebih dahulu",
+      "Menghapus file CSS agar website lebih cepat dimuat",
+      "Membeli domain berbayar sebelum mengunggah file",
+      "Menyalin kode ke Google Docs sebagai backup utama"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "P8",
+    "question": "Prinsip responsive design berarti…",
+    "options": [
+      "Website menyesuaikan tampilan dengan ukuran layar perangkat",
+      "Website hanya bisa dibuka di laptop resolusi tinggi",
+      "Semua gambar dihilangkan agar loading lebih cepat",
+      "Navigasi disembunyikan pada perangkat mobile",
+      "Font dibuat sangat kecil agar muat di layar HP"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "P9",
+    "question": "Dalam etika penggunaan AI, sikap yang paling tepat adalah…",
+    "options": [
+      "Menggunakan AI sebagai asisten lalu memeriksa dan mengedit hasilnya",
+      "Menyalin hasil AI mentah tanpa pemeriksaan sama sekali",
+      "Mengklaim hasil AI sepenuhnya sebagai karya sendiri tanpa edit",
+      "Mematikan semua filter keamanan agar hasil lebih bebas",
+      "Menggunakan AI untuk menyalin karya orang lain secara utuh"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "P10",
+    "question": "Strategic tags pada deskripsi video Dailymotion berguna untuk…",
+    "options": [
+      "Membantu konten lebih mudah ditemukan oleh penonton yang relevan",
+      "Mengunci video agar hanya bisa dilihat subscriber",
+      "Menghapus metadata agar tidak terdeteksi algoritma",
+      "Mengubah video menjadi private secara otomatis",
+      "Mempercepat proses upload tanpa mempengaruhi jangkauan"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "P11",
+    "question": "Jika muncul broken image pada website yang di-host di GitHub Pages, penyebab paling umum adalah…",
+    "options": [
+      "Path file gambar salah atau file belum diunggah ke repository",
+      "GitHub Pages tidak mendukung format gambar apa pun",
+      "CSS secara default memblokir semua elemen gambar",
+      "Domain website belum dibeli sehingga gambar hilang",
+      "JavaScript menghapus gambar saat halaman dimuat"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "P12",
+    "question": "Keterampilan paling berharga setelah belajar web design di tingkat SMA adalah…",
+    "options": [
+      "Problem-solving, berpikir sistematis, dan menggunakan teknologi secara etis",
+      "Menghafal semua shortcut keyboard tanpa memahami konteksnya",
+      "Menyalin template website tanpa pernah memodifikasinya",
+      "Mengandalkan AI sepenuhnya tanpa verifikasi hasil",
+      "Membuat website hanya untuk keperluan nilai rapor saja"
+    ],
+    "answer": 0
+  }
+]

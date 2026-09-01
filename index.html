@@ -8,10 +8,7 @@
     <link rel="stylesheet" href="style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div class="bg-overlay"></div>
@@ -26,43 +23,83 @@
           <p class="status"><span class="dot"></span> System Ready</p>
         </div>
 
-        <div class="form-group">
-          <label>Pilih Kelas / Rombel</label>
-          <select id="class-select">
-            <option value="">-- Pilih Kelas --</option>
-            <option value="51">Kelas 51</option>
-            <option value="52">Kelas 52</option>
-          </select>
+        <div id="login-main">
+          <div class="form-group">
+            <label>Pilih Kelas / Rombel</label>
+            <select id="class-select">
+              <option value="">-- Pilih Kelas --</option>
+              <option value="51">Kelas 51</option>
+              <option value="52">Kelas 52</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="password-group" style="display: none">
+            <label>Password Ujian</label>
+            <input type="password" id="exam-password" placeholder="Masukkan password rombel" autocomplete="off" />
+          </div>
+
+          <div class="form-group" id="name-group" style="display: none">
+            <label>Pilih Nama Anda</label>
+            <select id="name-select">
+              <option value="">-- Pilih Nama --</option>
+            </select>
+            <p class="hint">Nama yang sudah pernah submit akan ditolak sistem (dicek via Google Sheet).</p>
+          </div>
+
+          <button id="btn-start" class="btn btn-primary" disabled>Mulai Ujian</button>
+
+          <div class="login-extra">
+            <button type="button" id="btn-show-practice" class="btn-link">Mode Latihan</button>
+            <span class="sep">|</span>
+            <button type="button" id="btn-show-admin" class="btn-link">Admin</button>
+          </div>
         </div>
 
-        <div class="form-group" id="password-group" style="display: none">
-          <label>Password Ujian</label>
-          <input
-            type="password"
-            id="exam-password"
-            placeholder="Masukkan password rombel"
-            autocomplete="off"
-          />
+        <!-- PRACTICE LOGIN -->
+        <div id="practice-login" style="display:none">
+          <div class="form-group">
+            <label>Password Mode Latihan</label>
+            <input type="password" id="practice-password" placeholder="Password latihan" autocomplete="off" />
+          </div>
+          <button id="btn-start-practice" class="btn btn-primary">Mulai Latihan</button>
+          <button type="button" id="btn-back-from-practice" class="btn btn-secondary" style="margin-top:10px;width:100%">← Kembali</button>
         </div>
 
-        <div class="form-group" id="name-group" style="display: none">
-          <label>Pilih Nama Anda</label>
-          <select id="name-select">
-            <option value="">-- Pilih Nama --</option>
-          </select>
-          <p class="hint">Nama yang sudah pernah submit akan ditolak sistem (dicek via Google Sheet).</p>
+        <!-- ADMIN LOGIN -->
+        <div id="admin-login" style="display:none">
+          <div class="form-group">
+            <label>Password Admin</label>
+            <input type="password" id="admin-password" placeholder="Password admin" autocomplete="off" />
+          </div>
+          <button id="btn-admin-enter" class="btn btn-primary">Masuk Admin</button>
+          <button type="button" id="btn-back-from-admin" class="btn btn-secondary" style="margin-top:10px;width:100%">← Kembali</button>
         </div>
 
-        <button id="btn-start" class="btn btn-primary" disabled>
-          Mulai Ujian
-        </button>
         <p class="footer-note">
           © Silverhawk Network • Stealth Server<br />25 PG + 5 Essay • Timer Default 60 menit
         </p>
       </div>
     </div>
 
-    <!-- EXAM SCREEN (MC + Essay) -->
+    <!-- ADMIN SCREEN -->
+    <div id="admin-screen" class="screen">
+      <div class="card admin-card">
+        <div class="logo-area">
+          <div class="logo-circle">SH</div>
+          <h1>Panel Admin</h1>
+          <p class="subtitle">Kelola hasil ujian santriwati</p>
+        </div>
+        <div class="admin-actions">
+          <button id="btn-admin-refresh" class="btn btn-primary">Muat Data dari Sheet</button>
+          <button id="btn-admin-download" class="btn btn-secondary">Download CSV</button>
+          <button id="btn-admin-logout" class="btn btn-secondary">Keluar Admin</button>
+        </div>
+        <div id="admin-status" class="admin-status">Klik "Muat Data" untuk menampilkan daftar.</div>
+        <div id="admin-list" class="admin-list"></div>
+      </div>
+    </div>
+
+    <!-- EXAM SCREEN -->
     <div id="exam-screen" class="screen">
       <header class="exam-header">
         <div class="header-left">
@@ -76,45 +113,33 @@
           <span id="question-counter">1 / 30</span>
         </div>
         <div class="header-right">
-          <div class="timer" id="timer">75:00</div>
+          <div class="timer" id="timer">60:00</div>
         </div>
       </header>
 
+      <div class="nav-strip" id="nav-strip"></div>
+
       <main class="exam-main">
         <div class="question-card" id="mc-card">
-          <div class="q-number">
-            Soal Pilihan Ganda <span id="q-num">1</span>
-          </div>
+          <div class="q-number">Soal Pilihan Ganda <span id="q-num">1</span></div>
           <p class="q-text" id="q-text">Pertanyaan akan muncul di sini...</p>
           <div class="options" id="options-container"></div>
         </div>
 
         <div class="question-card" id="essay-card" style="display: none">
-          <div class="q-number">
-            Soal Essay <span id="e-num">1</span> dari 5
-          </div>
+          <div class="q-number">Soal Essay <span id="e-num">1</span> dari 5</div>
           <p class="q-text" id="e-text">Pertanyaan essay...</p>
-          <textarea
-            id="essay-answer"
-            class="essay-textarea"
-            rows="8"
-            placeholder="Tulis jawaban essay Anda di sini..."
-          ></textarea>
-          <p class="hint" style="margin-top: 8px">
-            Jawaban essay tidak dinilai otomatis. Guru akan menilai secara
-            manual.
-          </p>
+          <textarea id="essay-answer" class="essay-textarea" rows="8" placeholder="Tulis jawaban essay Anda di sini..."></textarea>
+          <p class="hint" style="margin-top: 8px">Jawaban essay tidak dinilai otomatis. Guru akan menilai secara manual.</p>
         </div>
       </main>
 
       <footer class="exam-footer">
-        <button id="btn-prev" class="btn btn-secondary" disabled>
-          ← Sebelumnya
-        </button>
+        <button id="btn-prev" class="btn btn-secondary" disabled>← Sebelumnya</button>
+        <button id="btn-jump-unanswered" class="btn btn-secondary" title="Lompat ke soal belum dijawab">Belum dijawab</button>
+        <button id="btn-jump-last" class="btn btn-secondary" title="Ke soal terakhir">Terakhir</button>
         <button id="btn-next" class="btn btn-primary">Selanjutnya →</button>
-        <button id="btn-submit" class="btn btn-danger" style="display: none">
-          Kirim Semua Jawaban
-        </button>
+        <button id="btn-submit" class="btn btn-danger" style="display: none">Kirim Semua Jawaban</button>
       </footer>
     </div>
 
@@ -123,29 +148,24 @@
       <div class="card result-card">
         <div class="logo-area">
           <div class="logo-circle">SH</div>
-          <h1>Hasil Ujian</h1>
+          <h1 id="result-title">Hasil Ujian</h1>
         </div>
         <div class="score-display">
           <div class="score-circle" id="score-circle">
             <span id="score-value">0</span>
-            <small>/ 25</small>
+            <small id="score-total">/ 25</small>
           </div>
           <p id="score-percent">0%</p>
           <p id="score-message">Semangat terus!</p>
         </div>
         <div class="result-details" id="result-details"></div>
         <div class="result-actions">
-          <button id="btn-download" class="btn btn-primary">
-            Download Hasil (JSON)
-          </button>
-          <button id="btn-review" class="btn btn-secondary">
-            Lihat Review PG
-          </button>
+          <button id="btn-download" class="btn btn-primary">Download Hasil (JSON)</button>
+          <button id="btn-review" class="btn btn-secondary">Lihat Review PG</button>
+          <button id="btn-back-home" class="btn btn-secondary">Kembali ke Login</button>
         </div>
-        <p class="footer-note">
-          Skor di atas hanya untuk 25 soal Pilihan Ganda.<br />Essay akan
-          dinilai manual oleh guru.<br />Hasil juga dikirim ke Google Sheet jika
-          sudah dikonfigurasi.
+        <p class="footer-note" id="result-footer-note">
+          Skor di atas hanya untuk soal Pilihan Ganda.<br />Essay dinilai manual oleh guru.
         </p>
       </div>
     </div>
@@ -160,6 +180,7 @@
         <div class="modal-body" id="review-body"></div>
       </div>
     </div>
+
     <script src="https://silverhawk.web.id/lock/lock.js"></script>
     <script src="app.js"></script>
   </body>
