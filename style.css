@@ -749,3 +749,68 @@ body {
   .exam-footer .btn { min-width: 90px; font-size: 0.8rem; padding: 10px 12px; }
   .nav-dot { width: 28px; height: 28px; font-size: 0.7rem; }
 }
+
+.login-card-wide { max-width: 480px; }
+
+.pack-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.pack-item {
+  text-align: left;
+  padding: 12px 14px;
+  background: rgba(6, 13, 26, 0.55);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text);
+  font-family: inherit;
+  width: 100%;
+}
+
+.pack-item:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: rgba(34, 211, 238, 0.08);
+}
+
+.pack-item.selected {
+  border-color: var(--accent);
+  background: rgba(34, 211, 238, 0.15);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.pack-item:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.pack-item .pack-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.pack-item .pack-meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.pack-item .pack-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-top: 6px;
+  background: rgba(16, 185, 129, 0.15);
+  color: #6ee7b7;
+}
+
+.pack-item .pack-badge.invalid {
+  background: rgba(244, 63, 94, 0.15);
+  color: #fda4af;
+}

@@ -1,13 +1,15 @@
 /**
- * Silverhawk CBT v1.2
- * 25 PG + 5 Essay | Mode Latihan | Admin Panel | Navigasi soal
+ * Silverhawk CBT v2.0 — Multi-mapel via catalog.json
  */
 
 let config = {};
 let students = {};
-let allQuestions = [];
-let allEssays = [];
-let practiceQuestions = [];
+let catalog = { packs: [] };
+let validPacks = [];
+let selectedPack = null;
+let packQuestions = [];
+let packEssays = [];
+let packPractice = [];
 let examQuestions = [];
 let currentIndex = 0;
 let answers = {};
@@ -35,32 +37,138 @@ const btnStart = document.getElementById('btn-start');
 const btnPrev = document.getElementById('btn-prev');
 const btnNext = document.getElementById('btn-next');
 const btnSubmit = document.getElementById('btn-submit');
-const btnDownload = document.getElementById('btn-download');
-const btnReview = document.getElementById('btn-review');
-const closeReview = document.getElementById('close-review');
-const reviewModal = document.getElementById('review-modal');
 const mcCard = document.getElementById('mc-card');
 const essayCard = document.getElementById('essay-card');
 const essayTextarea = document.getElementById('essay-answer');
 
 async function init() {
   try {
-    const [cfgRes, stuRes, qRes, eRes, pRes] = await Promise.all([
+    const [cfgRes, stuRes, catRes] = await Promise.all([
       fetch('config.json'),
       fetch('students.json'),
-      fetch('questions.json'),
-      fetch('essays.json'),
-      fetch('practice-questions.json')
+      fetch('catalog.json')
     ]);
     config = await cfgRes.json();
     students = await stuRes.json();
-    allQuestions = await qRes.json();
-    allEssays = await eRes.json();
-    practiceQuestions = await pRes.json();
+    catalog = await catRes.json();
+    validPacks = await validateCatalog(catalog.packs || []);
+    renderPackList();
     setupEventListeners();
   } catch (err) {
     console.error(err);
-    alert('Gagal memuat data. Pastikan semua file JSON ada.');
+    document.getElementById('pack-list').innerHTML =
+      '<p class="hint">Gagal memuat catalog.json. Periksa file di repository.</p>';
+  }
+}
+
+/** Validasi: setiap pack harus punya file questions yang bisa di-fetch */
+async function validateCatalog(packs) {
+  const results = [];
+  for (const pack of packs) {
+    if (pack.enabled === false) {
+      results.push({ ...pack, valid: false, reason: 'disabled' });
+      continue;
+    }
+    try {
+      const res = await fetch(pack.questionsFile, { method: 'GET', cache: 'no-store' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      if (!Array.isArray(data) || data.length === 0) throw new Error('soal kosong');
+      // Cek file practice & essays (opsional tapi dicatat)
+      let practiceOk = false;
+      let essaysCount = 0;
+      try {
+        const pr = await fetch(pack.practiceFile, { cache: 'no-store' });
+        if (pr.ok) {
+          const pd = await pr.json();
+          practiceOk = Array.isArray(pd) && pd.length > 0;
+        }
+      } catch (_) {}
+      try {
+        if (pack.essaysFile) {
+          const er = await fetch(pack.essaysFile, { cache: 'no-store' });
+          if (er.ok) {
+            const ed = await er.json();
+            essaysCount = Array.isArray(ed) ? ed.length : 0;
+          }
+        }
+      } catch (_) {}
+      results.push({
+        ...pack,
+        valid: true,
+        mcCount: data.length,
+        practiceOk,
+        essaysCount
+      });
+    } catch (err) {
+      console.warn('Pack invalid:', pack.id, err);
+      results.push({ ...pack, valid: false, reason: String(err.message || err) });
+    }
+  }
+  return results;
+}
+
+function renderPackList() {
+  const box = document.getElementById('pack-list');
+  if (!validPacks.length) {
+    box.innerHTML = '<p class="hint">Tidak ada paket soal di catalog.json</p>';
+    return;
+  }
+  box.innerHTML = '';
+  validPacks.forEach(pack => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'pack-item';
+    btn.disabled = !pack.valid;
+    btn.innerHTML = `
+      <div class="pack-title">${escapeHtml(pack.title || pack.id)}</div>
+      <div class="pack-meta">${escapeHtml(pack.subject || '')}${pack.description ? ' — ' + escapeHtml(pack.description) : ''}</div>
+      <span class="pack-badge ${pack.valid ? '' : 'invalid'}">
+        ${pack.valid
+          ? `${pack.mcCount} PG${pack.essaysCount ? ' + ' + pack.essaysCount + ' Essay' : ''}${pack.practiceOk ? ' • Latihan OK' : ''}`
+          : 'File tidak valid / tidak ditemukan'}
+      </span>
+    `;
+    if (pack.valid) {
+      btn.addEventListener('click', () => selectPack(pack, btn));
+    }
+    box.appendChild(btn);
+  });
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+async function selectPack(pack, btnEl) {
+  document.querySelectorAll('.pack-item').forEach(b => b.classList.remove('selected'));
+  if (btnEl) btnEl.classList.add('selected');
+  selectedPack = pack;
+
+  // Load pack files
+  try {
+    const fetches = [fetch(pack.questionsFile).then(r => r.json())];
+    if (pack.essaysFile) fetches.push(fetch(pack.essaysFile).then(r => r.json()).catch(() => []));
+    else fetches.push(Promise.resolve([]));
+    if (pack.practiceFile) fetches.push(fetch(pack.practiceFile).then(r => r.json()).catch(() => []));
+    else fetches.push(Promise.resolve([]));
+
+    const [qs, es, pr] = await Promise.all(fetches);
+    packQuestions = Array.isArray(qs) ? qs : [];
+    packEssays = Array.isArray(es) ? es : [];
+    packPractice = Array.isArray(pr) && pr.length ? pr : packQuestions;
+
+    document.getElementById('after-pack').style.display = 'block';
+    classSelect.value = '';
+    onClassChange();
+  } catch (err) {
+    console.error(err);
+    alert('Gagal memuat file soal paket ini.');
+    selectedPack = null;
   }
 }
 
@@ -72,9 +180,10 @@ function setupEventListeners() {
   btnPrev.addEventListener('click', () => navigate(-1));
   btnNext.addEventListener('click', () => navigate(1));
   btnSubmit.addEventListener('click', confirmSubmit);
-  btnDownload.addEventListener('click', downloadResult);
-  btnReview.addEventListener('click', showReview);
-  closeReview.addEventListener('click', () => reviewModal.classList.remove('active'));
+  document.getElementById('btn-download').addEventListener('click', downloadResult);
+  document.getElementById('btn-review').addEventListener('click', showReview);
+  document.getElementById('close-review').addEventListener('click', () =>
+    document.getElementById('review-modal').classList.remove('active'));
   essayTextarea.addEventListener('input', saveCurrentEssay);
 
   document.getElementById('btn-show-practice').addEventListener('click', showPracticeLogin);
@@ -92,9 +201,16 @@ function setupEventListeners() {
 }
 
 function showPracticeLogin() {
+  if (!selectedPack) {
+    alert('Pilih paket soal / mapel terlebih dahulu.');
+    return;
+  }
   document.getElementById('login-main').style.display = 'none';
   document.getElementById('practice-login').style.display = 'block';
   document.getElementById('admin-login').style.display = 'none';
+  document.getElementById('practice-pack-label').textContent =
+    'Latihan: ' + (selectedPack.title || selectedPack.id) +
+    ' (' + packPractice.length + ' soal PG)';
   document.getElementById('practice-password').value = '';
   document.getElementById('practice-password').focus();
 }
@@ -135,7 +251,7 @@ function checkStartReady() {
   const pass = examPassword.value.trim();
   const name = nameSelect.value;
   const correctPass = config.passwords?.[cls] || '';
-  btnStart.disabled = !(cls && name && pass && pass === correctPass);
+  btnStart.disabled = !(selectedPack && cls && name && pass && pass === correctPass);
 }
 
 function shuffleArray(arr) {
@@ -165,7 +281,7 @@ function prepareExamQuestions(source) {
 async function onStartClick() {
   const cls = classSelect.value;
   const name = nameSelect.value;
-  if (!cls || !name) return;
+  if (!selectedPack || !cls || !name) return;
 
   btnStart.disabled = true;
   btnStart.textContent = 'Memeriksa...';
@@ -185,10 +301,11 @@ async function onStartClick() {
   }
 
   isPracticeMode = false;
-  TOTAL_MC = allQuestions.length;
-  TOTAL_ESSAY = allEssays.length;
+  TOTAL_MC = packQuestions.length;
+  TOTAL_ESSAY = packEssays.length;
   TOTAL_ALL = TOTAL_MC + TOTAL_ESSAY;
-  startExam(name, cls, allQuestions, config.durationMinutes || 60);
+  const dur = selectedPack.durationMinutes || config.defaultDurationMinutes || 60;
+  startExam(name, cls, packQuestions, dur);
   btnStart.textContent = 'Mulai Ujian';
 }
 
@@ -198,17 +315,21 @@ function startPractice() {
     alert('Password latihan salah.');
     return;
   }
+  if (!selectedPack || !packPractice.length) {
+    alert('Paket soal / file latihan belum siap.');
+    return;
+  }
   isPracticeMode = true;
-  TOTAL_MC = practiceQuestions.length;
+  TOTAL_MC = packPractice.length;
   TOTAL_ESSAY = 0;
   TOTAL_ALL = TOTAL_MC;
-  startExam('Peserta Latihan', 'LATIHAN', practiceQuestions, config.practiceDurationMinutes || 30);
+  const dur = selectedPack.practiceDurationMinutes || config.defaultPracticeDurationMinutes || 30;
+  startExam('Peserta Latihan', 'LATIHAN', packPractice, dur);
 }
 
 async function checkNameInSheet(name, cls) {
   const url = config.googleScriptUrl +
-    '?action=check' +
-    '&name=' + encodeURIComponent(name) +
+    '?action=check&name=' + encodeURIComponent(name) +
     '&class=' + encodeURIComponent(cls);
   const res = await fetch(url);
   const data = await res.json();
@@ -225,8 +346,9 @@ function startExam(name, cls, questionSource, durationMin) {
   examFinished = false;
   timeLeft = durationMin * 60;
 
+  const packLabel = selectedPack ? (selectedPack.title || selectedPack.id) : '';
   document.getElementById('student-info').textContent = isPracticeMode
-    ? 'Mode Latihan'
+    ? `Latihan • ${packLabel}`
     : `${studentName} • ${studentClass}`;
 
   loginScreen.classList.remove('active');
@@ -270,7 +392,7 @@ function getEssayIndex() {
 
 function saveCurrentEssay() {
   if (!isEssayMode()) return;
-  const essay = allEssays[getEssayIndex()];
+  const essay = packEssays[getEssayIndex()];
   if (essay) essayAnswers[essay.id] = essayTextarea.value;
 }
 
@@ -279,8 +401,7 @@ function isAnswered(idx) {
     const q = examQuestions[idx];
     return q && answers[q.id] !== undefined;
   }
-  const eIdx = idx - TOTAL_MC;
-  const essay = allEssays[eIdx];
+  const essay = packEssays[idx - TOTAL_MC];
   return essay && essayAnswers[essay.id] && essayAnswers[essay.id].trim() !== '';
 }
 
@@ -295,7 +416,6 @@ function renderNavStrip() {
     else if (isAnswered(i)) btn.classList.add('answered');
     else btn.classList.add('unanswered');
     btn.textContent = i + 1;
-    btn.title = isAnswered(i) ? 'Sudah dijawab' : 'Belum dijawab';
     btn.addEventListener('click', () => {
       saveCurrentEssay();
       currentIndex = i;
@@ -306,17 +426,18 @@ function renderNavStrip() {
 }
 
 function renderCurrent() {
-  const progress = ((currentIndex + 1) / TOTAL_ALL) * 100;
-  document.getElementById('progress-bar').style.width = `${progress}%`;
-  document.getElementById('question-counter').textContent = `${currentIndex + 1} / ${TOTAL_ALL}`;
+  document.getElementById('progress-bar').style.width =
+    `${((currentIndex + 1) / TOTAL_ALL) * 100}%`;
+  document.getElementById('question-counter').textContent =
+    `${currentIndex + 1} / ${TOTAL_ALL}`;
   renderNavStrip();
 
   if (isEssayMode()) {
     mcCard.style.display = 'none';
     essayCard.style.display = 'block';
     const eIdx = getEssayIndex();
-    const essay = allEssays[eIdx];
-    document.getElementById('e-num').textContent = eIdx + 1;
+    const essay = packEssays[eIdx];
+    document.getElementById('e-num').textContent = `${eIdx + 1} dari ${TOTAL_ESSAY}`;
     document.getElementById('e-text').textContent = essay.question;
     essayTextarea.value = essayAnswers[essay.id] || '';
   } else {
@@ -379,15 +500,9 @@ function jumpToLast() {
 function confirmSubmit() {
   saveCurrentEssay();
   let unanswered = 0;
-  for (let i = 0; i < TOTAL_ALL; i++) {
-    if (!isAnswered(i)) unanswered++;
-  }
-  let msg = isPracticeMode
-    ? 'Yakin ingin menyelesaikan latihan?'
-    : 'Yakin ingin mengirim semua jawaban (PG + Essay)?';
-  if (unanswered > 0) {
-    msg = `Masih ada ${unanswered} soal yang belum dijawab. Yakin tetap kirim?`;
-  }
+  for (let i = 0; i < TOTAL_ALL; i++) if (!isAnswered(i)) unanswered++;
+  let msg = isPracticeMode ? 'Yakin menyelesaikan latihan?' : 'Yakin kirim semua jawaban?';
+  if (unanswered > 0) msg = `Masih ada ${unanswered} soal belum dijawab. Yakin tetap kirim?`;
   if (confirm(msg)) finishExam(false);
 }
 
@@ -412,12 +527,12 @@ function finishExam(auto = false) {
     });
   });
 
-  const percent = Math.round((correct / TOTAL_MC) * 100);
+  const percent = TOTAL_MC ? Math.round((correct / TOTAL_MC) * 100) : 0;
   const durationMin = isPracticeMode
-    ? (config.practiceDurationMinutes || 30)
-    : (config.durationMinutes || 60);
+    ? (selectedPack?.practiceDurationMinutes || config.defaultPracticeDurationMinutes || 30)
+    : (selectedPack?.durationMinutes || config.defaultDurationMinutes || 60);
 
-  const essaySummary = isPracticeMode ? [] : allEssays.map(e => ({
+  const essaySummary = isPracticeMode ? [] : packEssays.map(e => ({
     id: e.id,
     question: e.question,
     answer: essayAnswers[e.id] || '(kosong)'
@@ -426,6 +541,8 @@ function finishExam(auto = false) {
   const resultData = {
     name: studentName,
     class: studentClass,
+    packId: selectedPack?.id || '',
+    packTitle: selectedPack?.title || '',
     score: correct,
     total: TOTAL_MC,
     percent,
@@ -455,25 +572,19 @@ function finishExam(auto = false) {
   else if (percent >= 60) msg = 'Cukup baik, masih ada ruang untuk berkembang.';
   document.getElementById('score-message').textContent = msg;
 
+  const packLabel = selectedPack ? selectedPack.title : '';
   document.getElementById('result-details').innerHTML = isPracticeMode
-    ? `<strong>Mode Latihan</strong><br>Benar: ${correct} / ${TOTAL_MC}<br>Waktu dipakai: ${formatTime((durationMin * 60) - timeLeft)}<br>Hasil latihan tidak dikirim ke Google Sheet.`
-    : `<strong>${studentName}</strong> • Kelas ${studentClass}<br>
-      PG Benar: ${correct} / ${TOTAL_MC}<br>
+    ? `<strong>Mode Latihan</strong> • ${packLabel}<br>Benar: ${correct} / ${TOTAL_MC}<br>Waktu: ${formatTime((durationMin * 60) - timeLeft)}<br>Tidak dikirim ke Sheet.`
+    : `<strong>${studentName}</strong> • Kelas ${studentClass}<br>Paket: ${packLabel}<br>
+      PG: ${correct} / ${TOTAL_MC}<br>
       Essay: ${Object.keys(essayAnswers).filter(k => essayAnswers[k]?.trim()).length} / ${TOTAL_ESSAY} diisi<br>
-      Waktu dipakai: ${formatTime((durationMin * 60) - timeLeft)}<br>
-      Selesai: ${new Date().toLocaleString('id-ID')}`;
-
-  document.getElementById('result-footer-note').innerHTML = isPracticeMode
-    ? 'Ini adalah mode latihan. Hasil tidak tercatat di sistem ujian resmi.'
-    : 'Skor di atas hanya untuk soal Pilihan Ganda.<br>Essay dinilai manual oleh guru.';
+      Waktu: ${formatTime((durationMin * 60) - timeLeft)}`;
 
   window._lastResult = resultData;
 }
 
 function formatTime(sec) {
-  const m = Math.floor(sec / 60);
-  const s = sec % 60;
-  return `${m} menit ${s} detik`;
+  return `${Math.floor(sec / 60)} menit ${sec % 60} detik`;
 }
 
 function downloadResult() {
@@ -483,7 +594,7 @@ function downloadResult() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `hasil_${data.class}_${String(data.name).replace(/\s+/g, '_')}.json`;
+  a.download = `hasil_${data.packId || 'pack'}_${data.class}_${String(data.name).replace(/\s+/g, '_')}.json`;
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -491,17 +602,13 @@ function downloadResult() {
 function showReview() {
   const data = window._lastResult;
   if (!data) return;
-  const body = document.getElementById('review-body');
-  body.innerHTML = data.mcAnswers.map((a, i) => `
+  document.getElementById('review-body').innerHTML = data.mcAnswers.map((a, i) => `
     <div class="review-item ${a.isCorrect ? 'correct' : 'wrong'}">
       <div class="review-q">${i + 1}. ${a.question}</div>
-      <div class="review-ans">
-        Jawabanmu: ${a.userAnswer}<br>
-        Kunci: ${a.correctAnswer} ${a.isCorrect ? '✓' : '✗'}
-      </div>
+      <div class="review-ans">Jawabanmu: ${a.userAnswer}<br>Kunci: ${a.correctAnswer} ${a.isCorrect ? '✓' : '✗'}</div>
     </div>
   `).join('');
-  reviewModal.classList.add('active');
+  document.getElementById('review-modal').classList.add('active');
 }
 
 function backToLogin() {
@@ -533,20 +640,18 @@ function sendToGoogleSheet(data) {
     mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
-  }).catch(err => console.warn('Kirim ke Sheet (no-cors normal):', err));
+  }).catch(err => console.warn(err));
 }
 
-/* ========== ADMIN ========== */
 function enterAdmin() {
-  const pass = document.getElementById('admin-password').value.trim();
-  if (pass !== (config.adminPassword || '')) {
+  if (document.getElementById('admin-password').value.trim() !== (config.adminPassword || '')) {
     alert('Password admin salah.');
     return;
   }
   loginScreen.classList.remove('active');
   adminScreen.classList.add('active');
   document.getElementById('admin-list').innerHTML = '';
-  document.getElementById('admin-status').textContent = 'Klik "Muat Data dari Sheet" untuk menampilkan daftar.';
+  document.getElementById('admin-status').textContent = 'Klik "Muat Data dari Sheet".';
 }
 
 function logoutAdmin() {
@@ -557,67 +662,59 @@ function logoutAdmin() {
 
 async function adminLoadData() {
   if (!config.googleScriptUrl) {
-    alert('googleScriptUrl belum diisi di config.json');
+    alert('googleScriptUrl belum diisi');
     return;
   }
   const status = document.getElementById('admin-status');
   const list = document.getElementById('admin-list');
-  status.textContent = 'Memuat data...';
+  status.textContent = 'Memuat...';
   list.innerHTML = '';
   try {
-    const url = config.googleScriptUrl + '?action=list';
-    const res = await fetch(url);
+    const res = await fetch(config.googleScriptUrl + '?action=list');
     const data = await res.json();
-    if (!data.rows || data.rows.length === 0) {
-      status.textContent = 'Belum ada data di Sheet.';
+    if (!data.rows || !data.rows.length) {
+      status.textContent = 'Belum ada data.';
       window._adminRows = [];
       return;
     }
     window._adminRows = data.rows;
-    status.textContent = `Total ${data.rows.length} data ditemukan.`;
+    status.textContent = `Total ${data.rows.length} data.`;
     data.rows.forEach((row, idx) => {
       const div = document.createElement('div');
       div.className = 'admin-row';
       div.innerHTML = `
-        <div class="info"><strong>${row.name}</strong> • Kelas ${row.class}<br>
-        <small>${row.timestamp || ''}</small></div>
+        <div class="info"><strong>${escapeHtml(row.name)}</strong> • Kelas ${escapeHtml(row.class)}<br><small>${escapeHtml(row.timestamp || '')}</small></div>
         <div class="score">${row.score}/${row.total} (${row.percent}%)</div>
-        <button type="button" class="btn-del" data-idx="${idx}">Hapus</button>
-      `;
-      div.querySelector('.btn-del').addEventListener('click', () => adminDeleteRow(row.name, row.class, idx));
+        <button type="button" class="btn-del">Hapus</button>`;
+      div.querySelector('.btn-del').addEventListener('click', () => adminDeleteRow(row.name, row.class));
       list.appendChild(div);
     });
   } catch (err) {
-    console.error(err);
-    status.textContent = 'Gagal memuat data. Pastikan Apps Script sudah di-update (action=list) dan di-deploy ulang.';
+    status.textContent = 'Gagal memuat. Pastikan Apps Script action=list sudah di-deploy.';
   }
 }
 
-async function adminDeleteRow(name, cls, idx) {
-  if (!confirm(`Hapus record "${name}" kelas ${cls} dari Google Sheet?\nSetelah dihapus, siswa dapat ikut ujian lagi.`)) return;
+async function adminDeleteRow(name, cls) {
+  if (!confirm(`Hapus record "${name}" kelas ${cls}?`)) return;
   try {
     const url = config.googleScriptUrl +
-      '?action=delete' +
-      '&name=' + encodeURIComponent(name) +
+      '?action=delete&name=' + encodeURIComponent(name) +
       '&class=' + encodeURIComponent(cls);
     const res = await fetch(url);
     const data = await res.json();
     if (data.status === 'ok') {
-      alert('Record berhasil dihapus.');
+      alert('Record dihapus.');
       adminLoadData();
-    } else {
-      alert('Gagal menghapus: ' + (data.message || 'unknown'));
-    }
+    } else alert('Gagal: ' + (data.message || ''));
   } catch (err) {
-    console.error(err);
-    alert('Gagal menghapus. Pastikan Apps Script mendukung action=delete dan sudah di-deploy ulang.');
+    alert('Gagal menghapus. Cek Apps Script action=delete.');
   }
 }
 
 function adminDownloadCSV() {
   const rows = window._adminRows || [];
-  if (rows.length === 0) {
-    alert('Muat data terlebih dahulu.');
+  if (!rows.length) {
+    alert('Muat data dulu.');
     return;
   }
   const header = 'Timestamp,Nama,Kelas,Skor,Total,Persen,WaktuDetik,AutoSubmit\n';
@@ -625,12 +722,10 @@ function adminDownloadCSV() {
     `"${r.timestamp || ''}","${r.name}","${r.class}",${r.score},${r.total},${r.percent},${r.timeUsedSeconds || ''},"${r.autoSubmit || ''}"`
   ).join('\n');
   const blob = new Blob([header + body], { type: 'text/csv;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
+  a.href = URL.createObjectURL(blob);
   a.download = `hasil_ujian_${new Date().toISOString().slice(0, 10)}.csv`;
   a.click();
-  URL.revokeObjectURL(url);
 }
 
 init();

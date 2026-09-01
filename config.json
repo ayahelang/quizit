@@ -1,7 +1,5 @@
 {
-  "examTitle": "Silverhawk CBT - Ujian Web Design Kelas 11",
-  "durationMinutes": 60,
-  "practiceDurationMinutes": 30,
+  "examTitle": "Silverhawk CBT",
   "passwords": {
     "51": "Bismillaah5151",
     "52": "Bismillaah5252"
@@ -10,5 +8,7 @@
   "adminPassword": "adminSH2026",
   "googleScriptUrl": "https://script.google.com/macros/s/AKfycbzFx2sLqQKds6TkL0OLw37VulYJWLaxkI8FDoqCbyyfA0oYmfz4FGh2PJfy-u75bWDSbA/exec",
   "schoolName": "SMA PMA",
-  "version": "1.2.0"
+  "version": "2.0.0",
+  "defaultDurationMinutes": 60,
+  "defaultPracticeDurationMinutes": 30
 }

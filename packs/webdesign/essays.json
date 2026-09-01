@@ -1,0 +1,22 @@
+[
+  {
+    "id": "E1",
+    "question": "Analisis perbedaan antara penggunaan ChatGPT secara pasif (hanya menyalin hasil) dengan penggunaan secara aktif dan kritis. Berikan contoh konkret dalam konteks pembuatan deskripsi website portfolio atau konten Dailymotion, lalu jelaskan dampaknya terhadap kreativitas dan tanggung jawab digital siswa."
+  },
+  {
+    "id": "E2",
+    "question": "Seorang siswa mengalami beberapa masalah sekaligus: audio hilang setelah export CapCut, gambar broken di website GitHub Pages, dan hasil AI headshot tidak mirip. Susun langkah-langkah problem-solving sistematis yang harus dilakukan, serta jelaskan mengapa pendekatan “coba-coba tanpa analisis” justru memperlambat kemajuan."
+  },
+  {
+    "id": "E3",
+    "question": "Dalam era digital 2026, website portfolio tidak hanya harus menarik secara visual, tetapi juga aksesibel dan etis. Analisis minimal tiga prinsip UI/UX dan etika digital yang harus diterapkan pada website yang dibuat siswa, lengkap dengan alasan mengapa prinsip tersebut relevan dengan kebutuhan pengguna saat ini."
+  },
+  {
+    "id": "E4",
+    "question": "Bandingkan kelebihan dan kekurangan platform Dailymotion dibandingkan platform video populer lainnya dalam konteks pembelajaran dan branding diri siswa SMA. Kemudian, rancang strategi sederhana (judul, deskripsi, tags, dan playlist) agar konten edukasi siswa lebih mudah ditemukan dan berdampak positif."
+  },
+  {
+    "id": "E5",
+    "question": "Refleksikan perjalanan pembelajaran dari Week 1 hingga Week 4 (dari shortcut dasar, AI tools, content creation, hingga pembuatan website di GitHub). Identifikasi tiga keterampilan transferabel yang paling berharga untuk masa depan, lalu susun rencana konkret bagaimana keterampilan tersebut dapat digunakan untuk memecahkan masalah nyata di lingkungan sekolah atau komunitas."
+  }
+]

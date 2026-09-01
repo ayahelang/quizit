@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "packs": [
+    {
+      "id": "webdesign",
+      "title": "Web Design Kelas 11",
+      "subject": "Informatika / Web Design",
+      "description": "Ujian Web Design: literasi digital, AI tools, content creation, HTML/CSS/JS, GitHub Pages.",
+      "questionsFile": "packs/webdesign/questions.json",
+      "essaysFile": "packs/webdesign/essays.json",
+      "practiceFile": "packs/webdesign/practice-questions.json",
+      "durationMinutes": 60,
+      "practiceDurationMinutes": 45,
+      "enabled": true
+    },
+    {
+      "id": "smm",
+      "title": "Social Media Marketing",
+      "subject": "SMM / Digital Marketing",
+      "description": "Dasar SMM: copywriting, hashtag, metrik, content calendar, etika digital, dan strategi konten.",
+      "questionsFile": "packs/smm/questions.json",
+      "essaysFile": "packs/smm/essays.json",
+      "practiceFile": "packs/smm/practice-questions.json",
+      "durationMinutes": 45,
+      "practiceDurationMinutes": 30,
+      "enabled": true
+    }
+  ]
+}

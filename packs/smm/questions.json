@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "question": "Tujuan utama Social Media Marketing (SMM) bagi brand atau sekolah adalah…",
+    "options": [
+      "Membangun engagement, awareness, dan hubungan dengan audiens secara strategis",
+      "Hanya mengunggah foto sebanyak mungkin tanpa perencanaan",
+      "Menghapus semua komentar negatif secara otomatis",
+      "Membatasi konten hanya untuk internal sekolah saja",
+      "Mengganti website resmi dengan akun media sosial"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 2,
+    "question": "Elemen copywriting yang paling penting agar caption menarik perhatian adalah…",
+    "options": [
+      "Hook di awal, manfaat jelas, dan ajakan bertindak (CTA)",
+      "Teks sepanjang mungkin tanpa struktur",
+      "Hanya menggunakan emoji tanpa kalimat",
+      "Menyalin caption brand lain tanpa penyesuaian",
+      "Menulis dalam bahasa formal akademik saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 3,
+    "question": "Hashtag yang efektif dalam SMM biasanya…",
+    "options": [
+      "Relevan dengan konten, tidak berlebihan, dan mudah dicari audiens",
+      "Semakin banyak semakin baik tanpa memandang topik",
+      "Hanya memakai hashtag viral yang tidak terkait",
+      "Dihindari sama sekali agar konten terlihat formal",
+      "Diganti seluruhnya dengan mention orang asing"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 4,
+    "question": "Metrik yang umum dipakai untuk mengukur keberhasilan konten SMM adalah…",
+    "options": [
+      "Reach, engagement rate, clicks, dan konversi",
+      "Hanya jumlah follower tanpa melihat interaksi",
+      "Warna tema feed semata",
+      "Panjang caption dalam karakter",
+      "Jumlah akun yang di-follow setiap hari"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 5,
+    "question": "Dalam perencanaan konten, content calendar berguna untuk…",
+    "options": [
+      "Menjadwalkan topik, platform, dan waktu posting secara konsisten",
+      "Menghapus semua draft secara berkala",
+      "Mengunci akun agar tidak bisa diedit",
+      "Mengubah semua konten menjadi iklan berbayar",
+      "Mengganti password media sosial setiap minggu"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 6,
+    "question": "Etika digital dalam SMM yang penting dipatuhi adalah…",
+    "options": [
+      "Menghormati privasi, tidak menyebarkan hoaks, dan jujur pada audiens",
+      "Mengambil foto orang tanpa izin untuk engagement",
+      "Membeli follower palsu agar terlihat populer",
+      "Menjiplak konten kompetitor secara utuh",
+      "Mengabaikan komentar audiens sepenuhnya"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 7,
+    "question": "Platform video singkat seperti TikTok/Reels cocok untuk…",
+    "options": [
+      "Konten edukasi singkat, behind the scenes, dan tren yang relevan",
+      "Hanya dokumen PDF panjang tanpa visual",
+      "Rapat resmi internal tanpa editing",
+      "Arsip file sekolah yang bersifat rahasia",
+      "Pengganti seluruh sistem ujian online"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 8,
+    "question": "Call to Action (CTA) yang baik pada caption biasanya…",
+    "options": [
+      "Jelas, spesifik, dan mudah dilakukan audiens (misal: klik link, komen, simpan)",
+      "Tidak perlu ada karena audiens akan bertindak sendiri",
+      "Berupa ancaman agar orang segera membeli",
+      "Ditulis dalam bahasa yang tidak dipahami audiens",
+      "Hanya berupa emoji tanpa instruksi"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 9,
+    "question": "Analisis insight/analytics membantu kreator untuk…",
+    "options": [
+      "Memahami konten mana yang berkinerja baik dan menyesuaikan strategi",
+      "Menghapus semua postingan lama secara massal",
+      "Mengunci komentar permanen di semua post",
+      "Mengganti niche setiap hari tanpa data",
+      "Menyembunyikan metrik dari tim konten"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 10,
+    "question": "Konsistensi branding di media sosial mencakup…",
+    "options": [
+      "Visual, tone of voice, dan nilai yang selaras di berbagai platform",
+      "Mengubah logo dan warna setiap minggu",
+      "Memakai gaya bahasa yang berbeda total tiap post",
+      "Mengabaikan identitas sekolah atau brand",
+      "Hanya fokus pada satu postingan viral saja"
+    ],
+    "answer": 0
+  }
+]
