@@ -1,4 +1,37 @@
 
+## Fitur v2.2 — Admin tambahan + Upload soal + Excel + Analisis butir (Supabase gratis)
+
+### Setup Supabase (sekali)
+1. Buat project gratis di https://supabase.com
+2. SQL Editor → jalankan file `supabase-setup.sql`
+3. Settings → API → salin **Project URL** dan **anon public** key
+4. Isi di `config.json`:
+```json
+"supabaseUrl": "https://XXXX.supabase.co",
+"supabaseAnonKey": "eyJhbGciOi..."
+```
+5. Upload ke GitHub Pages
+
+Tanpa Supabase, fitur lama (Sheet + admin utama password config) **tetap jalan**.
+
+### Hak akses
+| Fitur | Admin utama (password config) | Admin tambahan (Supabase) |
+|-------|-------------------------------|---------------------------|
+| Lihat / filter / download CSV & Excel | Ya | Ya |
+| Hapus record Sheet | Ya | Ya |
+| Upload paket soal | Ya (jika Supabase on) | Ya |
+| Analisis butir soal | Ya (jika Supabase on) | Ya |
+| Tambah/nonaktifkan admin | Ya | Tidak |
+
+### Analisis butir
+Butuh data submit **setelah** Supabase aktif (jawaban per soal disimpan).  
+Menampilkan tingkat kesukaran (P) dan daya beda sederhana (D) per item.
+
+### Format Excel
+Tombol **Download Excel (.xlsx)** memakai SheetJS di browser (tanpa server).
+
+---
+
 ## Update v2.1 — Admin filter mapel + anti pindah tab
 
 ### Admin

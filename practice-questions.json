@@ -1,145 +1,121 @@
 [
   {
-    "id": "P1",
-    "question": "Shortcut manakah yang digunakan untuk menyimpan dokumen di hampir semua aplikasi Windows?",
+    "id": 1,
+    "question": "Tujuan utama Social Media Marketing (SMM) bagi brand atau sekolah adalah…",
     "options": [
-      "Ctrl + S untuk menyimpan file yang sedang dikerjakan",
-      "Ctrl + P untuk menyimpan file ke folder lain",
-      "Ctrl + N untuk menyimpan versi baru dokumen",
-      "Ctrl + O untuk menyimpan dan menutup dokumen",
-      "Ctrl + W untuk menyimpan otomatis setiap menit"
+      "Membangun engagement, awareness, dan hubungan dengan audiens secara strategis",
+      "Hanya mengunggah foto sebanyak mungkin tanpa perencanaan",
+      "Menghapus semua komentar negatif secara otomatis",
+      "Membatasi konten hanya untuk internal sekolah saja",
+      "Mengganti website resmi dengan akun media sosial"
     ],
     "answer": 0
   },
   {
-    "id": "P2",
-    "question": "Manakah yang merupakan praktik terbaik saat membuat prompt di ChatGPT untuk hasil yang relevan?",
+    "id": 2,
+    "question": "Elemen copywriting yang paling penting agar caption menarik perhatian adalah…",
     "options": [
-      "Memberikan konteks, tujuan, dan batasan yang jelas dalam prompt",
-      "Menulis prompt sangat pendek agar AI lebih kreatif",
-      "Menyalin prompt orang lain tanpa menyesuaikan kebutuhan",
-      "Menggunakan hanya satu kata kunci tanpa penjelasan",
-      "Mengulang prompt yang sama berkali-kali tanpa perubahan"
+      "Hook di awal, manfaat jelas, dan ajakan bertindak (CTA)",
+      "Teks sepanjang mungkin tanpa struktur",
+      "Hanya menggunakan emoji tanpa kalimat",
+      "Menyalin caption brand lain tanpa penyesuaian",
+      "Menulis dalam bahasa formal akademik saja"
     ],
     "answer": 0
   },
   {
-    "id": "P3",
-    "question": "Fungsi utama Google Docs dalam kerja kolaboratif adalah…",
+    "id": 3,
+    "question": "Hashtag yang efektif dalam SMM biasanya…",
     "options": [
-      "Memungkinkan banyak orang mengedit dokumen secara bersamaan secara online",
-      "Mengubah dokumen menjadi video secara otomatis",
-      "Menyimpan file hanya di komputer lokal pengguna",
-      "Menghapus riwayat perubahan agar dokumen lebih ringan",
-      "Membatasi pengeditan hanya pada satu perangkat saja"
+      "Relevan dengan konten, tidak berlebihan, dan mudah dicari audiens",
+      "Semakin banyak semakin baik tanpa memandang topik",
+      "Hanya memakai hashtag viral yang tidak terkait",
+      "Dihindari sama sekali agar konten terlihat formal",
+      "Diganti seluruhnya dengan mention orang asing"
     ],
     "answer": 0
   },
   {
-    "id": "P4",
-    "question": "Dalam CapCut, masalah audio hilang setelah export paling sering disebabkan oleh…",
+    "id": 4,
+    "question": "Metrik yang umum dipakai untuk mengukur keberhasilan konten SMM adalah…",
     "options": [
-      "Proyek atau folder media tidak tersimpan dengan benar sebelum export",
-      "Resolusi video terlalu rendah sehingga audio terbuang",
-      "Koneksi internet terlalu cepat saat proses rendering",
-      "Penggunaan filter warna yang berlebihan pada klip",
-      "Judul proyek terlalu panjang sehingga file korup"
+      "Reach, engagement rate, clicks, dan konversi",
+      "Hanya jumlah follower tanpa melihat interaksi",
+      "Warna tema feed semata",
+      "Panjang caption dalam karakter",
+      "Jumlah akun yang di-follow setiap hari"
     ],
     "answer": 0
   },
   {
-    "id": "P5",
-    "question": "File utama yang biasanya menjadi halaman depan website di GitHub Pages adalah…",
+    "id": 5,
+    "question": "Dalam perencanaan konten, content calendar berguna untuk…",
     "options": [
-      "index.html sebagai titik masuk utama website",
-      "style.css sebagai file yang menampilkan seluruh konten",
-      "script.js sebagai file yang mengatur struktur halaman",
-      "README.md sebagai halaman yang langsung dibuka pengunjung",
-      "package.json sebagai file yang menampilkan desain visual"
+      "Menjadwalkan topik, platform, dan waktu posting secara konsisten",
+      "Menghapus semua draft secara berkala",
+      "Mengunci akun agar tidak bisa diedit",
+      "Mengubah semua konten menjadi iklan berbayar",
+      "Mengganti password media sosial setiap minggu"
     ],
     "answer": 0
   },
   {
-    "id": "P6",
-    "question": "CSS terutama digunakan untuk…",
+    "id": 6,
+    "question": "Etika digital dalam SMM yang penting dipatuhi adalah…",
     "options": [
-      "Mengatur tampilan visual seperti warna, font, dan layout",
-      "Menambahkan logika perhitungan dan database",
-      "Mengirim data ke server secara otomatis",
-      "Membuat struktur konten utama halaman",
-      "Mengelola repository dan commit di GitHub"
+      "Menghormati privasi, tidak menyebarkan hoaks, dan jujur pada audiens",
+      "Mengambil foto orang tanpa izin untuk engagement",
+      "Membeli follower palsu agar terlihat populer",
+      "Menjiplak konten kompetitor secara utuh",
+      "Mengabaikan komentar audiens sepenuhnya"
     ],
     "answer": 0
   },
   {
-    "id": "P7",
-    "question": "Agar website bisa diakses online setelah diunggah ke GitHub, langkah penting yang harus dilakukan adalah…",
+    "id": 7,
+    "question": "Platform video singkat seperti TikTok/Reels cocok untuk…",
     "options": [
-      "Mengaktifkan GitHub Pages pada pengaturan repository",
-      "Mengubah semua file menjadi format PDF terlebih dahulu",
-      "Menghapus file CSS agar website lebih cepat dimuat",
-      "Membeli domain berbayar sebelum mengunggah file",
-      "Menyalin kode ke Google Docs sebagai backup utama"
+      "Konten edukasi singkat, behind the scenes, dan tren yang relevan",
+      "Hanya dokumen PDF panjang tanpa visual",
+      "Rapat resmi internal tanpa editing",
+      "Arsip file sekolah yang bersifat rahasia",
+      "Pengganti seluruh sistem ujian online"
     ],
     "answer": 0
   },
   {
-    "id": "P8",
-    "question": "Prinsip responsive design berarti…",
+    "id": 8,
+    "question": "Call to Action (CTA) yang baik pada caption biasanya…",
     "options": [
-      "Website menyesuaikan tampilan dengan ukuran layar perangkat",
-      "Website hanya bisa dibuka di laptop resolusi tinggi",
-      "Semua gambar dihilangkan agar loading lebih cepat",
-      "Navigasi disembunyikan pada perangkat mobile",
-      "Font dibuat sangat kecil agar muat di layar HP"
+      "Jelas, spesifik, dan mudah dilakukan audiens (misal: klik link, komen, simpan)",
+      "Tidak perlu ada karena audiens akan bertindak sendiri",
+      "Berupa ancaman agar orang segera membeli",
+      "Ditulis dalam bahasa yang tidak dipahami audiens",
+      "Hanya berupa emoji tanpa instruksi"
     ],
     "answer": 0
   },
   {
-    "id": "P9",
-    "question": "Dalam etika penggunaan AI, sikap yang paling tepat adalah…",
+    "id": 9,
+    "question": "Analisis insight/analytics membantu kreator untuk…",
     "options": [
-      "Menggunakan AI sebagai asisten lalu memeriksa dan mengedit hasilnya",
-      "Menyalin hasil AI mentah tanpa pemeriksaan sama sekali",
-      "Mengklaim hasil AI sepenuhnya sebagai karya sendiri tanpa edit",
-      "Mematikan semua filter keamanan agar hasil lebih bebas",
-      "Menggunakan AI untuk menyalin karya orang lain secara utuh"
+      "Memahami konten mana yang berkinerja baik dan menyesuaikan strategi",
+      "Menghapus semua postingan lama secara massal",
+      "Mengunci komentar permanen di semua post",
+      "Mengganti niche setiap hari tanpa data",
+      "Menyembunyikan metrik dari tim konten"
     ],
     "answer": 0
   },
   {
-    "id": "P10",
-    "question": "Strategic tags pada deskripsi video Dailymotion berguna untuk…",
+    "id": 10,
+    "question": "Konsistensi branding di media sosial mencakup…",
     "options": [
-      "Membantu konten lebih mudah ditemukan oleh penonton yang relevan",
-      "Mengunci video agar hanya bisa dilihat subscriber",
-      "Menghapus metadata agar tidak terdeteksi algoritma",
-      "Mengubah video menjadi private secara otomatis",
-      "Mempercepat proses upload tanpa mempengaruhi jangkauan"
-    ],
-    "answer": 0
-  },
-  {
-    "id": "P11",
-    "question": "Jika muncul broken image pada website yang di-host di GitHub Pages, penyebab paling umum adalah…",
-    "options": [
-      "Path file gambar salah atau file belum diunggah ke repository",
-      "GitHub Pages tidak mendukung format gambar apa pun",
-      "CSS secara default memblokir semua elemen gambar",
-      "Domain website belum dibeli sehingga gambar hilang",
-      "JavaScript menghapus gambar saat halaman dimuat"
-    ],
-    "answer": 0
-  },
-  {
-    "id": "P12",
-    "question": "Keterampilan paling berharga setelah belajar web design di tingkat SMA adalah…",
-    "options": [
-      "Problem-solving, berpikir sistematis, dan menggunakan teknologi secara etis",
-      "Menghafal semua shortcut keyboard tanpa memahami konteksnya",
-      "Menyalin template website tanpa pernah memodifikasinya",
-      "Mengandalkan AI sepenuhnya tanpa verifikasi hasil",
-      "Membuat website hanya untuk keperluan nilai rapor saja"
+      "Visual, tone of voice, dan nilai yang selaras di berbagai platform",
+      "Mengubah logo dan warna setiap minggu",
+      "Memakai gaya bahasa yang berbeda total tiap post",
+      "Mengabaikan identitas sekolah atau brand",
+      "Hanya fokus pada satu postingan viral saja"
     ],
     "answer": 0
   }

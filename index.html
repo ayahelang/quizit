@@ -41,11 +41,6 @@
               </select>
             </div>
 
-            <div class="form-group" id="password-group" style="display: none">
-              <label>Password Ujian</label>
-              <input type="password" id="exam-password" placeholder="Masukkan password rombel" autocomplete="off" />
-            </div>
-
             <div class="form-group" id="name-group" style="display: none">
               <label>Pilih Nama Anda</label>
               <select id="name-select">
@@ -54,6 +49,11 @@
               <p class="hint">Nama yang sudah pernah submit akan ditolak (dicek via Google Sheet).</p>
             </div>
 
+            <div class="form-group" id="password-group" style="display: none">
+              <label>Password Ujian</label>
+              <input type="password" id="exam-password" placeholder="Masukkan password rombel" autocomplete="off" />
+            </div>
+            
             <button id="btn-start" class="btn btn-primary" disabled>Mulai Ujian</button>
           </div>
 
@@ -76,16 +76,27 @@
 
         <div id="admin-login" style="display:none">
           <div class="form-group">
-            <label>Password Admin</label>
-            <input type="password" id="admin-password" placeholder="Password admin" autocomplete="off" />
+            <label>Login Admin Utama (password config)</label>
+            <input type="password" id="admin-password" placeholder="Password admin utama" autocomplete="off" />
           </div>
-          <button id="btn-admin-enter" class="btn btn-primary">Masuk Admin</button>
+          <button id="btn-admin-enter" class="btn btn-primary">Masuk Admin Utama</button>
+          <hr style="border-color:var(--border);margin:16px 0" />
+          <p class="hint" style="margin-bottom:8px">Atau admin tambahan (Supabase)</p>
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" id="admin-secondary-user" placeholder="username" autocomplete="username" />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="admin-secondary-pass" placeholder="password" autocomplete="current-password" />
+          </div>
+          <button id="btn-admin-secondary-enter" class="btn btn-secondary" style="width:100%">Masuk Admin Tambahan</button>
           <button type="button" id="btn-back-from-admin" class="btn btn-secondary" style="margin-top:10px;width:100%">← Kembali</button>
         </div>
 
         <p class="footer-note">
-          © Silverhawk Network<br />
-          Pilih mapel di atas • Multi-paket soal via catalog.json
+          Pilih mapel di atas<br />
+          © Silverhawk Network • Steqlth server
         </p>
       </div>
     </div>
@@ -96,25 +107,130 @@
         <div class="logo-area">
           <div class="logo-circle">SH</div>
           <h1>Panel Admin</h1>
-          <p class="subtitle">Kelola hasil ujian</p>
+          <p class="subtitle" id="admin-role-label">Kelola ujian & paket soal</p>
         </div>
-        <div class="admin-actions">
-          <button id="btn-admin-refresh" class="btn btn-primary">Muat Data dari Sheet</button>
-          <button id="btn-admin-logout" class="btn btn-secondary">Keluar Admin</button>
+
+        <div class="admin-tabs" id="admin-tabs">
+          <button type="button" class="admin-tab active" data-tab="hasil">Hasil Ujian</button>
+          <button type="button" class="admin-tab" data-tab="upload">Upload Paket</button>
+          <button type="button" class="admin-tab" data-tab="analisis">Analisis Butir</button>
+          <button type="button" class="admin-tab" data-tab="proctor">Proctoring</button>
+          <button type="button" class="admin-tab" data-tab="admins" id="tab-admins-btn">Kelola Admin</button>
         </div>
-        <div class="form-group" style="margin-bottom:12px">
-          <label>Filter mapel untuk tampilan &amp; download</label>
-          <select id="admin-pack-filter">
-            <option value="">Semua mapel</option>
-          </select>
+
+        <!-- TAB HASIL -->
+        <div class="admin-tab-panel active" id="tab-hasil">
+          <div class="admin-actions">
+            <button id="btn-admin-refresh" class="btn btn-primary">Muat Data</button>
+            <button id="btn-admin-logout" class="btn btn-secondary">Keluar</button>
+          </div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label>Filter mapel</label>
+            <select id="admin-pack-filter">
+              <option value="">Semua mapel</option>
+            </select>
+          </div>
+          <button id="btn-admin-download" class="btn btn-primary" style="width:100%;margin-bottom:8px">Download CSV</button>
+          <button id="btn-admin-download-xlsx" class="btn btn-secondary" style="width:100%;margin-bottom:12px">Download Excel (.xlsx)</button>
+          <div id="admin-status" class="admin-status">Klik "Muat Data".</div>
+          <div id="admin-list" class="admin-list"></div>
         </div>
-        <button id="btn-admin-download" class="btn btn-primary" style="width:100%;margin-bottom:12px">Download CSV (sesuai filter)</button>
-        <div id="admin-status" class="admin-status">Klik "Muat Data" untuk menampilkan daftar.</div>
-        <div id="admin-list" class="admin-list"></div>
+
+        <!-- TAB UPLOAD -->
+        <div class="admin-tab-panel" id="tab-upload" style="display:none">
+          <p class="hint" style="margin-bottom:12px">Upload paket soal ke Supabase. Format: <strong>JSON, XLSX, CSV</strong>. DOC lama tidak didukung — pakai Excel/CSV.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+            <a class="btn btn-secondary" style="flex:1;text-align:center;text-decoration:none" href="templates/template-soal-pg.xlsx" download>Template PG (XLSX)</a>
+            <a class="btn btn-secondary" style="flex:1;text-align:center;text-decoration:none" href="templates/template-soal-essay.xlsx" download>Template Essay (XLSX)</a>
+            <a class="btn btn-secondary" style="flex:1;text-align:center;text-decoration:none" href="templates/template-soal-pg.csv" download>Template PG (CSV)</a>
+            <a class="btn btn-secondary" style="flex:1;text-align:center;text-decoration:none" href="templates/PANDUAN-TEMPLATE.txt" download>Panduan</a>
+          </div>
+          <div class="form-group">
+            <label>ID paket (unik, huruf kecil)</label>
+            <input type="text" id="up-pack-id" placeholder="contoh: biologi11" />
+          </div>
+          <div class="form-group">
+            <label>Judul</label>
+            <input type="text" id="up-pack-title" placeholder="Biologi Kelas 11" />
+          </div>
+          <div class="form-group">
+            <label>Mapel / subject</label>
+            <input type="text" id="up-pack-subject" placeholder="Biologi" />
+          </div>
+          <div class="form-group">
+            <label>Deskripsi</label>
+            <input type="text" id="up-pack-desc" placeholder="Ujian semester..." />
+          </div>
+          <div class="form-group">
+            <label>Durasi ujian (menit)</label>
+            <input type="number" id="up-pack-dur" value="60" min="5" />
+          </div>
+          <div class="form-group">
+            <label>File soal PG (JSON / XLSX / CSV)</label>
+            <input type="file" id="up-file-q" accept=".json,.xlsx,.csv,application/json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv" />
+          </div>
+          <div class="form-group">
+            <label>File essay (JSON / XLSX / CSV, opsional)</label>
+            <input type="file" id="up-file-e" accept=".json,.xlsx,.csv,application/json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv" />
+          </div>
+          <div class="form-group">
+            <label>File latihan PG (JSON / XLSX / CSV, opsional)</label>
+            <input type="file" id="up-file-p" accept=".json,.xlsx,.csv,application/json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv" />
+          </div>
+          <button id="btn-upload-pack" class="btn btn-primary" style="width:100%">Upload / Update Paket</button>
+          <div id="upload-status" class="admin-status" style="margin-top:10px"></div>
+          <hr style="border-color:var(--border);margin:16px 0" />
+          <button id="btn-refresh-remote-packs" class="btn btn-secondary" style="width:100%">Muat Ulang Paket dari Database</button>
+        </div>
+
+        <!-- TAB ANALISIS -->
+        <div class="admin-tab-panel" id="tab-analisis" style="display:none">
+          <p class="hint" style="margin-bottom:12px">Analisis butir: tingkat kesukaran &amp; daya beda sederhana per soal (butuh Supabase).</p>
+          <div class="form-group">
+            <label>Pilih mapel / pack</label>
+            <select id="analisis-pack-filter">
+              <option value="">-- Pilih pack --</option>
+            </select>
+          </div>
+          <button id="btn-run-analisis" class="btn btn-primary" style="width:100%;margin-bottom:12px">Jalankan Analisis</button>
+          <div id="analisis-status" class="admin-status"></div>
+          <div id="analisis-list" class="admin-list"></div>
+        </div>
+
+        <!-- TAB PROCTOR -->
+        <div class="admin-tab-panel" id="tab-proctor" style="display:none">
+          <p class="hint" style="margin-bottom:12px">Pengaturan pengawasan ujian. Default: ON. Disimpan ke Supabase jika tersedia, agar semua peserta membaca setting yang sama.</p>
+          <label class="toggle-row">
+            <input type="checkbox" id="set-force-fullscreen" checked />
+            <span>Paksa mode Fullscreen saat ujian resmi</span>
+          </label>
+          <label class="toggle-row">
+            <input type="checkbox" id="set-cheat-alarm" checked />
+            <span>Bunyi alarm jika terdeteksi pindah tab / indikasi menyontek</span>
+          </label>
+          <button id="btn-save-proctor" class="btn btn-primary" style="width:100%;margin-top:14px">Simpan Pengaturan</button>
+          <div id="proctor-status" class="admin-status" style="margin-top:10px"></div>
+        </div>
+
+        <!-- TAB KELOLA ADMIN -->
+        <div class="admin-tab-panel" id="tab-admins" style="display:none">
+          <p class="hint" style="margin-bottom:12px">Hanya admin utama. Menambah admin tambahan untuk upload soal &amp; lihat nilai.</p>
+          <div class="form-group">
+            <label>Username admin baru</label>
+            <input type="text" id="new-admin-user" placeholder="guru_biologi" />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="new-admin-pass" placeholder="Minimal 6 karakter" />
+          </div>
+          <button id="btn-add-admin" class="btn btn-primary" style="width:100%;margin-bottom:12px">Tambah Admin</button>
+          <div id="admins-status" class="admin-status"></div>
+          <div id="admins-list" class="admin-list"></div>
+        </div>
       </div>
     </div>
 
-    <!-- EXAM SCREEN -->
+<!-- EXAM SCREEN -->
     <div id="exam-screen" class="screen">
       <header class="exam-header">
         <div class="header-left">
@@ -197,6 +313,20 @@
     </div>
 
     
+    <!-- Fullscreen exit gate -->
+    <div id="fs-exit-overlay" class="anticheat-overlay" style="display:none">
+      <div class="anticheat-box">
+        <h2>Keluar Fullscreen</h2>
+        <p>Ujian masih berlangsung. Masukkan password admin pengawas untuk keluar dari fullscreen.</p>
+        <div class="form-group" style="text-align:left;margin:12px 0">
+          <input type="password" id="fs-exit-password" placeholder="Password admin" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:rgba(6,13,26,0.6);color:var(--text)" />
+        </div>
+        <button type="button" id="btn-fs-exit-ok" class="btn btn-primary">Izinkan keluar</button>
+        <button type="button" id="btn-fs-reenter" class="btn btn-secondary" style="width:100%;margin-top:8px">Kembali ke Fullscreen</button>
+        <p class="hint" id="fs-exit-msg" style="margin-top:10px"></p>
+      </div>
+    </div>
+
     <!-- Anti-cheat warning overlay -->
     <div id="anticheat-overlay" class="anticheat-overlay" style="display:none">
       <div class="anticheat-box">
@@ -207,7 +337,9 @@
       </div>
     </div>
 
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
     <script src="https://silverhawk.web.id/lock/lock.js"></script>
+    <script src="js/admin-supabase.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
