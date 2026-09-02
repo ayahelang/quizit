@@ -81,7 +81,7 @@
           </div>
           <button id="btn-admin-enter" class="btn btn-primary">Masuk Admin Utama</button>
           <hr style="border-color:var(--border);margin:16px 0" />
-          <p class="hint" style="margin-bottom:8px">Atau admin tambahan (Supabase)</p>
+          <p class="hint" style="margin-bottom:8px">Atau admin tambahan</p>
           <div class="form-group">
             <label>Username</label>
             <input type="text" id="admin-secondary-user" placeholder="username" autocomplete="username" />
@@ -96,7 +96,7 @@
 
         <p class="footer-note">
           Pilih mapel di atas<br />
-          © Silverhawk Network • Steqlth server
+          © Silverhawk Network • Stealth server
         </p>
       </div>
     </div>
@@ -138,7 +138,7 @@
 
         <!-- TAB UPLOAD -->
         <div class="admin-tab-panel" id="tab-upload" style="display:none">
-          <p class="hint" style="margin-bottom:12px">Upload paket soal ke Supabase. Format: <strong>JSON, XLSX, CSV</strong>. DOC lama tidak didukung — pakai Excel/CSV.</p>
+          <p class="hint" style="margin-bottom:12px">Upload paket soal ke database. Format: <strong>JSON, XLSX, CSV</strong>. DOC lama tidak didukung — pakai Excel/CSV.</p>
           <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
             <a class="btn btn-secondary" style="flex:1;text-align:center;text-decoration:none" href="templates/template-soal-pg.xlsx" download>Template PG (XLSX)</a>
             <a class="btn btn-secondary" style="flex:1;text-align:center;text-decoration:none" href="templates/template-soal-essay.xlsx" download>Template Essay (XLSX)</a>
@@ -185,7 +185,7 @@
 
         <!-- TAB ANALISIS -->
         <div class="admin-tab-panel" id="tab-analisis" style="display:none">
-          <p class="hint" style="margin-bottom:12px">Analisis butir: tingkat kesukaran &amp; daya beda sederhana per soal (butuh Supabase).</p>
+          <p class="hint" style="margin-bottom:12px">Analisis butir: tingkat kesukaran &amp; daya beda sederhana per soal.</p>
           <div class="form-group">
             <label>Pilih mapel / pack</label>
             <select id="analisis-pack-filter">
@@ -199,7 +199,7 @@
 
         <!-- TAB PROCTOR -->
         <div class="admin-tab-panel" id="tab-proctor" style="display:none">
-          <p class="hint" style="margin-bottom:12px">Pengaturan pengawasan ujian. Default: ON. Disimpan ke Supabase jika tersedia, agar semua peserta membaca setting yang sama.</p>
+          <p class="hint" style="margin-bottom:12px">Pengaturan pengawasan ujian. Default: ON. Disimpan ke dataabase jika tersedia, agar semua peserta membaca setting yang sama.</p>
           <label class="toggle-row">
             <input type="checkbox" id="set-force-fullscreen" checked />
             <span>Paksa mode Fullscreen saat ujian resmi</span>
