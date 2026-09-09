@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "question": "Seorang siswa ingin mempercepat navigasi ke akhir dokumen Google Docs yang sangat panjang tanpa scrolling manual. Shortcut mana yang paling efisien dan sesuai praktik terbaik literasi digital?",
+    "options": [
+      "Ctrl + Home untuk langsung ke awal halaman dokumen",
+      "Ctrl + End untuk langsung ke akhir halaman dokumen",
+      "Ctrl + Page Down untuk berpindah halaman satu per satu",
+      "Ctrl + Arrow Down untuk bergerak baris demi baris",
+      "Ctrl + Shift + End untuk menyeleksi hingga akhir dokumen"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 2,
+    "question": "Saat mengerjakan proyek kolaboratif di Google Docs, beberapa anggota tim sering mengubah format tanpa disadari. Fitur mana yang paling tepat digunakan agar semua perubahan tetap terlacak dan dapat dikembalikan?",
+    "options": [
+      "Mode Suggestion untuk usulan perubahan yang bisa diterima atau ditolak",
+      "Mode Editing biasa tanpa pelacakan perubahan sama sekali",
+      "Mode Viewing yang hanya memungkinkan membaca dokumen",
+      "Fitur Version History yang menyimpan seluruh riwayat otomatis",
+      "Fitur Comment yang hanya menambahkan catatan tanpa mengubah teks"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 3,
+    "question": "Dalam Google Sheets, data nilai siswa perlu diurutkan dari A–Z berdasarkan nama. Langkah yang paling tepat dan efisien adalah…",
+    "options": [
+      "Menggunakan fungsi SORT secara manual di kolom baru",
+      "Memilih data lalu menggunakan menu Data > Sort range",
+      "Menyalin data ke dokumen baru lalu mengurutkan manual",
+      "Menggunakan filter view tanpa mengubah urutan asli data",
+      "Menulis rumus VLOOKUP untuk menyusun ulang seluruh data"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 4,
+    "question": "Seorang siswa ingin membuat prompt ChatGPT yang menghasilkan deskripsi video Dailymotion yang persuasif dan SEO-friendly. Ciri prompt yang paling efektif adalah…",
+    "options": [
+      "Prompt singkat tanpa konteks agar AI bebas berkreasi",
+      "Prompt spesifik berisi tujuan, audiens, panjang, dan kata kunci",
+      "Prompt panjang berisi seluruh isi video tanpa batasan",
+      "Prompt hanya berisi judul video tanpa penjelasan tambahan",
+      "Prompt menggunakan bahasa formal akademik tanpa gaya kreatif"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 5,
+    "question": "Saat menggunakan AI untuk mengubah foto menjadi headshot formal, hasilnya sering tidak mirip. Langkah critical thinking yang paling tepat adalah…",
+    "options": [
+      "Langsung menerima hasil AI tanpa evaluasi kualitas",
+      "Memberikan referensi foto yang jelas dan instruksi detail berulang",
+      "Mengganti AI platform setiap kali hasil kurang memuaskan",
+      "Mengurangi resolusi foto agar proses lebih cepat",
+      "Menghapus semua detail wajah agar AI lebih kreatif"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 6,
+    "question": "NaturalReader digunakan untuk membantu membaca teks berbahasa asing. Manfaat utama dari segi aksesibilitas dan pembelajaran adalah…",
+    "options": [
+      "Mengubah teks menjadi suara untuk melatih pengucapan yang benar",
+      "Menerjemahkan teks secara otomatis ke bahasa Indonesia",
+      "Memeriksa tata bahasa dan ejaan secara real-time",
+      "Membuat ringkasan otomatis dari dokumen panjang",
+      "Mengubah suara menjadi teks untuk keperluan transkrip"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 7,
+    "question": "Seorang kreator mengalami audio hilang setelah mengekspor video di CapCut. Analisis masalah yang paling logis adalah…",
+    "options": [
+      "Folder proyek CapCut tersembunyi atau tidak tersimpan dengan benar",
+      "Fitur premium CapCut membatasi ekspor audio secara otomatis",
+      "Format file audio tidak didukung oleh platform tujuan upload",
+      "Resolusi video terlalu tinggi sehingga audio terpotong",
+      "Koneksi internet lemah saat proses rendering berlangsung"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 8,
+    "question": "Dalam copywriting untuk deskripsi video Dailymotion, elemen mana yang paling penting agar konten mudah ditemukan dan menarik perhatian?",
+    "options": [
+      "Judul panjang tanpa kata kunci dan deskripsi sangat formal",
+      "Judul menarik, deskripsi jelas, serta strategic tags yang relevan",
+      "Deskripsi sangat panjang berisi seluruh naskah video",
+      "Hanya menggunakan emoji tanpa teks deskriptif sama sekali",
+      "Menyalin deskripsi dari video lain tanpa penyesuaian"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 9,
+    "question": "Platform Dailymotion memiliki fitur Kids. Situasi paling tepat untuk mengaktifkannya adalah…",
+    "options": [
+      "Saat mengunggah konten edukasi untuk audiens anak-anak",
+      "Saat mengunggah konten hiburan umum tanpa batasan usia",
+      "Saat ingin meningkatkan jumlah like secara instan",
+      "Saat membuat playlist untuk konten dewasa saja",
+      "Saat ingin menyembunyikan video dari pencarian publik"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 10,
+    "question": "Seorang siswa ingin membuat playlist di Dailymotion agar profil terlihat rapi dan profesional. Manfaat utama dari praktik ini adalah…",
+    "options": [
+      "Meningkatkan kredibilitas kreator dan memudahkan penonton menemukan konten terkait",
+      "Mempercepat proses upload video berikutnya secara otomatis",
+      "Mengunci video agar tidak bisa di-like atau dikomentari",
+      "Mengubah semua video menjadi private secara massal",
+      "Menghapus metadata video agar tidak terdeteksi algoritma"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 11,
+    "question": "Dalam pembuatan website portfolio di GitHub, file utama yang menentukan struktur halaman adalah…",
+    "options": [
+      "index.html sebagai kerangka dasar konten website",
+      "style.css sebagai satu-satunya file yang berisi interaktivitas",
+      "script.js sebagai file yang mengatur seluruh layout visual",
+      "README.md sebagai file yang menampilkan tampilan utama",
+      "package.json sebagai file yang mengatur desain responsif"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 12,
+    "question": "Fungsi utama CSS dalam website yang dibuat siswa adalah…",
+    "options": [
+      "Mengatur tampilan visual seperti warna, font, spacing, dan layout",
+      "Menambahkan logika interaktif seperti klik tombol dan animasi",
+      "Menyimpan data pengguna secara permanen di server",
+      "Menghubungkan website ke database eksternal secara otomatis",
+      "Menghasilkan konten dinamis dari AI secara real-time"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 13,
+    "question": "JavaScript pada website portfolio biasanya digunakan untuk…",
+    "options": [
+      "Menambahkan interaksi seperti hover effect, animasi, dan validasi form",
+      "Mengatur seluruh struktur HTML dan posisi elemen",
+      "Menyimpan file gambar agar tidak broken saat dibuka",
+      "Mengubah domain website menjadi lebih profesional",
+      "Membuat repository baru secara otomatis di GitHub"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 14,
+    "question": "Setelah mengunggah file website ke repository GitHub, langkah selanjutnya agar website bisa diakses online adalah…",
+    "options": [
+      "Mengaktifkan GitHub Pages pada pengaturan repository",
+      "Mengubah semua file menjadi format ZIP lalu mengunduhnya",
+      "Menghapus file CSS agar website lebih ringan",
+      "Mengganti username GitHub setiap kali ada update",
+      "Menyalin link repository ke Google Docs sebagai backup"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 15,
+    "question": "Saat website menampilkan broken image, analisis penyebab yang paling mungkin adalah…",
+    "options": [
+      "Path file gambar salah atau file belum diunggah ke repository",
+      "GitHub Pages belum diaktifkan sehingga seluruh site error",
+      "CSS tidak mendukung format gambar yang digunakan",
+      "JavaScript memblokir semua elemen gambar secara default",
+      "Domain website belum dibeli sehingga gambar tidak muncul"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 16,
+    "question": "Prinsip UI/UX yang paling penting agar website nyaman digunakan di HP maupun laptop adalah…",
+    "options": [
+      "Responsive design yang menyesuaikan layout dengan ukuran layar",
+      "Menggunakan hanya satu warna dominan tanpa variasi",
+      "Menonaktifkan semua animasi agar loading lebih cepat",
+      "Membuat navigasi hanya tersedia di versi desktop",
+      "Menyembunyikan footer agar konten utama lebih fokus"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 17,
+    "question": "Seorang siswa menemukan error kecil yang membuat seluruh website tidak berfungsi. Sikap problem-solving yang paling sesuai adalah…",
+    "options": [
+      "Mencari penyebab error secara sistematis, memperbaiki, lalu menguji ulang",
+      "Langsung menghapus seluruh repository dan membuat ulang dari awal",
+      "Mengabaikan error karena website masih bisa dibuka di beberapa perangkat",
+      "Mengganti platform hosting tanpa menganalisis sumber masalah",
+      "Meminta AI membuat website baru tanpa memeriksa kode lama"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 18,
+    "question": "Dalam konteks etika AI, penggunaan ChatGPT untuk membuat konten website yang paling bertanggung jawab adalah…",
+    "options": [
+      "Menggunakan AI sebagai asisten lalu mengedit dan memverifikasi hasilnya",
+      "Menyalin hasil AI mentah tanpa pemeriksaan sama sekali",
+      "Menggunakan AI untuk menyalin karya orang lain secara utuh",
+      "Mematikan semua filter etika AI agar hasil lebih kreatif",
+      "Mengganti identitas AI seolah hasil tersebut murni karya sendiri"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 19,
+    "question": "LinkCharm berguna dalam pengelolaan tautan. Manfaat praktisnya dalam konteks web design dan content creation adalah…",
+    "options": [
+      "Mengelola dan menyingkat tautan agar lebih rapi dan mudah dibagikan",
+      "Mengubah semua tautan menjadi video otomatis",
+      "Memblokir akses tautan dari pengguna tertentu",
+      "Menghasilkan konten copywriting secara otomatis",
+      "Menghubungkan tautan ke database GitHub secara real-time"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 20,
+    "question": "Saat membuat section “About” pada website portfolio, elemen yang paling mendukung critical thinking pengguna adalah…",
+    "options": [
+      "Narasi yang jelas, foto profesional, dan tautan ke karya relevan",
+      "Hanya menampilkan daftar nilai rapor tanpa konteks",
+      "Menampilkan seluruh kode sumber website secara mentah",
+      "Menggunakan animasi berlebihan tanpa informasi substansi",
+      "Menyembunyikan identitas pembuat agar lebih misterius"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 21,
+    "question": "Seorang siswa ingin website-nya tetap terlihat profesional meskipun dibuka di berbagai perangkat. Prinsip desain yang harus diterapkan adalah…",
+    "options": [
+      "Mobile-first dan pengujian responsivitas di berbagai ukuran layar",
+      "Desain tetap hanya untuk resolusi desktop tinggi",
+      "Menghapus semua gambar agar loading lebih cepat di HP",
+      "Menggunakan font yang sangat kecil agar muat di layar sempit",
+      "Menonaktifkan CSS sepenuhnya pada versi mobile"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 22,
+    "question": "Dalam workflow GitHub, proses “commit” berfungsi untuk…",
+    "options": [
+      "Menyimpan perubahan kode beserta pesan deskripsi yang jelas",
+      "Menghapus seluruh riwayat perubahan secara permanen",
+      "Mengubah nama repository menjadi lebih pendek",
+      "Mengaktifkan fitur private agar tidak bisa diakses publik",
+      "Mengunduh semua file ke komputer lokal secara otomatis"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 23,
+    "question": "Saat mengalami limit pada ChatGPT gratis, strategi critical thinking yang paling bijak adalah…",
+    "options": [
+      "Menyusun prompt lebih efisien dan memanfaatkan tools alternatif secara bijak",
+      "Membuat banyak akun baru untuk menghindari batasan",
+      "Menyalin jawaban dari teman tanpa memahami prosesnya",
+      "Menghentikan semua penggunaan AI karena terlalu terbatas",
+      "Menggunakan AI untuk menghasilkan kode tanpa pengujian sama sekali"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 24,
+    "question": "Seorang kreator ingin konten videonya di Dailymotion lebih mudah ditemukan. Langkah analitik yang paling tepat adalah…",
+    "options": [
+      "Menulis judul menarik, deskripsi informatif, dan tags yang relevan dengan topik",
+      "Mengunggah video tanpa judul dan deskripsi agar algoritma bebas bekerja",
+      "Menggunakan hanya emoji sebagai judul agar terlihat unik",
+      "Menyalin tags dari video viral tanpa menyesuaikan konten sendiri",
+      "Mengunci video agar hanya bisa dilihat oleh subscriber"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 25,
+    "question": "Dalam konteks literasi digital masa kini, keterampilan paling penting yang harus dikuasai siswa setelah mempelajari web design adalah…",
+    "options": [
+      "Kemampuan problem-solving, berpikir sistematis, dan menggunakan teknologi secara etis serta produktif",
+      "Kemampuan menghafal semua shortcut tanpa memahami konteks penggunaannya",
+      "Kemampuan menyalin template website tanpa modifikasi sama sekali",
+      "Kemampuan mengandalkan AI sepenuhnya tanpa verifikasi hasil",
+      "Kemampuan membuat website hanya untuk keperluan nilai rapor"
+    ],
+    "answer": 0
+  }
+]

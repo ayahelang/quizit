@@ -1,0 +1,25 @@
+TEMPLATE SOAL SILVERHAWK CBT
+===========================
+
+1) template-soal-pg.csv / .xlsx
+   Kolom wajib:
+   - id          : nomor/kode soal (1, 2, 3, ...)
+   - question    : teks pertanyaan
+   - optionA..E  : lima pilihan jawaban
+   - answer      : kunci = A/B/C/D/E  atau  0/1/2/3/4
+
+2) template-soal-essay.csv / .xlsx
+   Kolom:
+   - id       : E1, E2, ...
+   - question : teks soal essay
+
+3) File JSON tetap didukung (format lama).
+
+4) Format .doc lama (Word 97-2003) TIDAK didukung.
+   .docx: gunakan salin ke Excel/CSV, atau simpan sebagai CSV dari Word tabel.
+
+Cara pakai di Excel:
+- Buka file CSV template
+- Isi baris soal (jangan ubah nama kolom baris 1)
+- Simpan sebagai Excel (.xlsx) atau CSV
+- Upload di panel Admin → Upload Paket
