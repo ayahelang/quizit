@@ -783,6 +783,107 @@
     return { rows: rows || [], keys: set };
   }
 
+
+  async function listPackPasswords(packId) {
+    return await sbFetch(
+      'cbt_pack_passwords?pack_id=eq.' + encodeURIComponent(packId) +
+      '&select=*&order=created_at.desc'
+    );
+  }
+
+  function resolvePasswordExpiry(expiresAt, durationMinutes, createdAt) {
+    if (expiresAt) {
+      const d = new Date(expiresAt);
+      if (!isNaN(d.getTime())) return d;
+    }
+    if (durationMinutes && createdAt) {
+      const base = new Date(createdAt);
+      if (!isNaN(base.getTime())) {
+        return new Date(base.getTime() + Number(durationMinutes) * 60 * 1000);
+      }
+    }
+    return null;
+  }
+
+  function isPackPasswordValid(row) {
+    if (!row || row.active === false) return false;
+    const exp = resolvePasswordExpiry(row.expires_at, row.duration_minutes, row.created_at);
+    if (exp && exp.getTime() < Date.now()) return false;
+    return true;
+  }
+
+  async function addPackPassword(packId, plainPassword, opts) {
+    opts = opts || {};
+    if (!currentAdmin) throw new Error('Belum login');
+    if (!plainPassword || String(plainPassword).length < 4) throw new Error('Password minimal 4 karakter');
+    const packs = await sbFetch('cbt_packs?id=eq.' + encodeURIComponent(packId) + '&select=*');
+    if (!packs || !packs[0]) throw new Error('Paket tidak ditemukan');
+    const perm = await getPackPermissions(packs[0]);
+    // pemilik / utama / yang bisa edit items atau manage participants boleh kelola password
+    if (!(perm.is_owner || isMainAdmin() || perm.can_edit_items || perm.can_manage_participants || perm.can_rename)) {
+      throw new Error('Tidak punya hak mengatur password paket');
+    }
+    let expiresAt = opts.expiresAt || null;
+    const durationMinutes = opts.durationMinutes ? Number(opts.durationMinutes) : null;
+    if (!expiresAt && durationMinutes && durationMinutes > 0) {
+      expiresAt = new Date(Date.now() + durationMinutes * 60 * 1000).toISOString();
+    }
+    const hash = await sha256(String(plainPassword).trim());
+    await sbFetch('cbt_pack_passwords', {
+      method: 'POST',
+      body: JSON.stringify({
+        pack_id: packId,
+        label: String(opts.label || '').trim(),
+        password_hash: hash,
+        expires_at: expiresAt,
+        duration_minutes: durationMinutes || null,
+        active: true,
+        created_by: currentAdmin.username || ''
+      })
+    });
+  }
+
+  async function updatePackPassword(id, fields) {
+    if (!currentAdmin) throw new Error('Belum login');
+    const body = {};
+    if (fields.label !== undefined) body.label = String(fields.label || '').trim();
+    if (fields.active !== undefined) body.active = !!fields.active;
+    if (fields.expiresAt !== undefined) body.expires_at = fields.expiresAt || null;
+    if (fields.durationMinutes !== undefined) body.duration_minutes = fields.durationMinutes ? Number(fields.durationMinutes) : null;
+    if (fields.plainPassword) {
+      if (String(fields.plainPassword).length < 4) throw new Error('Password minimal 4 karakter');
+      body.password_hash = await sha256(String(fields.plainPassword).trim());
+    }
+    await sbFetch('cbt_pack_passwords?id=eq.' + encodeURIComponent(id), {
+      method: 'PATCH',
+      body: JSON.stringify(body)
+    });
+  }
+
+  async function deletePackPassword(id) {
+    if (!currentAdmin) throw new Error('Belum login');
+    await sbFetch('cbt_pack_passwords?id=eq.' + encodeURIComponent(id), { method: 'DELETE' });
+  }
+
+  async function verifyPackPassword(packId, plainPassword) {
+    const rows = await listPackPasswords(packId);
+    if (!rows || !rows.length) {
+      // fallback config passwords (legacy) — handled by caller
+      return { ok: false, reason: 'none' };
+    }
+    const hash = await sha256(String(plainPassword || '').trim());
+    for (const row of rows) {
+      if (!isPackPasswordValid(row)) continue;
+      if (row.password_hash === hash) return { ok: true, passwordId: row.id, label: row.label || '' };
+    }
+    return { ok: false, reason: 'invalid' };
+  }
+
+  async function packHasPasswords(packId) {
+    const rows = await listPackPasswords(packId);
+    return !!(rows && rows.length);
+  }
+
   global.SHSupabase = {
     sbEnabled,
     loginSecondary,
@@ -838,6 +939,14 @@
     deleteClassMember,
     listAdminsNameMap,
     replacePackParticipants,
-    getPackParticipantKeys
+    getPackParticipantKeys,
+    listPackPasswords,
+    addPackPassword,
+    updatePackPassword,
+    deletePackPassword,
+    verifyPackPassword,
+    packHasPasswords,
+    isPackPasswordValid,
+    resolvePasswordExpiry
   };
 })(window);

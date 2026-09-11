@@ -331,9 +331,10 @@ function checkStartReady() {
   const cls = classSelect.value;
   const pass = examPassword.value.trim();
   const name = nameSelect.value;
-  const correctPass = config.passwords?.[cls] || '';
-  btnStart.disabled = !(selectedPack && cls && name && pass && pass === correctPass);
+  // validasi password ketat di onStartClick (multi-password + kadaluarsa)
+  btnStart.disabled = !(selectedPack && cls && name && pass);
 }
+
 
 function shuffleArray(arr) {
   const a = [...arr];
@@ -366,6 +367,51 @@ async function onStartClick() {
 
   btnStart.disabled = true;
   btnStart.textContent = 'Memeriksa...';
+
+  // Password paket (multi + kadaluarsa) atau fallback password rombel lama
+  const packId = selectedPack.id || (selectedPack._remoteData && selectedPack._remoteData.id);
+  const passTyped = examPassword.value.trim();
+  try {
+    if (window.SHSupabase && SHSupabase.sbEnabled() && packId) {
+      const hasPw = await SHSupabase.packHasPasswords(packId);
+      if (hasPw) {
+        const ver = await SHSupabase.verifyPackPassword(packId, passTyped);
+        if (!ver.ok) {
+          alert('Password ujian salah atau sudah kadaluarsa.');
+          btnStart.disabled = false;
+          btnStart.textContent = 'Mulai Ujian';
+          return;
+        }
+      } else {
+        const legacy = config.passwords && config.passwords[cls];
+        if (legacy && passTyped !== legacy) {
+          alert('Password ujian salah.');
+          btnStart.disabled = false;
+          btnStart.textContent = 'Mulai Ujian';
+          return;
+        }
+        if (!legacy) {
+          // tidak ada password paket & tidak ada legacy → izinkan jika field terisi
+        }
+      }
+    } else {
+      const legacy = config.passwords && config.passwords[cls];
+      if (legacy && passTyped !== legacy) {
+        alert('Password ujian salah.');
+        btnStart.disabled = false;
+        btnStart.textContent = 'Mulai Ujian';
+        return;
+      }
+    }
+  } catch (e) {
+    console.warn(e);
+    alert('Gagal memeriksa password. Coba lagi.');
+    btnStart.disabled = false;
+    btnStart.textContent = 'Mulai Ujian';
+    return;
+  }
+
+
 
   // Blokir retake per packId via Supabase
   if (window.SHSupabase && typeof SHSupabase.sbEnabled === 'function' && SHSupabase.sbEnabled()) {
@@ -1685,6 +1731,7 @@ function setupPackManageUi() {
     ['btn-mp-add-part', onMpAddPart],
     ['btn-mp-acl-save', onMpAclSave],
     ['btn-mp-save-parts', onMpSaveParts],
+    ['btn-mp-add-pw', onMpAddPassword],
     ['btn-my-transfer', onSaveMyTransfer],
     ['btn-mc-add', onMcAddClass],
     ['btn-mc-add-member', onMcAddMember]
@@ -1728,6 +1775,7 @@ async function selectManagePack(p) {
   const canGrant = SHSupabase.isMainAdmin() || perm.is_owner || perm.can_grant;
   if (aclSec) aclSec.style.display = canGrant ? 'block' : 'none';
   await renderMpCheckboxTree(p.id);
+  await refreshMpPasswords(p.id);
   if (canGrant) await refreshMpAcl(p.id);
 }
 async function refreshMpParticipants(packId) {
@@ -2079,6 +2127,85 @@ async function onMcAddMember() {
     document.getElementById('mc-member-display').value = '';
     refreshMasterMembers(classId);
   } catch (e) { st.textContent = e.message; }
+}
+
+
+async function refreshMpPasswords(packId) {
+  const list = document.getElementById('mp-pw-list');
+  const st = document.getElementById('mp-pw-status');
+  if (!list) return;
+  list.innerHTML = '';
+  try {
+    const rows = await SHSupabase.listPackPasswords(packId);
+    if (!rows || !rows.length) {
+      st.textContent = 'Belum ada password paket. Peserta memakai password rombel lama (jika ada) atau cukup isi field password.';
+      return;
+    }
+    st.textContent = rows.length + ' password.';
+    rows.forEach(r => {
+      const exp = SHSupabase.resolvePasswordExpiry(r.expires_at, r.duration_minutes, r.created_at);
+      const valid = SHSupabase.isPackPasswordValid(r);
+      const div = document.createElement('div');
+      div.className = 'admin-row';
+      div.innerHTML = '<div class="info" style="flex:1"><strong>' + escapeHtml(r.label || '(tanpa label)') +
+        '</strong><br><small>' + (valid ? 'aktif' : 'nonaktif/kadaluarsa') +
+        (exp ? ' · s.d. ' + escapeHtml(exp.toLocaleString('id-ID')) : ' · tanpa kadaluarsa') +
+        (r.duration_minutes ? ' · durasi ' + r.duration_minutes + ' mnt' : '') +
+        '</small></div>';
+      const bOff = document.createElement('button');
+      bOff.type = 'button'; bOff.className = 'btn-del';
+      bOff.textContent = r.active === false ? 'Aktifkan' : 'Nonaktifkan';
+      bOff.onclick = async () => {
+        try {
+          await SHSupabase.updatePackPassword(r.id, { active: r.active === false });
+          refreshMpPasswords(packId);
+        } catch (e) { alert(e.message); }
+      };
+      const bDel = document.createElement('button');
+      bDel.type = 'button'; bDel.className = 'btn-del'; bDel.textContent = 'Hapus';
+      bDel.onclick = async () => {
+        if (!confirm('Hapus password ini?')) return;
+        try {
+          await SHSupabase.deletePackPassword(r.id);
+          refreshMpPasswords(packId);
+        } catch (e) { alert(e.message); }
+      };
+      div.appendChild(bOff);
+      div.appendChild(bDel);
+      list.appendChild(div);
+    });
+  } catch (e) {
+    st.textContent = e.message || 'Gagal memuat password';
+  }
+}
+
+async function onMpAddPassword() {
+  const id = document.getElementById('mp-pack-id').value;
+  const st = document.getElementById('mp-pw-status');
+  if (!id) { st.textContent = 'Pilih paket dulu.'; return; }
+  const plain = document.getElementById('mp-pw-plain').value;
+  const label = document.getElementById('mp-pw-label').value.trim();
+  const expLocal = document.getElementById('mp-pw-expires').value;
+  const dur = document.getElementById('mp-pw-duration').value;
+  try {
+    let expiresAt = null;
+    if (expLocal) {
+      expiresAt = new Date(expLocal).toISOString();
+    }
+    await SHSupabase.addPackPassword(id, plain, {
+      label,
+      expiresAt,
+      durationMinutes: dur ? parseInt(dur, 10) : null
+    });
+    document.getElementById('mp-pw-plain').value = '';
+    document.getElementById('mp-pw-label').value = '';
+    document.getElementById('mp-pw-expires').value = '';
+    document.getElementById('mp-pw-duration').value = '';
+    st.textContent = 'Password ditambahkan.';
+    refreshMpPasswords(id);
+  } catch (e) {
+    st.textContent = e.message;
+  }
 }
 
 async function loadProctorSettings() {

@@ -244,6 +244,18 @@
           <button id="btn-mp-save-parts" class="btn btn-primary" style="width:100%;margin:10px 0">Simpan Pilihan Peserta Paket</button>
           <div id="mp-part-status" class="admin-status"></div>
 
+
+          <hr style="border-color:var(--border);margin:16px 0" />
+          <h3 style="font-size:0.95rem;margin:12px 0 8px">Password pembuka ujian</h3>
+          <p class="hint">Boleh lebih dari satu. Opsional: jadwal kadaluarsa (tanggal/jam) atau durasi menit sejak dibuat.</p>
+          <div class="form-group"><label>Label (opsional)</label><input type="text" id="mp-pw-label" placeholder="Contoh: Sesi pagi" /></div>
+          <div class="form-group"><label>Password</label><input type="text" id="mp-pw-plain" placeholder="Minimal 4 karakter" autocomplete="off" /></div>
+          <div class="form-group"><label>Kadaluarsa (tanggal &amp; jam, opsional)</label><input type="datetime-local" id="mp-pw-expires" /></div>
+          <div class="form-group"><label>Atau durasi (menit dari sekarang, opsional)</label><input type="number" id="mp-pw-duration" min="1" placeholder="Contoh: 120" /></div>
+          <button id="btn-mp-add-pw" class="btn btn-primary" style="width:100%;margin-bottom:8px">Tambah Password</button>
+          <div id="mp-pw-list" class="admin-list"></div>
+          <div id="mp-pw-status" class="admin-status"></div>
+
           <div id="mp-acl-section" style="display:none">
             <hr style="border-color:var(--border);margin:16px 0" />
             <h3 style="font-size:0.95rem;margin:12px 0 8px">Hak admin lain (hanya admin utama)</h3>
