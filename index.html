@@ -113,6 +113,7 @@
         <div class="admin-tabs" id="admin-tabs">
           <button type="button" class="admin-tab active" data-tab="hasil">Hasil Ujian</button>
           <button type="button" class="admin-tab" data-tab="upload">Upload Paket</button>
+          <button type="button" class="admin-tab" data-tab="kelola-paket">Kelola Paket</button>
           <button type="button" class="admin-tab" data-tab="analisis">Analisis Butir</button>
           <button type="button" class="admin-tab" data-tab="proctor">Proctoring</button>
           <button type="button" class="admin-tab" data-tab="admins" id="tab-admins-btn">Kelola Admin</button>
@@ -183,6 +184,64 @@
           <button id="btn-refresh-remote-packs" class="btn btn-secondary" style="width:100%">Muat Ulang Paket dari Database</button>
         </div>
 
+
+        <!-- TAB KELOLA PAKET -->
+        <div class="admin-tab-panel" id="tab-kelola-paket" style="display:none">
+          <p class="hint" style="margin-bottom:12px">Paket milik Anda + paket yang diberi hak oleh admin utama. Rename hanya mengubah judul (ID tetap).</p>
+          <button id="btn-refresh-manage-packs" class="btn btn-secondary" style="width:100%;margin-bottom:12px">Muat Daftar Paket</button>
+          <div id="manage-packs-status" class="admin-status"></div>
+          <div id="manage-packs-list" class="admin-list"></div>
+          <hr style="border-color:var(--border);margin:16px 0" />
+          <h3 style="font-size:1rem;margin-bottom:10px">Detail paket terpilih</h3>
+          <input type="hidden" id="mp-pack-id" />
+          <div class="form-group">
+            <label>Judul paket (rename)</label>
+            <input type="text" id="mp-pack-title" placeholder="Judul baru" />
+          </div>
+          <button id="btn-mp-rename" class="btn btn-primary" style="width:100%;margin-bottom:8px">Simpan Judul</button>
+          <button id="btn-mp-delete" class="btn btn-secondary" style="width:100%;margin-bottom:12px">Hapus Paket</button>
+
+          <h3 style="font-size:0.95rem;margin:12px 0 8px">Tambah 1 butir PG</h3>
+          <div class="form-group"><label>Pertanyaan</label><input type="text" id="mp-q-text" /></div>
+          <div class="form-group"><label>Opsi A</label><input type="text" id="mp-q-a" /></div>
+          <div class="form-group"><label>Opsi B</label><input type="text" id="mp-q-b" /></div>
+          <div class="form-group"><label>Opsi C</label><input type="text" id="mp-q-c" /></div>
+          <div class="form-group"><label>Opsi D</label><input type="text" id="mp-q-d" /></div>
+          <div class="form-group"><label>Opsi E</label><input type="text" id="mp-q-e" /></div>
+          <div class="form-group"><label>Kunci (A-E)</label><input type="text" id="mp-q-ans" value="A" maxlength="1" /></div>
+          <button id="btn-mp-add-item" class="btn btn-primary" style="width:100%;margin-bottom:12px">Tambah Butir ke Paket</button>
+
+          <h3 style="font-size:0.95rem;margin:12px 0 8px">Gabung file ke paket (JSON/XLSX/CSV)</h3>
+          <div class="form-group"><label>File PG</label><input type="file" id="mp-merge-q" accept=".json,.xlsx,.csv" /></div>
+          <div class="form-group"><label>File Essay (opsional)</label><input type="file" id="mp-merge-e" accept=".json,.xlsx,.csv" /></div>
+          <button id="btn-mp-merge" class="btn btn-secondary" style="width:100%;margin-bottom:12px">Gabungkan ke Paket</button>
+          <div id="mp-edit-status" class="admin-status"></div>
+
+          <hr style="border-color:var(--border);margin:16px 0" />
+          <h3 style="font-size:0.95rem;margin:12px 0 8px">Peserta paket</h3>
+          <p class="hint">Kosong = semua siswa kelas boleh ikut (mode lama).</p>
+          <div class="form-group"><label>Kelas</label>
+            <select id="mp-part-class"><option value="51">51</option><option value="52">52</option></select>
+          </div>
+          <div class="form-group"><label>Nama (harus sama dengan daftar ujian)</label><input type="text" id="mp-part-name" /></div>
+          <div class="form-group"><label>Nama tampilan (opsional)</label><input type="text" id="mp-part-display" /></div>
+          <button id="btn-mp-add-part" class="btn btn-primary" style="width:100%;margin-bottom:8px">Tambah Peserta</button>
+          <div id="mp-part-list" class="admin-list"></div>
+          <div id="mp-part-status" class="admin-status"></div>
+
+          <div id="mp-acl-section" style="display:none">
+            <hr style="border-color:var(--border);margin:16px 0" />
+            <h3 style="font-size:0.95rem;margin:12px 0 8px">Hak admin lain (hanya admin utama)</h3>
+            <div class="form-group"><label>Username admin tambahan</label><input type="text" id="mp-acl-user" /></div>
+            <label class="toggle-row"><input type="checkbox" id="mp-acl-rename" /><span>Rename judul</span></label>
+            <label class="toggle-row"><input type="checkbox" id="mp-acl-edit" /><span>Edit/tambah butir</span></label>
+            <label class="toggle-row"><input type="checkbox" id="mp-acl-part" /><span>Kelola peserta</span></label>
+            <label class="toggle-row"><input type="checkbox" id="mp-acl-del" /><span>Hapus paket</span></label>
+            <button id="btn-mp-acl-save" class="btn btn-primary" style="width:100%;margin-top:10px">Simpan Hak</button>
+            <div id="mp-acl-list" class="admin-list" style="margin-top:10px"></div>
+          </div>
+        </div>
+
         <!-- TAB ANALISIS -->
         <div class="admin-tab-panel" id="tab-analisis" style="display:none">
           <p class="hint" style="margin-bottom:12px">Analisis butir: tingkat kesukaran &amp; daya beda sederhana per soal.</p>
@@ -214,7 +273,11 @@
 
         <!-- TAB KELOLA ADMIN -->
         <div class="admin-tab-panel" id="tab-admins" style="display:none">
-          <p class="hint" style="margin-bottom:12px">Hanya admin utama. Menambah admin tambahan untuk upload soal &amp; lihat nilai.</p>
+          <p class="hint" style="margin-bottom:12px">Hanya admin utama. Tambah, reset password, ubah nama, hapus (paket pindah ke utama).</p>
+          <div class="form-group">
+            <label>Nama asli</label>
+            <input type="text" id="new-admin-display" placeholder="Nama guru" />
+          </div>
           <div class="form-group">
             <label>Username admin baru</label>
             <input type="text" id="new-admin-user" placeholder="guru_biologi" />

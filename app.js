@@ -236,7 +236,7 @@ function hideSpecialLogins() {
   document.getElementById('admin-login').style.display = 'none';
 }
 
-function onClassChange() {
+async function onClassChange() {
   const cls = classSelect.value;
   passwordGroup.style.display = cls ? 'block' : 'none';
   nameGroup.style.display = 'none';
@@ -244,7 +244,34 @@ function onClassChange() {
   examPassword.value = '';
   btnStart.disabled = true;
   if (!cls) return;
-  (students[cls] || []).forEach(name => {
+
+  let names = (students[cls] || []).slice();
+  try {
+    const packId = selectedPack && (selectedPack.id || (selectedPack._remoteData && selectedPack._remoteData.id));
+    if (packId && window.SHSupabase && SHSupabase.sbEnabled() && SHSupabase.listParticipants) {
+      const parts = await SHSupabase.listParticipants(packId);
+      if (parts && parts.length) {
+        const allowed = parts.filter(x => String(x.student_class) === String(cls) && x.active !== false);
+        if (allowed.length) {
+          nameSelect.innerHTML = '<option value="">-- Pilih Nama --</option>';
+          allowed.forEach(x => {
+            const opt = document.createElement('option');
+            opt.value = x.student_name;
+            opt.textContent = (x.display_name && x.display_name !== x.student_name)
+              ? (x.display_name + ' (' + x.student_name + ')')
+              : x.student_name;
+            nameSelect.appendChild(opt);
+          });
+          nameGroup.style.display = 'block';
+          return;
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('participants filter', e);
+  }
+
+  names.forEach(name => {
     const opt = document.createElement('option');
     opt.value = name;
     opt.textContent = name;
@@ -1031,6 +1058,7 @@ function setupAdminExtendedUi() {
       }
       if (id === 'admins' && window.SHSupabase) refreshAdminsList();
       if (id === 'analisis') fillAnalisisPackOptions();
+      if (id === 'kelola-paket') refreshManagePacksList();
     });
   });
 
@@ -1057,6 +1085,7 @@ function setupAdminExtendedUi() {
   const btnAdd = document.getElementById('btn-add-admin');
   if (btnAdd) btnAdd.addEventListener('click', onAddAdmin);
   setupProctorUi();
+  setupPackManageUi();
 }
 
 async function onSecondaryAdminLogin() {
@@ -1443,16 +1472,20 @@ async function onAddAdmin() {
   const st = document.getElementById('admins-status');
   try {
     const u = document.getElementById('new-admin-user').value.trim();
-    const p = document.getElementById('new-admin-pass').value;
-    await SHSupabase.addAdmin(u, p);
+    const pw = document.getElementById('new-admin-pass').value;
+    const dEl = document.getElementById('new-admin-display');
+    const d = dEl ? dEl.value.trim() : '';
+    await SHSupabase.addAdmin(u, pw, d);
     st.textContent = 'Admin ditambahkan.';
     document.getElementById('new-admin-user').value = '';
     document.getElementById('new-admin-pass').value = '';
+    if (dEl) dEl.value = '';
     refreshAdminsList();
   } catch (e) {
     st.textContent = e.message;
   }
 }
+
 
 async function refreshAdminsList() {
   const list = document.getElementById('admins-list');
@@ -1466,26 +1499,55 @@ async function refreshAdminsList() {
     }
     const rows = await SHSupabase.listAdmins();
     (rows || []).forEach(r => {
+      if (r.role === 'main') return;
       const div = document.createElement('div');
       div.className = 'admin-row';
-      div.innerHTML = `
-        <div class="info"><strong>${escapeHtml(r.username)}</strong> · ${escapeHtml(r.role)}
-        <br><small>${r.active ? 'aktif' : 'nonaktif'} · ${escapeHtml(r.created_at || '')}</small></div>`;
-      if (r.role !== 'main' && r.active && SHSupabase.isMainAdmin()) {
-        const b = document.createElement('button');
-        b.type = 'button';
-        b.className = 'btn-del';
-        b.textContent = 'Nonaktifkan';
-        b.addEventListener('click', async () => {
-          if (!confirm('Nonaktifkan ' + r.username + '?')) return;
-          await SHSupabase.deactivateAdmin(r.id);
-          refreshAdminsList();
-        });
-        div.appendChild(b);
+      const dn = r.display_name || '';
+      div.innerHTML = '<div class="info" style="flex:1"><strong>' + escapeHtml(dn || r.username) +
+        '</strong> · <code>' + escapeHtml(r.username) + '</code><br><small>' +
+        (r.active ? 'aktif' : 'nonaktif') + ' · ' + escapeHtml(r.created_at || '') + '</small></div>';
+      if (SHSupabase.isMainAdmin()) {
+        const actions = document.createElement('div');
+        actions.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px';
+        const btnReset = document.createElement('button');
+        btnReset.type = 'button'; btnReset.className = 'btn-del'; btnReset.textContent = 'Reset PW';
+        btnReset.onclick = async () => {
+          const np = prompt('Password baru untuk ' + r.username + ' (min 6):');
+          if (!np) return;
+          try { await SHSupabase.resetAdminPassword(r.id, np); alert('Password direset.'); }
+          catch (e) { alert(e.message); }
+        };
+        const btnEdit = document.createElement('button');
+        btnEdit.type = 'button'; btnEdit.className = 'btn-del'; btnEdit.textContent = 'Edit';
+        btnEdit.onclick = async () => {
+          const nd = prompt('Nama asli:', dn || r.username);
+          if (nd === null) return;
+          const nu = prompt('Username:', r.username);
+          if (nu === null) return;
+          try {
+            await SHSupabase.updateAdminProfile(r.id, r.username, nu, nd);
+            alert('Profil diperbarui.');
+            refreshAdminsList();
+          } catch (e) { alert(e.message); }
+        };
+        const btnDel = document.createElement('button');
+        btnDel.type = 'button'; btnDel.className = 'btn-del'; btnDel.textContent = 'Hapus';
+        btnDel.onclick = async () => {
+          if (!confirm('Hapus admin "' + r.username + '"? Paket miliknya pindah ke admin utama.')) return;
+          try {
+            await SHSupabase.deleteAdminTransferPacks(r.id, r.username);
+            alert('Admin dihapus. Paket dipindah ke main.');
+            refreshAdminsList();
+          } catch (e) { alert(e.message); }
+        };
+        actions.appendChild(btnReset);
+        actions.appendChild(btnEdit);
+        actions.appendChild(btnDel);
+        div.appendChild(actions);
       }
       list.appendChild(div);
     });
-    st.textContent = `${(rows || []).length} admin terdaftar.`;
+    st.textContent = ((rows || []).filter(x => x.role !== 'main').length) + ' admin tambahan.';
   } catch (e) {
     st.textContent = e.message;
   }
@@ -1493,6 +1555,190 @@ async function refreshAdminsList() {
 
 
 
+
+
+
+let _managePacksCache = [];
+function setupPackManageUi() {
+  const map = [
+    ['btn-refresh-manage-packs', refreshManagePacksList],
+    ['btn-mp-rename', onMpRename],
+    ['btn-mp-delete', onMpDelete],
+    ['btn-mp-add-item', onMpAddItem],
+    ['btn-mp-merge', onMpMerge],
+    ['btn-mp-add-part', onMpAddPart],
+    ['btn-mp-acl-save', onMpAclSave]
+  ];
+  map.forEach(([id, fn]) => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', fn);
+  });
+}
+async function refreshManagePacksList() {
+  const list = document.getElementById('manage-packs-list');
+  const st = document.getElementById('manage-packs-status');
+  if (!list) return;
+  list.innerHTML = '';
+  try {
+    if (!window.SHSupabase || !SHSupabase.sbEnabled()) { st.textContent = 'Supabase belum dikonfigurasi.'; return; }
+    if (!SHSupabase.getCurrentAdmin()) { st.textContent = 'Login admin dulu.'; return; }
+    _managePacksCache = await SHSupabase.listManageablePacks();
+    if (!_managePacksCache.length) { st.textContent = 'Belum ada paket yang bisa dikelola.'; return; }
+    st.textContent = _managePacksCache.length + ' paket.';
+    _managePacksCache.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'admin-row';
+      div.innerHTML = '<div class="info" style="flex:1;cursor:pointer"><strong>' + escapeHtml(p.title || p.id) +
+        '</strong> <code>' + escapeHtml(p.id) + '</code><br><small>Owner: ' + escapeHtml(p.owner_username || '-') +
+        ' · PG ' + (Array.isArray(p.questions) ? p.questions.length : 0) + '</small></div>';
+      div.querySelector('.info').addEventListener('click', () => selectManagePack(p));
+      list.appendChild(div);
+    });
+  } catch (e) { st.textContent = e.message; }
+}
+async function selectManagePack(p) {
+  document.getElementById('mp-pack-id').value = p.id;
+  document.getElementById('mp-pack-title').value = p.title || '';
+  document.getElementById('mp-edit-status').textContent = 'Paket dipilih: ' + p.id;
+  const aclSec = document.getElementById('mp-acl-section');
+  if (aclSec) aclSec.style.display = SHSupabase.isMainAdmin() ? 'block' : 'none';
+  await refreshMpParticipants(p.id);
+  if (SHSupabase.isMainAdmin()) await refreshMpAcl(p.id);
+}
+async function refreshMpParticipants(packId) {
+  const list = document.getElementById('mp-part-list');
+  const st = document.getElementById('mp-part-status');
+  list.innerHTML = '';
+  try {
+    const rows = await SHSupabase.listParticipants(packId);
+    if (!rows || !rows.length) {
+      st.textContent = 'Belum ada peserta khusus — semua siswa kelas boleh ikut.';
+      return;
+    }
+    st.textContent = rows.length + ' peserta.';
+    rows.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'admin-row';
+      div.innerHTML = '<div class="info" style="flex:1"><strong>' + escapeHtml(r.display_name || r.student_name) +
+        '</strong><br><small>' + escapeHtml(r.student_class) + ' · ' + escapeHtml(r.student_name) + '</small></div>';
+      const b1 = document.createElement('button');
+      b1.type = 'button'; b1.className = 'btn-del'; b1.textContent = 'Rename';
+      b1.onclick = async () => {
+        const nd = prompt('Nama tampilan baru:', r.display_name || r.student_name);
+        if (!nd) return;
+        try { await SHSupabase.renameParticipant(packId, r.student_class, r.student_name, nd); refreshMpParticipants(packId); }
+        catch (e) { alert(e.message); }
+      };
+      const b2 = document.createElement('button');
+      b2.type = 'button'; b2.className = 'btn-del'; b2.textContent = 'Keluarkan';
+      b2.onclick = async () => {
+        if (!confirm('Keluarkan ' + r.student_name + '?')) return;
+        try { await SHSupabase.removeParticipant(packId, r.student_class, r.student_name); refreshMpParticipants(packId); }
+        catch (e) { alert(e.message); }
+      };
+      div.appendChild(b1); div.appendChild(b2); list.appendChild(div);
+    });
+  } catch (e) { st.textContent = e.message; }
+}
+async function refreshMpAcl(packId) {
+  const list = document.getElementById('mp-acl-list');
+  if (!list) return;
+  list.innerHTML = '';
+  try {
+    const rows = await SHSupabase.listPackAcl(packId);
+    (rows || []).forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'admin-row';
+      div.innerHTML = '<div class="info" style="flex:1"><strong>' + escapeHtml(r.grantee_username) +
+        '</strong><br><small>rename:' + (r.can_rename?'Y':'N') + ' edit:' + (r.can_edit_items?'Y':'N') +
+        ' peserta:' + (r.can_manage_participants?'Y':'N') + ' hapus:' + (r.can_delete?'Y':'N') + '</small></div>';
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'btn-del'; b.textContent = 'Cabut';
+      b.onclick = async () => { await SHSupabase.removePackAcl(packId, r.grantee_username); refreshMpAcl(packId); };
+      div.appendChild(b); list.appendChild(div);
+    });
+  } catch (e) { console.warn(e); }
+}
+async function onMpRename() {
+  const id = document.getElementById('mp-pack-id').value;
+  const title = document.getElementById('mp-pack-title').value.trim();
+  const st = document.getElementById('mp-edit-status');
+  if (!id || !title) { st.textContent = 'Pilih paket & isi judul.'; return; }
+  try { await SHSupabase.renamePackTitle(id, title); st.textContent = 'Judul disimpan.'; refreshManagePacksList(); }
+  catch (e) { st.textContent = e.message; }
+}
+async function onMpDelete() {
+  const id = document.getElementById('mp-pack-id').value;
+  const st = document.getElementById('mp-edit-status');
+  if (!id) { st.textContent = 'Pilih paket dulu.'; return; }
+  if (!confirm('Hapus paket ' + id + ' permanen?')) return;
+  try {
+    await SHSupabase.deletePack(id);
+    st.textContent = 'Paket dihapus.';
+    document.getElementById('mp-pack-id').value = '';
+    refreshManagePacksList();
+  } catch (e) { st.textContent = e.message; }
+}
+async function onMpAddItem() {
+  const id = document.getElementById('mp-pack-id').value;
+  const st = document.getElementById('mp-edit-status');
+  if (!id) { st.textContent = 'Pilih paket dulu.'; return; }
+  const q = document.getElementById('mp-q-text').value.trim();
+  const opts = ['mp-q-a','mp-q-b','mp-q-c','mp-q-d','mp-q-e'].map(x => document.getElementById(x).value.trim());
+  const ans = (document.getElementById('mp-q-ans').value || 'A').trim().toUpperCase();
+  if (!q || opts.filter(Boolean).length < 2) { st.textContent = 'Isi pertanyaan & minimal 2 opsi.'; return; }
+  const map = {A:0,B:1,C:2,D:3,E:4};
+  const item = { id: 'Q' + Date.now(), question: q, options: opts, answer: map[ans] != null ? map[ans] : 0 };
+  try {
+    const r = await SHSupabase.appendQuestionsToPack(id, [item], []);
+    st.textContent = 'Butir ditambahkan. Total PG: ' + r.questionsCount;
+    document.getElementById('mp-q-text').value = '';
+  } catch (e) { st.textContent = e.message; }
+}
+async function onMpMerge() {
+  const id = document.getElementById('mp-pack-id').value;
+  const st = document.getElementById('mp-edit-status');
+  if (!id) { st.textContent = 'Pilih paket dulu.'; return; }
+  const fq = document.getElementById('mp-merge-q').files[0];
+  if (!fq) { st.textContent = 'Pilih file PG.'; return; }
+  try {
+    const qs = await parseQuestionFile(fq, 'pg');
+    const fe = document.getElementById('mp-merge-e').files[0];
+    const es = fe ? await parseQuestionFile(fe, 'essay') : [];
+    const r = await SHSupabase.appendQuestionsToPack(id, qs, es);
+    st.textContent = 'Digabung: +' + qs.length + ' PG, +' + es.length + ' essay. Total PG: ' + r.questionsCount;
+  } catch (e) { st.textContent = e.message; }
+}
+async function onMpAddPart() {
+  const id = document.getElementById('mp-pack-id').value;
+  const st = document.getElementById('mp-part-status');
+  if (!id) { st.textContent = 'Pilih paket dulu.'; return; }
+  const cls = document.getElementById('mp-part-class').value;
+  const name = document.getElementById('mp-part-name').value.trim();
+  const disp = document.getElementById('mp-part-display').value.trim();
+  try {
+    await SHSupabase.addParticipant(id, cls, name, disp);
+    document.getElementById('mp-part-name').value = '';
+    document.getElementById('mp-part-display').value = '';
+    refreshMpParticipants(id);
+  } catch (e) { st.textContent = e.message; }
+}
+async function onMpAclSave() {
+  const id = document.getElementById('mp-pack-id').value;
+  const user = document.getElementById('mp-acl-user').value.trim();
+  if (!id || !user) { alert('Pilih paket & isi username'); return; }
+  try {
+    await SHSupabase.setPackAcl(id, user, {
+      can_rename: document.getElementById('mp-acl-rename').checked,
+      can_edit_items: document.getElementById('mp-acl-edit').checked,
+      can_manage_participants: document.getElementById('mp-acl-part').checked,
+      can_delete: document.getElementById('mp-acl-del').checked
+    });
+    document.getElementById('mp-acl-user').value = '';
+    refreshMpAcl(id);
+    alert('Hak disimpan.');
+  } catch (e) { alert(e.message); }
+}
 
 async function loadProctorSettings() {
   if (window.SHSupabase && SHSupabase.getProctorSettings) {
