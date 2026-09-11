@@ -61,10 +61,19 @@
     if (!rows || !rows.length) throw new Error('Username tidak ditemukan / nonaktif');
     const row = rows[0];
     if (row.password_hash !== hash) throw new Error('Password salah');
+    if (row.active === false) throw new Error('Akun admin nonaktif. Hubungi admin utama.');
+    if (row.subscription_expires_at) {
+      const exp = new Date(row.subscription_expires_at);
+      if (!isNaN(exp.getTime()) && exp.getTime() < Date.now()) {
+        throw new Error('Langganan expired (' + row.subscription_expires_at + '). Hubungi admin utama.');
+      }
+    }
     currentAdmin = {
       username: row.username,
       role: row.role || 'secondary',
-      display_name: row.display_name || row.username
+      display_name: row.display_name || row.username,
+      subscription_expires_at: row.subscription_expires_at || null,
+      active: row.active !== false
     };
     return currentAdmin;
   }
@@ -87,7 +96,7 @@
   }
 
   async function listAdmins() {
-    return await sbFetch('cbt_admins?select=id,username,display_name,role,active,created_at&order=created_at.desc');
+    return await sbFetch('cbt_admins?select=id,username,display_name,role,active,subscription_expires_at,transfer_proof_url,transfer_note,created_at&order=created_at.desc');
   }
 
   async function resetAdminPassword(adminId, newPassword) {
@@ -240,9 +249,29 @@
     });
   }
 
+  function isAdminEffectivelyActive(adminRow) {
+    if (!adminRow) return true;
+    if (adminRow.active === false) return false;
+    if (adminRow.subscription_expires_at) {
+      const exp = new Date(adminRow.subscription_expires_at);
+      if (!isNaN(exp.getTime()) && exp.getTime() < Date.now()) return false;
+    }
+    return true;
+  }
+
   async function listRemotePacks() {
     if (!sbEnabled()) return [];
-    return await sbFetch('cbt_packs?enabled=eq.true&select=*');
+    const packs = await sbFetch('cbt_packs?enabled=eq.true&select=*');
+    let adminMap = {};
+    try {
+      const admins = await sbFetch('cbt_admins?select=username,active,subscription_expires_at');
+      (admins || []).forEach(a => { adminMap[a.username] = a; });
+    } catch (e) { console.warn(e); }
+    return (packs || []).filter(p => {
+      const owner = p.owner_username || 'main';
+      if (owner === 'main') return true;
+      return isAdminEffectivelyActive(adminMap[owner]);
+    });
   }
 
   async function listAllPacksAdmin() {
@@ -261,11 +290,11 @@
   async function getPackPermissions(pack) {
     if (!currentAdmin) return {};
     if (isMainAdmin()) {
-      return { can_rename: true, can_edit_items: true, can_manage_participants: true, can_delete: true, is_owner: true };
+      return { can_rename: true, can_edit_items: true, can_manage_participants: true, can_delete: true, is_owner: true, can_grant: true };
     }
     const owner = pack.owner_username || pack.owner || '';
     if (owner === currentAdmin.username) {
-      return { can_rename: true, can_edit_items: true, can_manage_participants: true, can_delete: true, is_owner: true };
+      return { can_rename: true, can_edit_items: true, can_manage_participants: true, can_delete: true, is_owner: true, can_grant: true };
     }
     const acl = await getPackAclForUser(pack.id, currentAdmin.username);
     if (!acl) return { can_rename: false, can_edit_items: false, can_manage_participants: false, can_delete: false, is_owner: false };
@@ -273,8 +302,9 @@
       can_rename: !!acl.can_rename,
       can_edit_items: !!acl.can_edit_items,
       can_manage_participants: !!acl.can_manage_participants,
-      can_delete: !!acl.can_delete,
-      is_owner: false
+      can_delete: false,
+      is_owner: false,
+      can_grant: false
     };
   }
 
@@ -342,15 +372,29 @@
   }
 
   async function setPackAcl(packId, granteeUsername, flags) {
-    if (!isMainAdmin()) throw new Error('Hanya admin utama yang bisa memberi hak paket');
+    if (!currentAdmin) throw new Error('Belum login');
+    const packs = await sbFetch('cbt_packs?id=eq.' + encodeURIComponent(packId) + '&select=*');
+    if (!packs || !packs[0]) throw new Error('Paket tidak ditemukan');
+    const pack = packs[0];
+    const owner = pack.owner_username || 'main';
+    const isOwner = isMainAdmin() || owner === currentAdmin.username;
+    if (!isOwner) throw new Error('Hanya owner paket atau admin utama yang bisa memberi hak');
+    // Grantee tidak boleh digrant can_delete
     const body = {
       pack_id: packId,
       grantee_username: granteeUsername.trim(),
       can_rename: !!flags.can_rename,
       can_edit_items: !!flags.can_edit_items,
       can_manage_participants: !!flags.can_manage_participants,
-      can_delete: !!flags.can_delete
+      can_delete: false
     };
+    // Admin tambahan hanya boleh grant subset hak yang dia punya
+    if (!isMainAdmin()) {
+      const perm = await getPackPermissions(pack);
+      if (body.can_rename && !perm.can_rename) body.can_rename = false;
+      if (body.can_edit_items && !perm.can_edit_items) body.can_edit_items = false;
+      if (body.can_manage_participants && !perm.can_manage_participants) body.can_manage_participants = false;
+    }
     await sbFetch('cbt_pack_acl?on_conflict=pack_id,grantee_username', {
       method: 'POST',
       headers: { 'Prefer': 'resolution=merge-duplicates,return=representation' },
@@ -533,6 +577,212 @@
     });
   }
 
+
+  async function setAdminActive(adminId, active) {
+    if (!isMainAdmin()) throw new Error('Hanya admin utama');
+    await sbFetch('cbt_admins?id=eq.' + encodeURIComponent(adminId), {
+      method: 'PATCH',
+      body: JSON.stringify({ active: !!active })
+    });
+  }
+
+  async function setAdminExpiry(adminId, expiresAtIsoOrNull) {
+    if (!isMainAdmin()) throw new Error('Hanya admin utama');
+    await sbFetch('cbt_admins?id=eq.' + encodeURIComponent(adminId), {
+      method: 'PATCH',
+      body: JSON.stringify({ subscription_expires_at: expiresAtIsoOrNull || null })
+    });
+  }
+
+  async function setTransferProof(adminId, url, note) {
+    // admin tambahan mengisi bukti sendiri; admin utama juga boleh
+    if (!currentAdmin) throw new Error('Belum login');
+    const body = {
+      transfer_proof_url: (url || '').trim(),
+      transfer_note: (note || '').trim()
+    };
+    if (isMainAdmin()) {
+      await sbFetch('cbt_admins?id=eq.' + encodeURIComponent(adminId), {
+        method: 'PATCH', body: JSON.stringify(body)
+      });
+      return;
+    }
+    // secondary: only self
+    const rows = await sbFetch('cbt_admins?username=eq.' + encodeURIComponent(currentAdmin.username) + '&select=id');
+    if (!rows || !rows[0] || rows[0].id !== adminId) throw new Error('Hanya bisa mengisi bukti sendiri');
+    await sbFetch('cbt_admins?id=eq.' + encodeURIComponent(adminId), {
+      method: 'PATCH', body: JSON.stringify(body)
+    });
+  }
+
+  async function bulkAddClassParticipants(packId, studentClass, nameList) {
+    if (!currentAdmin) throw new Error('Belum login');
+    const packs = await sbFetch('cbt_packs?id=eq.' + encodeURIComponent(packId) + '&select=*');
+    if (!packs || !packs[0]) throw new Error('Paket tidak ditemukan');
+    const perm = await getPackPermissions(packs[0]);
+    if (!perm.can_manage_participants) throw new Error('Tidak punya hak kelola peserta');
+    const cls = String(studentClass || '').trim();
+    let n = 0;
+    for (const name of (nameList || [])) {
+      const nm = String(name || '').trim();
+      if (!nm) continue;
+      await sbFetch('cbt_pack_participants?on_conflict=pack_id,student_class,student_name', {
+        method: 'POST',
+        headers: { 'Prefer': 'resolution=merge-duplicates,return=representation' },
+        body: JSON.stringify({
+          pack_id: packId,
+          student_class: cls,
+          student_name: nm,
+          display_name: nm,
+          active: true
+        })
+      });
+      n++;
+    }
+    return n;
+  }
+
+
+  async function canManageMasterRoster() {
+    if (!currentAdmin) return false;
+    if (isMainAdmin()) return true;
+    // inisiator: punya minimal 1 paket sebagai owner
+    const owned = await sbFetch('cbt_packs?owner_username=eq.' + encodeURIComponent(currentAdmin.username) + '&select=id&limit=1');
+    if (owned && owned.length) return true;
+    // atau diberi hak kelola peserta di paket mana pun
+    const acl = await sbFetch('cbt_pack_acl?grantee_username=eq.' + encodeURIComponent(currentAdmin.username) + '&can_manage_participants=eq.true&select=id&limit=1');
+    return !!(acl && acl.length);
+  }
+
+  async function listClasses() {
+    return await sbFetch('cbt_classes?active=eq.true&select=*&order=institution.asc,name.asc');
+  }
+
+  async function listAllClassesAdmin() {
+    return await sbFetch('cbt_classes?select=*&order=institution.asc,name.asc');
+  }
+
+  async function createClass(name, institution) {
+    if (!(await canManageMasterRoster())) throw new Error('Tidak punya hak kelola data peserta');
+    const n = String(name || '').trim();
+    if (!n) throw new Error('Nama kelas wajib');
+    const rows = await sbFetch('cbt_classes', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: n,
+        institution: String(institution || '').trim(),
+        created_by: currentAdmin.username || 'main',
+        active: true
+      })
+    });
+    return Array.isArray(rows) ? rows[0] : rows;
+  }
+
+  async function updateClass(classId, name, institution) {
+    if (!(await canManageMasterRoster())) throw new Error('Tidak punya hak kelola data peserta');
+    await sbFetch('cbt_classes?id=eq.' + encodeURIComponent(classId), {
+      method: 'PATCH',
+      body: JSON.stringify({
+        name: String(name || '').trim(),
+        institution: String(institution || '').trim()
+      })
+    });
+  }
+
+  async function deleteClass(classId) {
+    if (!(await canManageMasterRoster())) throw new Error('Tidak punya hak kelola data peserta');
+    await sbFetch('cbt_class_members?class_id=eq.' + encodeURIComponent(classId), { method: 'DELETE' });
+    await sbFetch('cbt_classes?id=eq.' + encodeURIComponent(classId), { method: 'DELETE' });
+  }
+
+  async function listClassMembers(classId) {
+    return await sbFetch(
+      'cbt_class_members?class_id=eq.' + encodeURIComponent(classId) +
+      '&active=eq.true&select=*&order=participant_name.asc'
+    );
+  }
+
+  async function addClassMember(classId, participantName, displayName) {
+    if (!(await canManageMasterRoster())) throw new Error('Tidak punya hak kelola data peserta');
+    const nm = String(participantName || '').trim();
+    if (!nm) throw new Error('Nama peserta wajib');
+    await sbFetch('cbt_class_members?on_conflict=class_id,participant_name', {
+      method: 'POST',
+      headers: { 'Prefer': 'resolution=merge-duplicates,return=representation' },
+      body: JSON.stringify({
+        class_id: classId,
+        participant_name: nm,
+        display_name: String(displayName || nm).trim(),
+        active: true
+      })
+    });
+  }
+
+  async function updateClassMember(memberId, participantName, displayName) {
+    if (!(await canManageMasterRoster())) throw new Error('Tidak punya hak kelola data peserta');
+    await sbFetch('cbt_class_members?id=eq.' + encodeURIComponent(memberId), {
+      method: 'PATCH',
+      body: JSON.stringify({
+        participant_name: String(participantName || '').trim(),
+        display_name: String(displayName || participantName || '').trim()
+      })
+    });
+  }
+
+  async function deleteClassMember(memberId) {
+    if (!(await canManageMasterRoster())) throw new Error('Tidak punya hak kelola data peserta');
+    await sbFetch('cbt_class_members?id=eq.' + encodeURIComponent(memberId), { method: 'DELETE' });
+  }
+
+  async function listAdminsNameMap() {
+    const rows = await sbFetch('cbt_admins?select=username,display_name,role');
+    const map = { main: 'Admin Utama' };
+    (rows || []).forEach(r => {
+      map[r.username] = (r.display_name && String(r.display_name).trim()) || r.username;
+    });
+    return map;
+  }
+
+  async function replacePackParticipants(packId, selectedList) {
+    // selectedList: [{class_id, student_class, student_name, display_name, member_id?}]
+    if (!currentAdmin) throw new Error('Belum login');
+    if (!selectedList || !selectedList.length) throw new Error('Wajib pilih minimal satu peserta untuk paket ini');
+    const packs = await sbFetch('cbt_packs?id=eq.' + encodeURIComponent(packId) + '&select=*');
+    if (!packs || !packs[0]) throw new Error('Paket tidak ditemukan');
+    const perm = await getPackPermissions(packs[0]);
+    if (!perm.can_manage_participants) throw new Error('Tidak punya hak kelola peserta paket');
+    // hapus semua peserta lama paket
+    await sbFetch('cbt_pack_participants?pack_id=eq.' + encodeURIComponent(packId), { method: 'DELETE' });
+    for (const s of selectedList) {
+      await sbFetch('cbt_pack_participants', {
+        method: 'POST',
+        body: JSON.stringify({
+          pack_id: packId,
+          student_class: String(s.student_class || s.class_name || '').trim(),
+          student_name: String(s.student_name || s.participant_name || '').trim(),
+          display_name: String(s.display_name || s.student_name || '').trim(),
+          class_id: s.class_id || null,
+          member_id: s.member_id || null,
+          active: true
+        })
+      });
+    }
+    return selectedList.length;
+  }
+
+  async function getPackParticipantKeys(packId) {
+    const rows = await listParticipants(packId);
+    // key: classId|name or className|name
+    const set = new Set();
+    (rows || []).forEach(r => {
+      const k1 = (r.class_id || '') + '|' + (r.student_name || '');
+      const k2 = (r.student_class || '') + '|' + (r.student_name || '');
+      set.add(k1);
+      set.add(k2);
+    });
+    return { rows: rows || [], keys: set };
+  }
+
   global.SHSupabase = {
     sbEnabled,
     loginSecondary,
@@ -570,6 +820,24 @@
     isMainAdmin,
     sha256,
     getProctorSettings,
-    saveProctorSettings
+    saveProctorSettings,
+    setAdminActive,
+    setAdminExpiry,
+    setTransferProof,
+    bulkAddClassParticipants,
+    isAdminEffectivelyActive,
+    canManageMasterRoster,
+    listClasses,
+    listAllClassesAdmin,
+    createClass,
+    updateClass,
+    deleteClass,
+    listClassMembers,
+    addClassMember,
+    updateClassMember,
+    deleteClassMember,
+    listAdminsNameMap,
+    replacePackParticipants,
+    getPackParticipantKeys
   };
 })(window);

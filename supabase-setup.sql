@@ -126,3 +126,11 @@ drop policy if exists "cbt_pack_part_all" on cbt_pack_participants;
 create policy "cbt_pack_part_all" on cbt_pack_participants for all using (true) with check (true);
 
 update cbt_packs set owner_username = 'main' where owner_username is null or owner_username = '';
+
+-- ===== v2.5 langganan =====
+alter table cbt_admins add column if not exists subscription_expires_at timestamptz default null;
+alter table cbt_admins add column if not exists transfer_proof_url text default '';
+alter table cbt_admins add column if not exists transfer_note text default '';
+
+-- v2.6 see supabase-migration-v26.sql
+
