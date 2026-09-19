@@ -884,6 +884,118 @@
     return !!(rows && rows.length);
   }
 
+
+  /**
+   * Impor sekali dari objek legacy { "51": ["Nama",...], "52": [...] }
+   * ke cbt_classes + cbt_class_members. Tidak menulis file JSON.
+   */
+  async function importLegacyStudents(legacyMap, institution) {
+    if (!(await canManageMasterRoster())) throw new Error('Tidak punya hak kelola data peserta');
+    institution = String(institution || 'SMA PMA').trim() || 'SMA PMA';
+    if (!legacyMap || typeof legacyMap !== 'object') throw new Error('Data sumber tidak valid');
+    let classCount = 0, memberCount = 0;
+    for (const className of Object.keys(legacyMap)) {
+      const names = legacyMap[className];
+      if (!Array.isArray(names)) continue;
+      // cek kelas sudah ada (sama nama + instansi)
+      const existing = await sbFetch(
+        'cbt_classes?name=eq.' + encodeURIComponent(String(className)) +
+        '&institution=eq.' + encodeURIComponent(institution) + '&select=id&limit=1'
+      );
+      let classId;
+      if (existing && existing[0]) {
+        classId = existing[0].id;
+      } else {
+        const created = await createClass(String(className), institution);
+        classId = created && created.id;
+        classCount++;
+      }
+      if (!classId) continue;
+      for (const name of names) {
+        const nm = String(name || '').trim();
+        if (!nm) continue;
+        await addClassMember(classId, nm, nm);
+        memberCount++;
+      }
+    }
+    return { classCount, memberCount };
+  }
+
+  /** Ambil seluruh anggota master (semua kelas aktif) */
+  async function listAllMasterMembers() {
+    const classes = await listClasses();
+    const out = [];
+    for (const c of (classes || [])) {
+      const members = await listClassMembers(c.id);
+      (members || []).forEach(m => {
+        out.push({
+          class_id: c.id,
+          student_class: c.name,
+          student_name: m.participant_name,
+          display_name: m.display_name || m.participant_name,
+          member_id: m.id,
+          institution: c.institution || ''
+        });
+      });
+    }
+    return out;
+  }
+
+
+  /**
+   * Daftarkan paket lokal (catalog/GitHub) ke database agar bisa dikelola peserta/password di admin.
+   * Tidak menimpa soal jika paket remote sudah ada & punya questions (kecuali forceOverwriteQuestions).
+   */
+  async function syncCatalogPackToDb(packMeta, questions, essays, practiceQuestions, opts) {
+    opts = opts || {};
+    if (!sbEnabled()) throw new Error('Layanan data belum dikonfigurasi');
+    if (!currentAdmin) throw new Error('Belum login admin');
+    const id = packMeta.id;
+    if (!id) throw new Error('Pack id wajib');
+    const existing = await sbFetch('cbt_packs?id=eq.' + encodeURIComponent(id) + '&select=id,questions,owner_username');
+    const hasExisting = existing && existing[0];
+    const body = {
+      id: id,
+      title: packMeta.title || id,
+      subject: packMeta.subject || '',
+      description: packMeta.description || '',
+      duration_minutes: packMeta.durationMinutes || packMeta.duration_minutes || 60,
+      practice_duration_minutes: packMeta.practiceDurationMinutes || packMeta.practice_duration_minutes || 30,
+      enabled: packMeta.enabled !== false,
+      updated_at: new Date().toISOString(),
+      updated_by: currentAdmin.username || 'main',
+      owner_username: (hasExisting && existing[0].owner_username) ? existing[0].owner_username : 'main'
+    };
+    const existingQs = hasExisting && Array.isArray(existing[0].questions) ? existing[0].questions : [];
+    if (!hasExisting || !existingQs.length || opts.forceOverwriteQuestions) {
+      body.questions = Array.isArray(questions) ? questions : [];
+      body.essays = Array.isArray(essays) ? essays : [];
+      body.practice_questions = Array.isArray(practiceQuestions) && practiceQuestions.length
+        ? practiceQuestions
+        : (body.questions || []);
+    }
+    await sbFetch('cbt_packs?on_conflict=id', {
+      method: 'POST',
+      headers: { 'Prefer': 'resolution=merge-duplicates,return=representation' },
+      body: JSON.stringify(body)
+    });
+    return { id: id, created: !hasExisting };
+  }
+
+  async function syncAllCatalogPacks(packList) {
+    // packList: [{ meta, questions, essays, practice }]
+    const results = [];
+    for (const item of (packList || [])) {
+      try {
+        const r = await syncCatalogPackToDb(item.meta, item.questions, item.essays, item.practice);
+        results.push({ id: item.meta.id, ok: true, created: r.created });
+      } catch (e) {
+        results.push({ id: item.meta && item.meta.id, ok: false, error: e.message });
+      }
+    }
+    return results;
+  }
+
   global.SHSupabase = {
     sbEnabled,
     loginSecondary,
@@ -902,6 +1014,8 @@
     listRemotePacks,
     listAllPacksAdmin,
     listManageablePacks,
+    syncCatalogPackToDb,
+    syncAllCatalogPacks,
     getPackPermissions,
     renamePackTitle,
     deletePack,
@@ -940,6 +1054,8 @@
     listAdminsNameMap,
     replacePackParticipants,
     getPackParticipantKeys,
+    importLegacyStudents,
+    listAllMasterMembers,
     listPackPasswords,
     addPackPassword,
     updatePackPassword,

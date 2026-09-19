@@ -1,0 +1,2 @@
+-- Gunakan tombol "Impor data awal kelas 51 & 52" di tab Kelola Peserta.
+-- File students.json hanya sumber impor sekali, bukan database runtime.

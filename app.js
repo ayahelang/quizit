@@ -246,7 +246,7 @@ async function populateClassSelectForPack(packId) {
     if (!parts || !parts.length) {
       const opt = document.createElement('option');
       opt.value = '';
-      opt.textContent = '-- Paket belum ada peserta --';
+      opt.textContent = '-- Belum ada peserta di paket (atur di Kelola Paket) --';
       classSelect.appendChild(opt);
       return;
     }
@@ -298,7 +298,7 @@ async function onClassChange() {
     }
     const parts = await SHSupabase.listParticipants(packId);
     if (!parts || !parts.length) {
-      alert('Paket ini belum memiliki peserta. Admin harus memilih minimal satu peserta di Kelola Paket.');
+      alert('Paket ini belum memiliki peserta. Admin: buka Kelola Paket → pilih paket → centang peserta → Simpan. Jika daftar kelas masih kosong, buka Kelola Peserta → Impor data awal.');
       return;
     }
     const allowed = parts.filter(x => {
@@ -1724,6 +1724,7 @@ let _managePacksCache = [];
 function setupPackManageUi() {
   const map = [
     ['btn-refresh-manage-packs', refreshManagePacksList],
+    ['btn-sync-catalog-packs', onSyncCatalogPacksClick],
     ['btn-mp-rename', onMpRename],
     ['btn-mp-delete', onMpDelete],
     ['btn-mp-add-item', onMpAddItem],
@@ -1734,13 +1735,70 @@ function setupPackManageUi() {
     ['btn-mp-add-pw', onMpAddPassword],
     ['btn-my-transfer', onSaveMyTransfer],
     ['btn-mc-add', onMcAddClass],
-    ['btn-mc-add-member', onMcAddMember]
+    ['btn-mc-add-member', onMcAddMember],
+    ['btn-mc-import-legacy', onMcImportLegacy],
+    ['btn-mp-assign-all-master', onMpAssignAllMaster],
+    ['btn-mp-select-all-tree', onMpSelectAllTree]
   ];
   map.forEach(([id, fn]) => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('click', fn);
   });
 }
+
+/** Daftarkan paket dari catalog.json (Web Design, SMM, dll.) ke database agar muncul di Kelola Paket */
+async function syncLocalCatalogPacksToDb() {
+  if (!window.SHSupabase || !SHSupabase.sbEnabled() || !SHSupabase.getCurrentAdmin()) return [];
+  const packs = (validPacks || []).filter(p => p && p.id && !p._remote);
+  const payload = [];
+  for (const p of packs) {
+    try {
+      let questions = [], essays = [], practice = [];
+      if (p.questionsFile) {
+        try { questions = await fetch(p.questionsFile).then(r => r.json()); } catch (_) {}
+      }
+      if (p.essaysFile) {
+        try { essays = await fetch(p.essaysFile).then(r => r.json()); } catch (_) {}
+      }
+      if (p.practiceFile) {
+        try { practice = await fetch(p.practiceFile).then(r => r.json()); } catch (_) {}
+      }
+      payload.push({
+        meta: {
+          id: p.id,
+          title: p.title,
+          subject: p.subject,
+          description: p.description,
+          durationMinutes: p.durationMinutes,
+          practiceDurationMinutes: p.practiceDurationMinutes,
+          enabled: p.enabled !== false
+        },
+        questions: Array.isArray(questions) ? questions : [],
+        essays: Array.isArray(essays) ? essays : [],
+        practice: Array.isArray(practice) ? practice : []
+      });
+    } catch (e) {
+      console.warn('sync pack skip', p.id, e);
+    }
+  }
+  if (!payload.length) return [];
+  return await SHSupabase.syncAllCatalogPacks(payload);
+}
+
+async function onSyncCatalogPacksClick() {
+  const st = document.getElementById('manage-packs-status');
+  try {
+    st.textContent = 'Mendaftarkan paket lokal...';
+    const res = await syncLocalCatalogPacksToDb();
+    const ok = (res || []).filter(x => x.ok).length;
+    const created = (res || []).filter(x => x.ok && x.created).length;
+    st.textContent = 'Selesai: ' + ok + ' paket tersinkron (' + created + ' baru). Klik Muat Daftar Paket jika perlu.';
+    await refreshManagePacksList();
+  } catch (e) {
+    st.textContent = e.message || 'Gagal sinkron';
+  }
+}
+
 async function refreshManagePacksList() {
   const list = document.getElementById('manage-packs-list');
   const st = document.getElementById('manage-packs-status');
@@ -1749,6 +1807,15 @@ async function refreshManagePacksList() {
   try {
     if (!window.SHSupabase || !SHSupabase.sbEnabled()) { st.textContent = 'Layanan data belum dikonfigurasi.'; return; }
     if (!SHSupabase.getCurrentAdmin()) { st.textContent = 'Login admin dulu.'; return; }
+    st.textContent = 'Menyinkronkan paket lokal ke database...';
+    try {
+      const syncRes = await syncLocalCatalogPacksToDb();
+      const nNew = (syncRes || []).filter(x => x.ok && x.created).length;
+      const nOk = (syncRes || []).filter(x => x.ok).length;
+      if (nOk) console.log('Catalog sync', syncRes);
+    } catch (e) {
+      console.warn('Catalog sync', e);
+    }
     _managePacksCache = await SHSupabase.listManageablePacks();
     if (!_managePacksCache.length) { st.textContent = 'Belum ada paket yang bisa dikelola.'; return; }
     let nameMap = { main: 'Admin Utama' };
@@ -2203,6 +2270,55 @@ async function onMpAddPassword() {
     document.getElementById('mp-pw-duration').value = '';
     st.textContent = 'Password ditambahkan.';
     refreshMpPasswords(id);
+  } catch (e) {
+    st.textContent = e.message;
+  }
+}
+
+
+async function onMcImportLegacy() {
+  const st = document.getElementById('mc-import-status');
+  try {
+    st.textContent = 'Mengimpor...';
+    // Baca students.json HANYA sebagai sumber impor sekali (bukan penyimpanan rutin)
+    let legacy = null;
+    try {
+      const res = await fetch('students.json', { cache: 'no-store' });
+      if (res.ok) legacy = await res.json();
+    } catch (_) {}
+    if (!legacy || typeof legacy !== 'object') {
+      st.textContent = 'File data awal tidak ditemukan. Tambah kelas/peserta manual di form bawah.';
+      return;
+    }
+    const institution = (config && config.schoolName) || 'SMA PMA';
+    const r = await SHSupabase.importLegacyStudents(legacy, institution);
+    st.textContent = 'Impor selesai. Kelas baru: ' + r.classCount + ', peserta diproses: ' + r.memberCount + '. Lanjut atur peserta di Kelola Paket.';
+    refreshMasterClasses();
+  } catch (e) {
+    st.textContent = e.message || 'Gagal impor';
+  }
+}
+
+async function onMpSelectAllTree() {
+  document.querySelectorAll('#mp-checkbox-tree input[type="checkbox"]').forEach(cb => { cb.checked = true; });
+  const st = document.getElementById('mp-part-status');
+  if (st) st.textContent = 'Semua dicentang. Klik Simpan Pilihan Peserta Paket.';
+}
+
+async function onMpAssignAllMaster() {
+  const id = document.getElementById('mp-pack-id').value;
+  const st = document.getElementById('mp-part-status');
+  if (!id) { st.textContent = 'Pilih paket dulu.'; return; }
+  try {
+    const all = await SHSupabase.listAllMasterMembers();
+    if (!all.length) {
+      st.textContent = 'Master peserta kosong. Buka Kelola Peserta → Impor data awal dulu.';
+      return;
+    }
+    if (!confirm('Masukkan ' + all.length + ' peserta dari seluruh kelas master ke paket ini?')) return;
+    const n = await SHSupabase.replacePackParticipants(id, all);
+    st.textContent = 'Tersimpan: ' + n + ' peserta pada paket.';
+    await renderMpCheckboxTree(id);
   } catch (e) {
     st.textContent = e.message;
   }
