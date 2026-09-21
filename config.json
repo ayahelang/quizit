@@ -19,7 +19,7 @@
   "whatsappTokenRequest": "6285158822803",
   "gopayNumber": "6285158822803",
   "gopayMinAmount": 5000,
-  "googleClientId": "",
+  "googleClientId": "xxxx.apps.googleusercontent.com"
   "certificateIssuer": "Silverhawk Network · QuizIT",
   "mainAdminGoogleEmails": [
     "admin@silverhawk.web.id",
