@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "question": "IaaS menyediakan…",
+    "options": [
+      "Sumber daya infrastruktur virtual (VM, storage, jaringan) sebagai layanan",
+      "Hanya aplikasi siap pakai tanpa kontrol OS",
+      "Hanya kabel data center",
+      "Hanya lisensi Office offline abadi",
+      "Hanya printer cloud tanpa jaringan"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 2,
+    "question": "SaaS contohnya…",
+    "options": [
+      "Microsoft 365 / Google Workspace (aplikasi lewat langganan)",
+      "Membeli server fisik tanpa OS",
+      "Merakit PC di gudang",
+      "Kabel fiber splicing",
+      "Rack mounting saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 3,
+    "question": "Shared responsibility model di cloud berarti…",
+    "options": [
+      "Keamanan dibagi antara provider dan pelanggan sesuai jenis layanan",
+      "Provider menjamin semua termasuk password user lokal abadi",
+      "Pelanggan tidak perlu patch apa pun di SaaS identity",
+      "Tidak ada enkripsi",
+      "Firewall dilarang"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 4,
+    "question": "Region pada cloud publik terkait…",
+    "options": [
+      "Lokasi geografis pusat data provider",
+      "Warna dashboard",
+      "Jumlah font di dokumen",
+      "Tema gelap OS",
+      "Ukuran mousepad"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 5,
+    "question": "Azure AD / Entra ID terutama mengelola…",
+    "options": [
+      "Identitas dan akses cloud/hybrid",
+      "Driver GPU workstation",
+      "Firmware BIOS legacy",
+      "Toner level",
+      "Kabel console RJ45"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 6,
+    "question": "MFA di Microsoft 365 mengurangi risiko…",
+    "options": [
+      "Akun diambil alih hanya dengan password bocor",
+      "Kehabisan space OneDrive saja tanpa dampak keamanan",
+      "Salah template Word",
+      "Lag Teams karena Wi-Fi saja tanpa faktor lain",
+      "Update Windows optional"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 7,
+    "question": "OneDrive terutama untuk…",
+    "options": [
+      "Penyimpanan dan sinkronisasi file pengguna di cloud",
+      "Routing BGP",
+      "Switch stacking",
+      "Hypervisor bare metal saja",
+      "SIP trunking"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 8,
+    "question": "SharePoint sering dipakai untuk…",
+    "options": [
+      "Portal dokumen dan kolaborasi tim",
+      "Mengganti firewall edge",
+      "Mengganti core switch",
+      "DHCP exclusive",
+      "Syslog buffer saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 9,
+    "question": "Teams menggabungkan…",
+    "options": [
+      "Chat, meeting, kolaborasi dengan integrasi M365",
+      "Hanya email SMTP relay",
+      "Hanya file tftp",
+      "Hanya console serial",
+      "Hanya RDP gateway tanpa chat"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 10,
+    "question": "Conditional Access dapat membatasi login berdasarkan…",
+    "options": [
+      "Kondisi seperti lokasi, perangkat, risiko (sesuai kebijakan)",
+      "Hanya kecepatan ketik user",
+      "Hanya warna tema",
+      "Hanya resolusi monitor",
+      "Hanya ukuran font"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 11,
+    "question": "Elasticity di cloud memungkinkan…",
+    "options": [
+      "Menambah/mengurangi kapasitas sesuai beban",
+      "Mengunci kapasitas permanen tanpa scaling",
+      "Menghapus kebutuhan monitoring",
+      "Menonaktifkan billing",
+      "Mengganti TCP jadi UDP global"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 12,
+    "question": "Object storage (mis. S3-style) cocok untuk…",
+    "options": [
+      "Menyimpan objek/file dalam skala besar dengan API",
+      "Menjalankan OS desktop secara native tanpa VM",
+      "Mengganti CPU soldering",
+      "Patch panel management",
+      "KVM over IP saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 13,
+    "question": "CapEx vs OpEx di cloud: model cloud cenderung…",
+    "options": [
+      "OpEx (bayar sesuai pemakaian/langganan)",
+      "Selalu CapEx hardware besar di awal tanpa opsi lain",
+      "Gratis tanpa tanggung jawab",
+      "Tanpa invoice",
+      "Tanpa SLA"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 14,
+    "question": "Hybrid cloud menggabungkan…",
+    "options": [
+      "Sumber daya on-premises dengan cloud publik/private",
+      "Hanya dua laptop peer-to-peer",
+      "Hanya Wi-Fi tetangga",
+      "Hanya USB OTG",
+      "Hanya printed manual"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 15,
+    "question": "Data residency menyangkut…",
+    "options": [
+      "Di negara/wilayah mana data disimpan secara hukum/kebijakan",
+      "Hanya frekuensi CPU",
+      "Hanya refresh rate monitor",
+      "Hanya noise fan",
+      "Hanya RGB lighting"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 16,
+    "question": "Admin role least privilege di M365 bertujuan…",
+    "options": [
+      "Membatasi dampak jika akun admin disusupi",
+      "Memberi Global Admin ke semua staff",
+      "Menonaktifkan audit log",
+      "Membuka anonymous sharing default ke publik tanpa review",
+      "Menyimpan password di Excel publik"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 17,
+    "question": "API rate limiting melindungi…",
+    "options": [
+      "Layanan dari abuse/overuse",
+      "Hanya warna ikon aplikasi",
+      "Hanya font embedding",
+      "Hanya spellcheck",
+      "Hanya dark mode"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 18,
+    "question": "Container (konsep) berbeda dari VM karena…",
+    "options": [
+      "Lebih ringan, berbagi kernel host (umumnya)",
+      "Selalu lebih berat dari hypervisor penuh",
+      "Tidak bisa di-deploy di cloud",
+      "Wajib GPU workstation",
+      "Tidak punya image"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 19,
+    "question": "SLA cloud menyatakan…",
+    "options": [
+      "Tingkat layanan/komitmen ketersediaan dari provider",
+      "Password default admin",
+      "Jumlah karyawan SOC pelanggan",
+      "Warna logo perusahaan",
+      "Ukuran desk"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 20,
+    "question": "Encryption at rest di cloud melindungi…",
+    "options": [
+      "Data tersimpan pada media storage",
+      "Hanya paket ICMP",
+      "Hanya LED panel",
+      "Hanya label disk",
+      "Hanya noise cancelling"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 21,
+    "question": "Guest user di tenant M365 harus dikelola karena…",
+    "options": [
+      "Akses eksternal berpotensi risiko jika berlebihan/tidak diawasi",
+      "Guest selalu read-only abadi tanpa file",
+      "Guest menonaktifkan MFA tenant",
+      "Guest mengganti domain DNS publik otomatis",
+      "Guest tidak pernah melihat SharePoint"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 22,
+    "question": "Cost monitoring penting agar…",
+    "options": [
+      "Pengeluaran cloud tidak membengkak tanpa kendali",
+      "VM selalu overprovision tanpa batas tanpa tagih",
+      "Billing diabaikan",
+      "Reserved instance dilarang",
+      "Snapshot tak terbatas tanpa biaya"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 23,
+    "question": "Identity is the new perimeter menekankan…",
+    "options": [
+      "Kontrol identitas/akses sebagai inti keamanan modern",
+      "Firewall fisik tidak lagi relevan sama sekali tanpa exception",
+      "Password tunggal cukup selamanya",
+      "VPN dilarang di zero trust murni tanpa desain",
+      "Endpoint tidak perlu patch"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 24,
+    "question": "Power Automate / automation kantor membantu…",
+    "options": [
+      "Otomatisasi alur kerja antar aplikasi",
+      "Mengganti core routing",
+      "Mengganti physical cabling",
+      "Flash BIOS massal",
+      "Recrimp RJ45"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 25,
+    "question": "Offboarding karyawan di M365 sebaiknya mencakup…",
+    "options": [
+      "Nonaktifkan akun, review akses, transfer data, revokasi perangkat",
+      "Hanya menghapus shortcut desktop",
+      "Hanya ganti wallpaper",
+      "Hanya cabut mouse",
+      "Hanya matikan monitor"
+    ],
+    "answer": 0
+  }
+]

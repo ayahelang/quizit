@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "question": "RAM yang hilang datanya saat listrik mati bersifat…",
+    "options": [
+      "Volatile",
+      "Non-volatile seperti SSD",
+      "Read-only permanen",
+      "Optical saja",
+      "Hanya cache DNS"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 2,
+    "question": "UEFI menggantikan sebagian besar fungsi…",
+    "options": [
+      "BIOS legacy pada proses boot",
+      "Driver printer saja",
+      "File system NTFS",
+      "Protokol SMTP",
+      "Switch PoE"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 3,
+    "question": "Form factor motherboard umum pada PC desktop modern adalah…",
+    "options": [
+      "ATX / microATX",
+      "RJ45",
+      "SFP+",
+      "CAT6a",
+      "QSFP"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 4,
+    "question": "SSD umumnya lebih unggul dari HDD dalam…",
+    "options": [
+      "Kecepatan akses dan ketahanan terhadap guncangan",
+      "Kapasitas selalu lebih besar di harga sama",
+      "Tidak membutuhkan driver sama sekali",
+      "Hanya bisa menyimpan sistem operasi Linux",
+      "Menghasilkan lebih banyak suara seek"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 5,
+    "question": "Kabel yang umum untuk monitor digital modern adalah…",
+    "options": [
+      "HDMI atau DisplayPort",
+      "RJ11 telepon saja",
+      "Coaxial TV wajib",
+      "Parallel printer 25-pin saja",
+      "VGA hanya untuk server blade"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 6,
+    "question": "SATA terutama menghubungkan…",
+    "options": [
+      "Storage (HDD/SSD) ke motherboard",
+      "Monitor ke GPU saja",
+      "Keyboard PS/2",
+      "Antenna Wi-Fi eksternal",
+      "Modul RAM DDR"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 7,
+    "question": "Blue screen (BSOD) di Windows sering terkait…",
+    "options": [
+      "Driver, hardware, atau kesalahan kernel",
+      "Kelebihan tinta printer saja",
+      "Salah password Wi-Fi",
+      "Kabel HDMI longgar saja tanpa opsi lain",
+      "Update antivirus yang selalu sukses"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 8,
+    "question": "Electrostatic Discharge (ESD) berbahaya karena…",
+    "options": [
+      "Dapat merusak komponen elektronik sensitif",
+      "Hanya memanaskan casing plastik",
+      "Menghapus akun Microsoft",
+      "Memutus langganan Office 365",
+      "Mengubah warna LED keyboard"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 9,
+    "question": "IPv4 APIPA (169.254.x.x) biasanya muncul ketika…",
+    "options": [
+      "DHCP gagal memberi alamat",
+      "DNS root down global",
+      "Firewall memblokir HTTPS saja",
+      "GPU overheat",
+      "PSU undervoltage saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 10,
+    "question": "Printer laser menggunakan teknologi…",
+    "options": [
+      "Toner dan drum unit",
+      "Hanya cartridge cairan tinta continuous",
+      "Pita ink ribbon dot matrix saja",
+      "Thermal paper kasir saja",
+      "Plotter tinta arsitektur saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 11,
+    "question": "Virtualization di PC memerlukan fitur CPU seperti…",
+    "options": [
+      "Intel VT-x / AMD-V diaktifkan di firmware",
+      "Hanya tambahan RAM tanpa CPU support",
+      "Kartu suara dedicated",
+      "Modem dial-up",
+      "Port serial RS232"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 12,
+    "question": "Perintah Windows untuk konfigurasi IP di CMD adalah…",
+    "options": [
+      "ipconfig",
+      "ifconfig hanya di Windows 11",
+      "netstat -firewall",
+      "chmod 777",
+      "brew install"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 13,
+    "question": "Mobile device yang sering diuji di A+ mencakup…",
+    "options": [
+      "Smartphone dan tablet plus konektivitasnya",
+      "Hanya mainframe",
+      "Hanya PLC industri",
+      "Hanya thin client tanpa OS",
+      "Router core MPLS"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 14,
+    "question": "File system default Windows modern pada internal drive biasanya…",
+    "options": [
+      "NTFS",
+      "FAT12 saja",
+      "ext4 wajib",
+      "HFS+ lama",
+      "ZFS only"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 15,
+    "question": "PSU 80 Plus menandakan…",
+    "options": [
+      "Efisiensi daya lebih baik pada beban tertentu",
+      "Kapasitas hard disk",
+      "Kecepatan RAM",
+      "Versi PCIe",
+      "Jumlah core CPU"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 16,
+    "question": "Troubleshooting “no POST” sering memeriksa…",
+    "options": [
+      "RAM, PSU, motherboard, dan koneksi dasar",
+      "Hanya brightness monitor",
+      "Hanya tema Windows",
+      "Akun email Outlook",
+      "Sertifikat SSL website"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 17,
+    "question": "Port TCP 3389 terkait…",
+    "options": [
+      "Remote Desktop (RDP)",
+      "DNS query saja",
+      "SMTP relay",
+      "NTP sync saja",
+      "LDAP anonymous"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 18,
+    "question": "SoC pada smartphone berarti…",
+    "options": [
+      "CPU/GPU/komponen terintegrasi dalam satu chip",
+      "Hanya baterai removable",
+      "Hanya slot microSD",
+      "Modem eksternal USB",
+      "Docking station Windows"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 19,
+    "question": "Backup 3-2-1 menganjurkan…",
+    "options": [
+      "3 salinan, 2 media berbeda, 1 offsite",
+      "Hanya 1 salinan di USB yang sama",
+      "Backup hanya di RAM",
+      "Tidak perlu uji restore",
+      "Enkripsi dilarang"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 20,
+    "question": "Device Manager di Windows dipakai untuk…",
+    "options": [
+      "Mengelola driver dan status perangkat keras",
+      "Mengedit Group Policy domain saja",
+      "Mengatur DNS publik Google saja",
+      "Menyusun kabel patch panel",
+      "Mengganti firmware switch Cisco"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 21,
+    "question": "Hot-swappable umumnya berarti…",
+    "options": [
+      "Komponen dapat dilepas/dipasang saat sistem menyala (sesuai desain)",
+      "Wajib matikan listrik utama selalu",
+      "Hanya untuk CPU socket LGA",
+      "Tidak perlu antistatic",
+      "Khusus printer dot matrix"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 22,
+    "question": "Malware yang menyebar dengan menyalin diri ke file/host lain disebut…",
+    "options": [
+      "Virus/worm (tergantung karakteristik)",
+      "Hanya adware cookie",
+      "Hanya font rusak",
+      "Hanya tema gelap",
+      "Hanya shortcut broken"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 23,
+    "question": "TPM modul membantu…",
+    "options": [
+      "Keamanan berbasis hardware (mis. BitLocker)",
+      "Mempercepat kipas CPU",
+      "Menambah watt PSU",
+      "Mengganti antivirus penuh",
+      "Menyimpan film 4K"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 24,
+    "question": "Konektor RJ45 digunakan untuk…",
+    "options": [
+      "Ethernet twisted pair",
+      "Audio jack 3.5mm",
+      "DisplayPort",
+      "USB-C power only tanpa data",
+      "Fiber SC APC saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 25,
+    "question": "Dokumentasi tiket helpdesk yang baik mencakup…",
+    "options": [
+      "Masalah, langkah, hasil, dan resolusi",
+      "Hanya screenshot meme",
+      "Hanya nama printer",
+      "Tanpa stempel waktu",
+      "Password user dalam teks polos di chat publik"
+    ],
+    "answer": 0
+  }
+]

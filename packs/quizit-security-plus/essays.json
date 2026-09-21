@@ -1,0 +1,22 @@
+[
+  {
+    "id": "E1",
+    "question": "Jelaskan CIA triad dengan contoh nyata di lingkungan kantor (email, file share, layanan online)."
+  },
+  {
+    "id": "E2",
+    "question": "Susun kebijakan password dan MFA yang realistis untuk karyawan non-teknis."
+  },
+  {
+    "id": "E3",
+    "question": "Apa yang harus dilakukan user dan tim IT saat menerima email phishing yang meyakinkan?"
+  },
+  {
+    "id": "E4",
+    "question": "Bandingkan backup, disaster recovery, dan business continuity secara singkat."
+  },
+  {
+    "id": "E5",
+    "question": "Uraikan langkah awal penanganan insiden ransomware di file server kantor (prioritas contain vs restore)."
+  }
+]

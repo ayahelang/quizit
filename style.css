@@ -1,8 +1,10 @@
 :root {
+  /* QuizIT accent */
+
   --bg-deep: #060d1a;
   --bg-card: rgba(15, 30, 55, 0.75);
   --bg-card-solid: #0f1e37;
-  --accent: #22d3ee;
+  --accent: #a78bfa;
   --accent-hover: #06b6d4;
   --accent-glow: rgba(34, 211, 238, 0.35);
   --text: #e2e8f0;
@@ -72,7 +74,7 @@ body {
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #22d3ee, #3b82f6);
+  background: linear-gradient(135deg, #a78bfa, #3b82f6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -182,7 +184,7 @@ body {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #22d3ee, #3b82f6);
+  background: linear-gradient(135deg, #a78bfa, #3b82f6);
   color: #fff;
   width: 100%;
   margin-top: 8px;
@@ -249,7 +251,7 @@ body {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #22d3ee, #3b82f6);
+  background: linear-gradient(135deg, #a78bfa, #3b82f6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -286,7 +288,7 @@ body {
 
 .progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, #22d3ee, #3b82f6);
+  background: linear-gradient(90deg, #a78bfa, #3b82f6);
   border-radius: 10px;
   width: 0%;
   transition: width 0.3s ease;
@@ -898,7 +900,7 @@ body {
 .analisis-row .bar > span {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, #22d3ee, #3b82f6);
+  background: linear-gradient(90deg, #a78bfa, #3b82f6);
 }
 
 .toggle-row {

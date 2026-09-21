@@ -1,0 +1,22 @@
+[
+  {
+    "id": "E1",
+    "question": "Gambarkan secara tertulis topologi jaringan kantor cabang kecil (internet, firewall, switch, AP, server). Jelaskan fungsi tiap bagian."
+  },
+  {
+    "id": "E2",
+    "question": "Jelaskan perbedaan bandwidth, latency, dan jitter serta dampaknya pada aplikasi kantor."
+  },
+  {
+    "id": "E3",
+    "question": "Susun kebijakan dasar keamanan Wi-Fi kantor (standar enkripsi, SSID, tamu, update firmware)."
+  },
+  {
+    "id": "E4",
+    "question": "Apa itu segmentasi jaringan dan bagaimana membantu membatasi dampak malware di LAN?"
+  },
+  {
+    "id": "E5",
+    "question": "Jelaskan langkah isolasi dan investigasi awal saat terjadi dugaan serangan di jaringan kantor."
+  }
+]

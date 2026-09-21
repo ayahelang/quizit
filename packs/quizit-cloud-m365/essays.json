@@ -1,0 +1,22 @@
+[
+  {
+    "id": "E1",
+    "question": "Bandingkan IaaS, PaaS, dan SaaS dengan satu contoh layanan untuk masing-masing."
+  },
+  {
+    "id": "E2",
+    "question": "Jelaskan shared responsibility model saat perusahaan memakai Microsoft 365 (SaaS)."
+  },
+  {
+    "id": "E3",
+    "question": "Susun checklist onboarding karyawan baru terkait akun M365, MFA, dan akses folder tim."
+  },
+  {
+    "id": "E4",
+    "question": "Mengapa Conditional Access dan least privilege penting untuk admin cloud?"
+  },
+  {
+    "id": "E5",
+    "question": "Rancang kebijakan sederhana retensi dan berbagi file (OneDrive/SharePoint) agar aman tetapi tetap produktif."
+  }
+]

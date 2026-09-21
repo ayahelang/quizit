@@ -1,0 +1,22 @@
+[
+  {
+    "id": "E1",
+    "question": "Jelaskan perbedaan fungsi router dan switch dalam jaringan kantor. Berikan contoh skenario penggunaan keduanya."
+  },
+  {
+    "id": "E2",
+    "question": "Uraikan langkah dasar subnetting untuk membagi jaringan 192.168.10.0/24 menjadi minimal 4 subnet. Sertakan contoh rentang alamat."
+  },
+  {
+    "id": "E3",
+    "question": "Mengapa segmentasi VLAN penting untuk keamanan dan manajemen jaringan perusahaan? Berikan contoh pembagian VLAN di kantor."
+  },
+  {
+    "id": "E4",
+    "question": "Bandingkan TCP dan UDP beserta contoh aplikasi yang cocok untuk masing-masing."
+  },
+  {
+    "id": "E5",
+    "question": "Susun checklist singkat troubleshooting jika PC di kantor tidak bisa akses internet tetapi status LAN terhubung."
+  }
+]

@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "question": "Model yang menyederhanakan komunikasi jaringan menjadi lapisan adalah…",
+    "options": [
+      "OSI / TCP-IP model",
+      "Waterfall SDLC saja",
+      "Agile sprint hanya",
+      "ITIL change only",
+      "RAID level"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 2,
+    "question": "Perangkat yang bekerja di Layer 3 untuk antar-subnet adalah…",
+    "options": [
+      "Router",
+      "Hub passive",
+      "Repeater listrik",
+      "Patch panel non-manageable",
+      "Monitor KVM saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 3,
+    "question": "CIDR /24 berarti…",
+    "options": [
+      "24 bit network prefix",
+      "24 host wajib aktif",
+      "24 VLAN",
+      "24 switch stack",
+      "24 GHz Wi-Fi"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 4,
+    "question": "Protokol yang menyelesaikan nama host ke IP adalah…",
+    "options": [
+      "DNS",
+      "FTP",
+      "SSH file only",
+      "Syslog",
+      "ICMP redirect only"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 5,
+    "question": "WPA3 lebih aman daripada WEP karena…",
+    "options": [
+      "Enkripsi dan handshake modern yang jauh lebih kuat",
+      "WEP memakai quantum crypto",
+      "WPA3 menonaktifkan semua password",
+      "WEP wajib IPv6",
+      "WPA3 hanya untuk kabel"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 6,
+    "question": "Traceroute membantu menemukan…",
+    "options": [
+      "Hop/jalur yang dilalui paket ke tujuan",
+      "Password enable secret",
+      "Daftar user AD",
+      "Suhu chassis",
+      "Firmware kamera IP"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 7,
+    "question": "DMZ pada firewall biasanya menempatkan…",
+    "options": [
+      "Server yang perlu diakses publik terbatas",
+      "Seluruh PC HR tanpa filter",
+      "Hanya printer label",
+      "Backup tape library offline",
+      "UPS monitoring only"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 8,
+    "question": "Port 53 umum untuk…",
+    "options": [
+      "DNS",
+      "RDP",
+      "MySQL default",
+      "LDAP secure only",
+      "SIP voice only"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 9,
+    "question": "Full duplex berarti…",
+    "options": [
+      "Kirim dan terima simultan",
+      "Hanya half speed selalu",
+      "Hanya broadcast storm",
+      "Hanya simplex radio",
+      "Hanya multicast IPTV"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 10,
+    "question": "PoE memungkinkan…",
+    "options": [
+      "Daya listrik melalui kabel Ethernet ke perangkat",
+      "Fiber membawa 220V AC",
+      "USB-C ke SATA power",
+      "HDMI membawa PoE+",
+      "Coax membawa 48V ke CPU"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 11,
+    "question": "MTU yang tidak cocok sering menyebabkan…",
+    "options": [
+      "Fragmentasi/masalah performa atau gagal koneksi tertentu",
+      "Upgrade RAM otomatis",
+      "Ganti SSID",
+      "Hapus VLAN 1",
+      "Reset BIOS"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 12,
+    "question": "Load balancer terutama…",
+    "options": [
+      "Membagi beban ke beberapa server backend",
+      "Mengganti firewall stateful",
+      "Menyimpan backup NAS",
+      "Mengatur cuti karyawan",
+      "Mengukur UPS runtime saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 13,
+    "question": "SNMP dipakai untuk…",
+    "options": [
+      "Monitoring dan manajemen perangkat jaringan",
+      "Streaming Netflix",
+      "Enkripsi disk full",
+      "Chat internal saja",
+      "Render GPU farm"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 14,
+    "question": "Site-to-site VPN menghubungkan…",
+    "options": [
+      "Dua jaringan kantor melalui tunnel terenkripsi",
+      "Hanya satu smartphone ke printer",
+      "Monitor ke PC tanpa OS",
+      "Two hubs unmanaged",
+      "SAN ke tape secara fisik saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 15,
+    "question": "Copper category Cat6 umum mendukung…",
+    "options": [
+      "1 Gbps (dan desain untuk higher di jarak terbatas)",
+      "Hanya 10 Mbps legacy",
+      "Hanya RS232",
+      "Hanya analog modem 56k",
+      "Hanya token ring"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 16,
+    "question": "Broadcast domain dipisah oleh…",
+    "options": [
+      "Router (dan teknik Layer3 lainnya)",
+      "Hanya patch cord",
+      "Hanya LED status",
+      "Hanya label cable",
+      "Hanya rack nut"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 17,
+    "question": "Syslog server mengumpulkan…",
+    "options": [
+      "Log dari perangkat jaringan/sistem",
+      "Toner printer level saja",
+      "Suhu AC ruangan saja tanpa IT",
+      "Jumlah kursi meeting",
+      "Stok ATK"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 18,
+    "question": "Authentication vs authorization…",
+    "options": [
+      "Authentication memverifikasi identitas; authorization menentukan hak akses",
+      "Keduanya selalu identik",
+      "Authorization selalu sebelum authentication tanpa pengecualian",
+      "Keduanya hanya untuk printer",
+      "Tidak relevan di jaringan"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 19,
+    "question": "Packet sniffer (mis. Wireshark) digunakan untuk…",
+    "options": [
+      "Analisis trafik jaringan",
+      "Memformat ulang SSD",
+      "Flash BIOS wajib",
+      "Ganti thermal paste",
+      "Kalibrasi UPS"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 20,
+    "question": "Redundansi gateway dapat memakai…",
+    "options": [
+      "FHRP seperti HSRP/VRRP (konsep high availability)",
+      "Hanya satu static route tanpa backup",
+      "Hanya DNS sinkhole",
+      "Hanya captive portal cafe",
+      "Hanya WEP shared key"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 21,
+    "question": "IPsec sering dipakai untuk…",
+    "options": [
+      "Mengamankan komunikasi IP (mis. VPN)",
+      "Mengganti HTML CSS",
+      "Kompresi gambar PNG",
+      "Editing video timeline",
+      "Font subsetting"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 22,
+    "question": "Collision domain di switch modern…",
+    "options": [
+      "Umumnya tersegmentasi per port (microsegmentation vs hub)",
+      "Sama luasnya dengan seluruh broadcast internet",
+      "Hanya ada di cloud DNS",
+      "Tidak ada di Ethernet",
+      "Hanya pada fiber single-mode"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 23,
+    "question": "NAC (Network Access Control) bertujuan…",
+    "options": [
+      "Mengontrol perangkat yang boleh masuk jaringan sesuai kebijakan",
+      "Menghapus kebutuhan antivirus",
+      "Mengganti routing BGP",
+      "Mematikan DHCP global",
+      "Menonaktifkan syslog"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 24,
+    "question": "Jitter tinggi merusak kualitas…",
+    "options": [
+      "VoIP / real-time media",
+      "File copy lokal USB",
+      "Perhitungan spreadsheet offline",
+      "Pencetakan dokumen teks",
+      "Backup ke disk external idle"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 25,
+    "question": "Dokumentasi diagram jaringan penting agar…",
+    "options": [
+      "Tim dapat memahami topologi, perubahan, dan troubleshooting lebih cepat",
+      "Mengganti kebutuhan monitoring",
+      "Menghapus inventory aset",
+      "Menyembunyikan VLAN dari auditor",
+      "Menonaktifkan change management"
+    ],
+    "answer": 0
+  }
+]

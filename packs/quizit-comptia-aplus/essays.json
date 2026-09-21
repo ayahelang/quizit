@@ -1,0 +1,22 @@
+[
+  {
+    "id": "E1",
+    "question": "Jelaskan langkah sistematis troubleshooting PC yang tidak mau menyala (no power / no POST)."
+  },
+  {
+    "id": "E2",
+    "question": "Bandingkan HDD, SSD SATA, dan NVMe dari sisi kecepatan, harga, dan skenario pemakaian kantor."
+  },
+  {
+    "id": "E3",
+    "question": "Mengapa ESD dan penanganan antistatic penting saat servis hardware? Sebutkan praktik yang benar."
+  },
+  {
+    "id": "E4",
+    "question": "Uraikan perbedaan escalate ke level 2 support versus menyelesaikan di level 1 helpdesk."
+  },
+  {
+    "id": "E5",
+    "question": "Rancang prosedur backup data workstation karyawan kantor kecil (tools, frekuensi, uji restore)."
+  }
+]

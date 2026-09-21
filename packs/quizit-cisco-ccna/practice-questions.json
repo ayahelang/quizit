@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "question": "OSI layer yang bertanggung jawab atas routing antar jaringan adalah…",
+    "options": [
+      "Network",
+      "Data Link",
+      "Transport",
+      "Physical",
+      "Application"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 2,
+    "question": "Protokol yang digunakan router untuk menemukan MAC address dari IP di LAN yang sama adalah…",
+    "options": [
+      "ARP",
+      "DNS",
+      "DHCP",
+      "FTP",
+      "SMTP"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 3,
+    "question": "Subnet mask default untuk kelas C adalah…",
+    "options": [
+      "255.255.255.0",
+      "255.0.0.0",
+      "255.255.0.0",
+      "255.255.255.255",
+      "0.0.0.0"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 4,
+    "question": "Port default HTTPS adalah…",
+    "options": [
+      "443",
+      "80",
+      "22",
+      "25",
+      "53"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 5,
+    "question": "Perintah Cisco IOS untuk menyimpan konfigurasi running ke startup adalah…",
+    "options": [
+      "copy running-config startup-config",
+      "write erase",
+      "reload",
+      "show ip route",
+      "configure terminal"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 6,
+    "question": "VLAN terutama digunakan untuk…",
+    "options": [
+      "Segmentasi logis jaringan di switch",
+      "Mengganti kabel fiber menjadi tembaga",
+      "Meningkatkan daya listrik PoE",
+      "Menghapus kebutuhan IP address",
+      "Mengganti fungsi firewall"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 7,
+    "question": "Protokol routing yang bersifat distance-vector dan sering diajarkan di CCNA dasar adalah…",
+    "options": [
+      "RIP",
+      "BGP saja tanpa opsi lain",
+      "SMTP",
+      "HTTP",
+      "TFTP"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 8,
+    "question": "Alamat IP 192.168.1.1 termasuk kategori…",
+    "options": [
+      "Private IPv4",
+      "Public IPv4 yang wajib diinternet",
+      "IPv6 link-local",
+      "Multicast kelas D wajib",
+      "APIPA saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 9,
+    "question": "Fungsi utama switch Layer 2 adalah…",
+    "options": [
+      "Meneruskan frame berdasarkan MAC address",
+      "Merutekan paket antar subnet berbeda",
+      "Menyimpan email pengguna",
+      "Mengelola DNS publik",
+      "Mengenkripsi seluruh trafik WAN"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 10,
+    "question": "NAT berguna untuk…",
+    "options": [
+      "Menerjemahkan IP private ke public agar bisa akses internet",
+      "Mengganti password Wi-Fi otomatis",
+      "Mempercepat CPU router",
+      "Menghapus VLAN",
+      "Menonaktifkan DHCP"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 11,
+    "question": "SSID pada Wi-Fi adalah…",
+    "options": [
+      "Nama jaringan nirkabel yang terlihat klien",
+      "Alamat MAC access point saja",
+      "Kunci enkripsi WPA3",
+      "Channel radio 2.4 GHz saja",
+      "Alamat IP gateway"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 12,
+    "question": "Perintah show ip interface brief pada Cisco menampilkan…",
+    "options": [
+      "Status ringkas interface dan alamat IP",
+      "Isi seluruh routing table BGP",
+      "Password enable rahasia",
+      "Daftar VLAN voice saja",
+      "Log syslog server"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 13,
+    "question": "TCP berbeda dari UDP terutama karena TCP…",
+    "options": [
+      "Connection-oriented dan menjamin pengiriman berurutan",
+      "Lebih cepat tanpa overhead sama sekali",
+      "Tidak memakai nomor port",
+      "Hanya dipakai untuk video streaming",
+      "Tidak memerlukan IP address"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 14,
+    "question": "Default gateway pada PC berfungsi sebagai…",
+    "options": [
+      "Jalan keluar ke jaringan di luar subnet lokal",
+      "Server DNS primer saja",
+      "Server file SMB",
+      "Alamat MAC default NIC",
+      "Nama domain Active Directory"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 15,
+    "question": "Access Control List (ACL) pada router Cisco umumnya memfilter…",
+    "options": [
+      "Lalu lintas berdasarkan kriteria IP/port/protokol",
+      "Hanya warna LED interface",
+      "Ukuran RAM switch",
+      "Suhu perangkat",
+      "Versi IOS secara otomatis"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 16,
+    "question": "DHCP menyediakan secara otomatis…",
+    "options": [
+      "Konfigurasi IP, mask, gateway, dan sering DNS",
+      "Sertifikat SSL wildcard",
+      "Akun VPN perusahaan",
+      "Update firmware BIOS",
+      "Kunci enkripsi hard disk"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 17,
+    "question": "Trunk port pada switch biasanya membawa…",
+    "options": [
+      "Beberapa VLAN dengan tagging (802.1Q)",
+      "Hanya satu VLAN access tanpa tag",
+      "Hanya trafik wireless",
+      "Hanya trafik printer",
+      "Hanya management IPv6"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 18,
+    "question": "Ping menggunakan protokol…",
+    "options": [
+      "ICMP",
+      "FTP",
+      "SSH",
+      "SNMP trap saja",
+      "BGP"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 19,
+    "question": "IPv6 link-local umumnya diawali…",
+    "options": [
+      "fe80::",
+      "2001:db8::",
+      "::1 saja tanpa yang lain",
+      "ff00:: untuk unicast global",
+      "0.0.0.0"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 20,
+    "question": "Spanning Tree Protocol (STP) mencegah…",
+    "options": [
+      "Loop Layer 2 di topologi switch yang redundant",
+      "Serangan phishing email",
+      "Kehabisan alamat IPv4 publik",
+      "Kegagalan DNS root",
+      "Overheating PSU"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 21,
+    "question": "SSH lebih disarankan daripada Telnet karena…",
+    "options": [
+      "Lalu lintas dikenkripsi",
+      "Telnet selalu lebih cepat di WAN",
+      "SSH tidak butuh password",
+      "Telnet hanya untuk IPv6",
+      "SSH menonaktifkan ACL"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 22,
+    "question": "Metric pada routing menentukan…",
+    "options": [
+      "Preferensi jalur yang dipilih protokol routing",
+      "Jumlah VLAN di switch access",
+      "Kecepatan kipas router",
+      "Ukuran flash memory",
+      "Jumlah user Wi-Fi"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 23,
+    "question": "Port security pada switch dapat…",
+    "options": [
+      "Membatasi MAC address yang diizinkan di suatu port",
+      "Mengganti IOS tanpa reboot",
+      "Membuat tunnel GRE otomatis",
+      "Menghapus konfigurasi startup",
+      "Menyimpan log ke cloud AWS saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 24,
+    "question": "DNS mengubah…",
+    "options": [
+      "Nama domain menjadi alamat IP",
+      "MAC menjadi IP di VLAN berbeda",
+      "VLAN ID menjadi subnet mask",
+      "TCP menjadi UDP",
+      "HTTP menjadi FTP"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 25,
+    "question": "Dalam desain jaringan kantor kecil, firewall biasanya diletakkan…",
+    "options": [
+      "Di perbatasan antara LAN internal dan internet/WAN",
+      "Hanya di antara dua printer",
+      "Di dalam setiap kabel UTP",
+      "Menggantikan seluruh switch access",
+      "Hanya pada endpoint tanpa gateway"
+    ],
+    "answer": 0
+  }
+]

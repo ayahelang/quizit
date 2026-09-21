@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "question": "CIA triad terdiri dari…",
+    "options": [
+      "Confidentiality, Integrity, Availability",
+      "CPU, I/O, Accelerator",
+      "Cable, Interface, Adapter",
+      "Code, Index, Array",
+      "Cache, Instruction, ALU"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 2,
+    "question": "Phishing bertujuan…",
+    "options": [
+      "Memperdaya korban agar menyerahkan data/kredensial",
+      "Mempercepat DNS",
+      "Mengupgrade switch IOS",
+      "Mengkalibrasi monitor",
+      "Membersihkan debu PSU"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 3,
+    "question": "MFA menambahkan…",
+    "options": [
+      "Faktor autentikasi tambahan selain password",
+      "Lebih banyak VLAN",
+      "Lebih banyak core GPU",
+      "Kabel cross-over wajib",
+      "Port printer LPT"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 4,
+    "question": "Principle of least privilege berarti…",
+    "options": [
+      "Memberi hak minimum yang diperlukan untuk tugas",
+      "Memberi admin ke semua user",
+      "Menonaktifkan logging",
+      "Membuka semua port firewall",
+      "Menyimpan password di sticky note"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 5,
+    "question": "Ransomware biasanya…",
+    "options": [
+      "Mengenkripsi data dan meminta tebusan",
+      "Mempercepat compile code",
+      "Mengoptimalkan SSD TRIM saja",
+      "Mengganti tema OS",
+      "Menambah free RAM"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 6,
+    "question": "Hashing terutama menjamin aspek…",
+    "options": [
+      "Integrity (deteksi perubahan data)",
+      "Warna UI",
+      "Kecepatan kipas",
+      "Panjang kabel",
+      "Volume speaker"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 7,
+    "question": "TLS melindungi data…",
+    "options": [
+      "Dalam transit antara klien dan server",
+      "Hanya pada backup tape offline tanpa key",
+      "Hanya di BIOS password",
+      "Hanya pada label rack",
+      "Hanya pada toner"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 8,
+    "question": "Social engineering memanfaatkan…",
+    "options": [
+      "Faktor manusia / psikologi korban",
+      "Bug CPU speculative saja",
+      "Fault PSU ripple",
+      "Bad sector HDD saja",
+      "Driver GPU outdated saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 9,
+    "question": "Patch management penting untuk…",
+    "options": [
+      "Menutup celah keamanan yang sudah diketahui",
+      "Menghapus kebutuhan firewall",
+      "Mengganti seluruh hardware tiap minggu",
+      "Menonaktifkan MFA",
+      "Membuka RDP ke internet tanpa filter"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 10,
+    "question": "Zero-day adalah celah…",
+    "options": [
+      "Yang belum memiliki patch resmi / baru diketahui",
+      "Yang hanya ada di Windows XP",
+      "Yang hanya pada kabel fiber",
+      "Yang hanya pada printer dot matrix",
+      "Yang hanya pada hub 10BASE-T"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 11,
+    "question": "SIEM membantu…",
+    "options": [
+      "Mengumpulkan dan menganalisis log keamanan secara terpusat",
+      "Mengganti keyboard layout",
+      "Mengatur cuti karyawan",
+      "Mencetak badge otomatis",
+      "Mengisi tinta"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 12,
+    "question": "Backup terenkripsi membantu jika…",
+    "options": [
+      "Media cadangan hilang/dicuri",
+      "DNS lambat",
+      "SSID tersembunyi",
+      "Jumlah AP kurang",
+      "CAT5e legacy"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 13,
+    "question": "IDS/IPS berbeda dalam…",
+    "options": [
+      "IPS dapat mencegah/blok; IDS lebih pada deteksi (konsep umum)",
+      "IDS selalu menonaktifkan internet",
+      "IPS hanya untuk printer",
+      "Keduanya identik tanpa perbedaan",
+      "Keduanya hanya antivirus desktop"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 14,
+    "question": "Password spraying adalah…",
+    "options": [
+      "Mencoba sedikit password umum ke banyak akun",
+      "Menghapus semua password",
+      "Reset BIOS massal",
+      "Flood ICMP saja",
+      "Scan port 0 saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 15,
+    "question": "Disk encryption (mis. BitLocker) melindungi data…",
+    "options": [
+      "At rest pada storage",
+      "Hanya saat cable modem sync",
+      "Hanya pada SNMP community public",
+      "Hanya pada banner MOTD",
+      "Hanya pada NTP stratum"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 16,
+    "question": "Incident response langkah awal sering…",
+    "options": [
+      "Identify/contain sesuai playbook (bukan asal format disk)",
+      "Langsung bayar ransomware tanpa investigasi",
+      "Publikasi password di forum",
+      "Matikan SIEM",
+      "Hapus seluruh log"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 17,
+    "question": "Hardening sistem berarti…",
+    "options": [
+      "Mengurangi attack surface (service, patch, config aman)",
+      "Memasang lebih banyak game",
+      "Membuka semua share anonymous",
+      "Menonaktifkan update",
+      "Memberi semua user local admin"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 18,
+    "question": "Certificate digital pada HTTPS membuktikan…",
+    "options": [
+      "Identitas server (dalam rantai kepercayaan CA) dan mendukung enkripsi",
+      "Kecepatan GPU",
+      "Suhu ruangan server",
+      "Jumlah karyawan SOC",
+      "Warna rack"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 19,
+    "question": "Privilege escalation terjadi ketika…",
+    "options": [
+      "Penyerang memperoleh hak lebih tinggi dari yang semestinya",
+      "User biasa hanya membaca email",
+      "Printer kehabisan kertas",
+      "Monitor sleep",
+      "UPS beep low battery saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 20,
+    "question": "Security awareness training menargetkan…",
+    "options": [
+      "Karyawan sebagai lapisan pertahanan manusia",
+      "Hanya firmware switch",
+      "Hanya desain UI",
+      "Hanya kabel grounding",
+      "Hanya PSU rating"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 21,
+    "question": "VPN remote access mengamankan…",
+    "options": [
+      "Koneksi pengguna jarak jauh ke jaringan organisasi",
+      "Hanya cetak dokumen lokal",
+      "Hanya file di RAM disk sementara",
+      "Hanya LED RJ45",
+      "Hanya label patch"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 22,
+    "question": "Default account yang tidak diganti berbahaya karena…",
+    "options": [
+      "Sering diketahui publik dan menjadi sasaran",
+      "Selalu memakai MFA hardware",
+      "Tidak pernah punya password",
+      "Hanya read-only abadi",
+      "Tidak bisa di-network"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 23,
+    "question": "Data classification membantu…",
+    "options": [
+      "Menentukan tingkat proteksi sesuai sensitivitas data",
+      "Menghapus kebutuhan ACL",
+      "Menonaktifkan audit",
+      "Membuka RDP publik",
+      "Menyimpan secret di repo publik"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 24,
+    "question": "Brute force attack mencoba…",
+    "options": [
+      "Banyak kemungkinan kredensial secara sistematis",
+      "Hanya satu password benar sekali",
+      "Hanya phishing suara",
+      "Hanya physical tailgating",
+      "Hanya dumpster diving"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 25,
+    "question": "Chain of custody pada forensik penting untuk…",
+    "options": [
+      "Menjaga keabsahan barang bukti digital di proses hukum/investigasi",
+      "Mempercepat download torrent",
+      "Mengganti SSD lebih murah",
+      "Mengatur wallpaper",
+      "Menyembunyikan log dari auditor internal"
+    ],
+    "answer": 0
+  }
+]
