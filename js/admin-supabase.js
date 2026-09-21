@@ -668,12 +668,26 @@
     return !!(acl && acl.length);
   }
 
+  function currentProductId() {
+    return (typeof config !== 'undefined' && config.productId) ||
+      (global.__CBT_CONFIG__ && global.__CBT_CONFIG__.productId) || 'quizit';
+  }
+  function filterClassesByProduct(rows) {
+    const product = currentProductId();
+    return (rows || []).filter(c => {
+      const cp = c.product_id || null;
+      if (!cp) return product === 'cbt';
+      return cp === product;
+    });
+  }
   async function listClasses() {
-    return await sbFetch('cbt_classes?active=eq.true&select=*&order=institution.asc,name.asc');
+    const rows = await sbFetch('cbt_classes?active=eq.true&select=*&order=institution.asc,name.asc');
+    return filterClassesByProduct(rows);
   }
 
   async function listAllClassesAdmin() {
-    return await sbFetch('cbt_classes?select=*&order=institution.asc,name.asc');
+    const rows = await sbFetch('cbt_classes?select=*&order=institution.asc,name.asc');
+    return filterClassesByProduct(rows);
   }
 
   async function createClass(name, institution) {
@@ -686,6 +700,7 @@
         name: n,
         institution: String(institution || '').trim(),
         created_by: currentAdmin.username || 'main',
+        product_id: currentProductId(),
         active: true
       })
     });
@@ -912,9 +927,12 @@
       const names = legacyMap[className];
       if (!Array.isArray(names)) continue;
       // cek kelas sudah ada (sama nama + instansi)
+      const product = currentProductId();
       const existing = await sbFetch(
         'cbt_classes?name=eq.' + encodeURIComponent(String(className)) +
-        '&institution=eq.' + encodeURIComponent(institution) + '&select=id&limit=1'
+        '&institution=eq.' + encodeURIComponent(institution) +
+        '&product_id=eq.' + encodeURIComponent(product) +
+        '&select=id&limit=1'
       );
       let classId;
       if (existing && existing[0]) {
@@ -1172,6 +1190,7 @@
 
   global.SHSupabase = {
     sbEnabled,
+    currentProductId,
     loginSecondary,
     addAdmin,
     listAdmins,

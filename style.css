@@ -922,3 +922,59 @@ body {
 
 /* tooltip hint */
 button[title], .btn[title] { cursor: help; }
+
+/* Collapsible admin sections */
+.admin-fold {
+  border: 1px solid rgba(148,163,184,0.25);
+  border-radius: 12px;
+  margin: 12px 0;
+  background: rgba(15,23,42,0.35);
+  overflow: hidden;
+}
+.admin-fold-title {
+  list-style: none;
+  cursor: pointer;
+  padding: 12px 14px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+.admin-fold-title::-webkit-details-marker { display: none; }
+.admin-fold-title::after {
+  content: "▼";
+  font-size: 0.7rem;
+  opacity: 0.7;
+  transition: transform 0.15s ease;
+}
+details.admin-fold:not([open]) > .admin-fold-title::after {
+  transform: rotate(-90deg);
+}
+.admin-fold-body { padding: 0 14px 14px; }
+
+.admin-top-bar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  align-items: center;
+  justify-content: flex-end;
+}
+.btn-google {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(148,163,184,0.35);
+  background: #fff;
+  color: #3c4043;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-google:hover { background: #f8fafc; }
+.btn-google .g-icon { display: flex; }
