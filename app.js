@@ -6,6 +6,250 @@ let config = {};
 let students = {};
 let catalog = { packs: [] };
 let validPacks = [];
+
+let guestSession = { email: '', name: '', picture: '' };
+let lastExamResult = null;
+
+function parseGoogleJwt(credential) {
+  const payload = JSON.parse(atob(credential.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+  return {
+    email: payload.email || '',
+    name: payload.name || '',
+    picture: payload.picture || '',
+    email_verified: payload.email_verified
+  };
+}
+
+async function handleAdminGoogleCredential(resp) {
+  try {
+    const profile = parseGoogleJwt(resp.credential);
+    if (!window.SHSupabase || !SHSupabase.sbEnabled()) {
+      // main-only offline fallback
+      const mains = (config.mainAdminGoogleEmails || []).map(e => String(e).toLowerCase());
+      if (mains.includes(String(profile.email).toLowerCase())) {
+        openAdminPanel({ username: 'main', role: 'main', display_name: profile.name || 'Admin Utama', google_email: profile.email });
+        return;
+      }
+      alert('Layanan data belum siap / email bukan admin utama.');
+      return;
+    }
+    const admin = await SHSupabase.loginWithGoogleEmail(profile.email, profile);
+    openAdminPanel(admin);
+  } catch (e) {
+    alert(e.message || 'Login Google admin gagal');
+  }
+}
+
+function renderAdminGoogleButton() {
+  const clientId = (config && config.googleClientId) || '';
+  const el = document.getElementById('admin-google-btn');
+  if (!el) return;
+  if (!clientId) {
+    el.innerHTML = '<p class="hint">Isi googleClientId di config.json (lihat panduan Google Cloud).</p>';
+    return;
+  }
+  if (!window.google || !google.accounts || !google.accounts.id) {
+    el.innerHTML = '<p class="hint">Memuat Google…</p>';
+    setTimeout(renderAdminGoogleButton, 1200);
+    return;
+  }
+  el.innerHTML = '';
+  google.accounts.id.initialize({
+    client_id: clientId,
+    callback: handleAdminGoogleCredential
+  });
+  google.accounts.id.renderButton(el, { theme: 'filled_blue', size: 'large', text: 'signin_with', width: 280 });
+}
+
+async function linkCurrentAdminGoogle() {
+  const clientId = (config && config.googleClientId) || '';
+  if (!clientId) { alert('googleClientId belum diisi di config.json'); return; }
+  if (!window.google || !google.accounts) { alert('Google belum termuat, coba lagi'); return; }
+  // One-tap / prompt
+  google.accounts.id.initialize({
+    client_id: clientId,
+    callback: async (resp) => {
+      try {
+        const profile = parseGoogleJwt(resp.credential);
+        if (!SHSupabase.getCurrentAdmin()) {
+          alert('Login admin dulu (password), lalu hubungkan Google.');
+          return;
+        }
+        await SHSupabase.linkGoogleEmailToCurrentAdmin(profile.email);
+        alert('Akun Google terhubung: ' + profile.email + '\\nLain kali bisa login admin dengan Google.');
+      } catch (e) {
+        alert(e.message || 'Gagal menghubungkan Google');
+      }
+    }
+  });
+  google.accounts.id.prompt();
+  // also show a temporary button container if prompt blocked
+  const host = document.createElement('div');
+  host.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:center;justify-content:center';
+  const card = document.createElement('div');
+  card.style.cssText = 'background:#0f172a;padding:20px;border-radius:12px;max-width:360px;width:90%';
+  card.innerHTML = '<p style="color:#e2e8f0;margin-bottom:12px">Pilih akun Google untuk dihubungkan ke admin ini.</p>';
+  const btnBox = document.createElement('div');
+  card.appendChild(btnBox);
+  const close = document.createElement('button');
+  close.textContent = 'Tutup';
+  close.className = 'btn btn-secondary';
+  close.style.marginTop = '12px';
+  close.onclick = () => host.remove();
+  card.appendChild(close);
+  host.appendChild(card);
+  document.body.appendChild(host);
+  google.accounts.id.renderButton(btnBox, { theme: 'outline', size: 'large', width: 280 });
+}
+
+
+
+function onExamModeChange() {
+  const mode = (document.getElementById('exam-mode') || {}).value || 'registered';
+  const guest = document.getElementById('guest-token-group');
+  const regBlocks = ['password-group', 'class-group', 'name-group'].map(id => document.getElementById(id));
+  if (guest) guest.style.display = mode === 'token' ? 'block' : 'none';
+  regBlocks.forEach(el => {
+    if (!el) return;
+    if (mode === 'token') el.style.display = 'none';
+  });
+  if (mode === 'registered') {
+    // restore via class change logic
+    const cls = document.getElementById('class-select');
+    if (cls && cls.value) {
+      const pg = document.getElementById('password-group');
+      if (pg) pg.style.display = 'block';
+    }
+  }
+  checkStartReady();
+}
+
+function openTokenWhatsApp() {
+  const phone = (config.whatsappTokenRequest || '6285158822803').replace(/[^0-9]/g, '');
+  const gopay = config.gopayNumber || phone;
+  const minAmt = config.gopayMinAmount || 5000;
+  const packTitle = (selectedPack && selectedPack.title) || '(pilih paket dulu)';
+  const text = encodeURIComponent(
+    'Halo Teddy Mulyana, saya ingin minta token tes QuizIT.\\n' +
+    'Paket: ' + packTitle + '\\n' +
+    'Saya sudah / akan transfer Gopay ke ' + gopay + ' minimal Rp' + minAmt + '.\\n' +
+    'Bukti transfer menyusul di chat ini.\\n' +
+    'Mohon dibuatkan token tes.'
+  );
+  window.open('https://wa.me/' + phone + '?text=' + text, '_blank');
+}
+
+function initGoogleButton() {
+  const clientId = (config && config.googleClientId) || '';
+  const wrap = document.getElementById('google-btn-wrap');
+  if (!wrap) return;
+  if (!clientId) {
+    wrap.innerHTML = '<p class="hint">Login Google belum dikonfigurasi (isi googleClientId di config). Anda tetap bisa isi nama manual + token.</p>';
+    return;
+  }
+  if (!window.google || !google.accounts) {
+    wrap.innerHTML = '<p class="hint">Memuat Google Sign-In… refresh jika belum muncul.</p>';
+    setTimeout(initGoogleButton, 1500);
+    return;
+  }
+  wrap.innerHTML = '';
+  google.accounts.id.initialize({
+    client_id: clientId,
+    callback: (resp) => {
+      try {
+        const payload = JSON.parse(atob(resp.credential.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+        guestSession.email = payload.email || '';
+        guestSession.name = payload.name || '';
+        guestSession.picture = payload.picture || '';
+        const lab = document.getElementById('google-user-label');
+        if (lab) lab.textContent = 'Login: ' + guestSession.name + ' (' + guestSession.email + ')';
+        const gn = document.getElementById('guest-name');
+        if (gn && !gn.value) gn.value = guestSession.name || '';
+      } catch (e) { console.warn(e); }
+    }
+  });
+  google.accounts.id.renderButton(wrap, { theme: 'outline', size: 'large', width: 280 });
+}
+
+function predicateFromPercent(p) {
+  if (p >= 90) return 'Sangat Baik (Excellent)';
+  if (p >= 80) return 'Baik (Good)';
+  if (p >= 70) return 'Cukup (Fair)';
+  if (p >= 60) return 'Lulus Minimum';
+  return 'Perlu Latihan Lagi';
+}
+
+function downloadCertificatePDF() {
+  if (!lastExamResult) {
+    // fallback dari DOM hasil
+    lastExamResult = {
+      name: (document.getElementById('guest-name') && document.getElementById('guest-name').value) || (nameSelect && nameSelect.value) || 'Peserta',
+      packTitle: selectedPack ? selectedPack.title : '',
+      packId: selectedPack ? selectedPack.id : '',
+      scorePg: document.getElementById('score-value') ? document.getElementById('score-value').textContent : '0',
+      maxPg: (document.getElementById('score-total') || {}).textContent || '',
+      percent: (document.getElementById('score-percent') || {}).textContent || '',
+      predicate: predicateFromPercent(parseFloat(String((document.getElementById('score-percent')||{}).textContent||'0'))),
+      className: (classSelect && classSelect.value) || '',
+      issuedAt: new Date().toLocaleString('id-ID')
+    };
+  }
+  const { jsPDF } = window.jspdf || {};
+  if (!jsPDF) { alert('Modul PDF belum termuat. Refresh halaman.'); return; }
+  const r = lastExamResult;
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+  const W = doc.internal.pageSize.getWidth();
+  const H = doc.internal.pageSize.getHeight();
+  // background
+  doc.setFillColor(11, 18, 32);
+  doc.rect(0, 0, W, H, 'F');
+  doc.setDrawColor(167, 139, 250);
+  doc.setLineWidth(3);
+  doc.rect(24, 24, W - 48, H - 48);
+  doc.setDrawColor(34, 211, 238);
+  doc.setLineWidth(1);
+  doc.rect(32, 32, W - 64, H - 64);
+  doc.setTextColor(167, 139, 250);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(18);
+  doc.text((config.certificateIssuer || 'QuizIT · Silverhawk Network'), W/2, 70, { align: 'center' });
+  doc.setTextColor(226, 232, 240);
+  doc.setFontSize(28);
+  doc.text('SERTIFIKAT PENYELESAIAN', W/2, 120, { align: 'center' });
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(12);
+  doc.setTextColor(148, 163, 184);
+  doc.text('Diberikan kepada', W/2, 160, { align: 'center' });
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(26);
+  doc.text(String(r.name || '-'), W/2, 195, { align: 'center' });
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(13);
+  doc.setTextColor(203, 213, 225);
+  doc.text('atas partisipasi dan hasil asesmen:', W/2, 230, { align: 'center' });
+  doc.setTextColor(167, 139, 250);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(16);
+  doc.text(String(r.packTitle || r.packId || ''), W/2, 258, { align: 'center' });
+  doc.setTextColor(226, 232, 240);
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'normal');
+  const lines = [
+    'Skor PG: ' + r.scorePg + ' / ' + r.maxPg + '  (' + r.percent + '%)',
+    'Predikat: ' + r.predicate,
+    r.className ? ('Kelas/Identitas: ' + r.className) : '',
+    'Tanggal: ' + (r.issuedAt || new Date().toLocaleString('id-ID'))
+  ].filter(Boolean);
+  let y = 300;
+  lines.forEach(line => { doc.text(line, W/2, y, { align: 'center' }); y += 22; });
+  doc.setFontSize(10);
+  doc.setTextColor(100, 116, 139);
+  doc.text('Verifikasi internal QuizIT · Bukan sertifikasi vendor resmi (Cisco/CompTIA/AWS/dll.)', W/2, H - 50, { align: 'center' });
+  doc.save('Sertifikat-QuizIT-' + String(r.name || 'peserta').replace(/\\s+/g, '_') + '.pdf');
+}
+
+
 let selectedPack = null;
 let packQuestions = [];
 let packEssays = [];
@@ -53,6 +297,9 @@ async function init() {
     students = await stuRes.json();
     catalog = await catRes.json();
     validPacks = await validateCatalog(catalog.packs || []);
+    validPacks = (validPacks || []).filter(p => {
+      try { return isPackForThisProduct(p.id, null); } catch (_) { return true; }
+    });
     renderPackList();
     setupEventListeners();
     setupAntiCheatUi();
@@ -115,33 +362,51 @@ async function validateCatalog(packs) {
   return results;
 }
 
+
 function renderPackList() {
+  renderPackListProgressive();
+}
+
+function renderPackListProgressive() {
   const box = document.getElementById('pack-list');
-  if (!validPacks.length) {
-    box.innerHTML = '<p class="hint">Tidak ada paket soal di catalog.json</p>';
+  if (!box) return;
+  const packs = (validPacks || []).filter(p => p && p.valid !== false && isPackForThisProduct(p.id, p._remoteData));
+  box.innerHTML = '';
+  if (!packs.length) {
+    box.innerHTML = '<p class="hint">Memuat paket soal…</p>';
     return;
   }
-  box.innerHTML = '';
-  validPacks.forEach(pack => {
+  let i = 0;
+  const status = document.createElement('p');
+  status.className = 'hint';
+  status.id = 'pack-load-status';
+  status.textContent = 'Memuat daftar paket…';
+  box.appendChild(status);
+  function addNext() {
+    if (i >= packs.length) {
+      if (status.parentNode) status.remove();
+      return;
+    }
+    const pack = packs[i++];
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'pack-item';
-    btn.disabled = !pack.valid;
-    btn.innerHTML = `
-      <div class="pack-title">${escapeHtml(pack.title || pack.id)}</div>
-      <div class="pack-meta">${escapeHtml(pack.subject || '')}${pack.description ? ' — ' + escapeHtml(pack.description) : ''}</div>
-      <span class="pack-badge ${pack.valid ? '' : 'invalid'}">
-        ${pack.valid
-          ? `${pack.mcCount} PG${pack.essaysCount ? ' + ' + pack.essaysCount + ' Essay' : ''}${pack.practiceOk ? ' • Latihan OK' : ''}`
-          : 'File tidak valid / tidak ditemukan'}
-      </span>
-    `;
-    if (pack.valid) {
-      btn.addEventListener('click', () => selectPack(pack, btn));
-    }
+    btn.dataset.packId = pack.id;
+    const mc = pack.mcCount != null ? pack.mcCount : '?';
+    const es = pack.essaysCount != null ? pack.essaysCount : '?';
+    const latihan = pack.practiceOk ? ' · Latihan OK' : '';
+    btn.innerHTML = '<strong>' + escapeHtml(pack.title || pack.id) + '</strong>' +
+      '<span class="pack-desc">' + escapeHtml((pack.subject ? pack.subject + ' — ' : '') + (pack.description || '')) + '</span>' +
+      '<span class="pack-meta">' + mc + ' PG + ' + es + ' Essay' + latihan + '</span>';
+    btn.addEventListener('click', () => selectPack(pack, btn));
     box.appendChild(btn);
-  });
+    status.textContent = 'Memuat paket ' + i + ' / ' + packs.length + '…';
+    setTimeout(addNext, 40);
+  }
+  addNext();
 }
+
+
 
 function escapeHtml(s) {
   return String(s)
@@ -185,6 +450,17 @@ function setupEventListeners() {
   examPassword.addEventListener('input', checkStartReady);
   nameSelect.addEventListener('change', checkStartReady);
   btnStart.addEventListener('click', onStartClick);
+  const em = document.getElementById('exam-mode');
+  if (em) em.addEventListener('change', onExamModeChange);
+  const brt = document.getElementById('btn-request-token');
+  if (brt) brt.addEventListener('click', openTokenWhatsApp);
+  ['exam-token','guest-name'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', checkStartReady);
+  });
+  const bdc = document.getElementById('btn-download-cert');
+  if (bdc) bdc.addEventListener('click', downloadCertificatePDF);
+  setTimeout(initGoogleButton, 800);
   btnPrev.addEventListener('click', () => navigate(-1));
   btnNext.addEventListener('click', () => navigate(1));
   btnSubmit.addEventListener('click', confirmSubmit);
@@ -201,6 +477,8 @@ function setupEventListeners() {
   document.getElementById('btn-back-from-admin').addEventListener('click', hideSpecialLogins);
   document.getElementById('btn-admin-enter').addEventListener('click', enterAdmin);
   document.getElementById('btn-admin-logout').addEventListener('click', logoutAdmin);
+  const blg = document.getElementById('btn-link-google');
+  if (blg) blg.addEventListener('click', linkCurrentAdminGoogle);
   document.getElementById('btn-admin-refresh').addEventListener('click', adminLoadData);
   document.getElementById('btn-admin-download').addEventListener('click', adminDownloadCSV);
   document.getElementById('btn-jump-unanswered').addEventListener('click', jumpToUnanswered);
@@ -229,6 +507,7 @@ function showAdminLogin() {
   document.getElementById('admin-login').style.display = 'block';
   document.getElementById('admin-password').value = '';
   document.getElementById('admin-password').focus();
+  setTimeout(renderAdminGoogleButton, 400);
 }
 
 function hideSpecialLogins() {
@@ -328,10 +607,16 @@ async function onClassChange() {
 }
 
 function checkStartReady() {
+  const mode = (document.getElementById('exam-mode') || {}).value || 'registered';
+  if (mode === 'token') {
+    const tok = (document.getElementById('exam-token') || {}).value || '';
+    const nm = (document.getElementById('guest-name') || {}).value || '';
+    btnStart.disabled = !(selectedPack && tok.trim() && nm.trim());
+    return;
+  }
   const cls = classSelect.value;
   const pass = examPassword.value.trim();
   const name = nameSelect.value;
-  // validasi password ketat di onStartClick (multi-password + kadaluarsa)
   btnStart.disabled = !(selectedPack && cls && name && pass);
 }
 
@@ -367,6 +652,28 @@ async function onStartClick() {
 
   btnStart.disabled = true;
   btnStart.textContent = 'Memeriksa...';
+
+  const examMode = (document.getElementById('exam-mode') || {}).value || 'registered';
+  if (examMode === 'token') {
+    const tokenCode = (document.getElementById('exam-token') || {}).value || '';
+    const gName = (document.getElementById('guest-name') || {}).value || guestSession.name || '';
+    const gEmail = guestSession.email || '';
+    if (!selectedPack) { alert('Pilih paket dulu'); btnStart.disabled=false; btnStart.textContent='Mulai Ujian'; return; }
+    if (!gName.trim()) { alert('Isi nama untuk sertifikat'); btnStart.disabled=false; btnStart.textContent='Mulai Ujian'; return; }
+    if (!tokenCode.trim()) { alert('Isi token tes'); btnStart.disabled=false; btnStart.textContent='Mulai Ujian'; return; }
+    try {
+      const ver = await SHSupabase.verifyExamToken(tokenCode.trim(), selectedPack.id, gName, gEmail);
+      if (!ver.ok) { alert(ver.reason || 'Token tidak valid'); btnStart.disabled=false; btnStart.textContent='Mulai Ujian'; return; }
+      await SHSupabase.consumeExamToken(ver.token.id, { user_name: gName, user_email: gEmail, pack_id: selectedPack.id });
+      // set session identity for scoring/cert
+      window.__guestExam = { name: gName, email: gEmail, token: tokenCode.trim() };
+    } catch (e) {
+      alert(e.message || 'Gagal verifikasi token');
+      btnStart.disabled = false; btnStart.textContent = 'Mulai Ujian';
+      return;
+    }
+  }
+
 
   // Password paket (multi + kadaluarsa) atau fallback password rombel lama
   const packId = selectedPack.id || (selectedPack._remoteData && selectedPack._remoteData.id);
@@ -1087,10 +1394,25 @@ function setupAntiCheatUi() {
 
 
 /* ========== ADMIN EXTENDED (Supabase) ========== */
+function isPackForThisProduct(packId, rp) {
+  const product = (config && config.productId) || 'quizit';
+  if (product === 'quizit') {
+    // QuizIT: hanya paket quizit-* (jangan tampilkan webdesign/smm/dkv dari DB bersama)
+    if (packId && String(packId).startsWith('quizit-')) return true;
+    if (rp && rp.product_id === 'quizit') return true;
+    return false;
+  }
+  // CBT: jangan tampilkan quizit-*
+  if (packId && String(packId).startsWith('quizit-')) return false;
+  if (rp && rp.product_id === 'quizit') return false;
+  return true;
+}
+
 async function mergeRemotePacks() {
   if (!window.SHSupabase || !SHSupabase.sbEnabled()) return;
   const remote = await SHSupabase.listRemotePacks();
   (remote || []).forEach(rp => {
+    if (!isPackForThisProduct(rp.id, rp)) return;
     const pack = {
       id: rp.id,
       title: rp.title,
@@ -1110,7 +1432,9 @@ async function mergeRemotePacks() {
     if (idx >= 0) validPacks[idx] = { ...validPacks[idx], ...pack };
     else validPacks.push(pack);
   });
-  renderPackList();
+  // buang paket asing yang sempat masuk dari remote sebelumnya
+  validPacks = (validPacks || []).filter(p => isPackForThisProduct(p.id, p._remoteData));
+  renderPackListProgressive();
 }
 
 // Override selectPack loading for remote packs — patch via wrapper
@@ -1154,6 +1478,7 @@ function setupAdminExtendedUi() {
       if (id === 'analisis') fillAnalisisPackOptions();
       if (id === 'kelola-paket') refreshManagePacksList();
       if (id === 'peserta-master') refreshMasterClasses();
+      if (id === 'tokens') refreshTokenList();
     });
   });
 
@@ -1737,6 +2062,7 @@ function setupPackManageUi() {
     ['btn-mc-add', onMcAddClass],
     ['btn-mc-add-member', onMcAddMember],
     ['btn-mc-import-legacy', onMcImportLegacy],
+    ['btn-tok-create', onCreateToken],
     ['btn-mp-assign-all-master', onMpAssignAllMaster],
     ['btn-mp-select-all-tree', onMpSelectAllTree]
   ];
@@ -2322,6 +2648,78 @@ async function onMpAssignAllMaster() {
   } catch (e) {
     st.textContent = e.message;
   }
+}
+
+
+async function refreshTokenList() {
+  const list = document.getElementById('tok-list');
+  const st = document.getElementById('tok-status');
+  if (!list) return;
+  list.innerHTML = '';
+  try {
+    const rows = await SHSupabase.listExamTokens((config && config.productId) || 'quizit');
+    st.textContent = (rows||[]).length + ' token.';
+    (rows||[]).forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'admin-row';
+      div.innerHTML = '<div class="info" style="flex:1;cursor:pointer"><strong>' + escapeHtml(r.token_code) + '</strong> · ' +
+        escapeHtml(r.label||'') + '<br><small>' + escapeHtml(r.scope_type) + ' · pakai ' + (r.used_count||0) + '/' + (r.max_uses||'∞') +
+        ' · Rp' + (r.transfer_amount||0) + (r.expires_at ? ' · exp ' + r.expires_at : '') + '</small></div>';
+      div.querySelector('.info').onclick = async () => {
+        const detail = document.getElementById('tok-detail');
+        let usages = [];
+        try { usages = await SHSupabase.listTokenUsages(r.id); } catch(_){}
+        detail.innerHTML = '<strong>Detail ' + escapeHtml(r.token_code) + '</strong><br>' +
+          'Dibuat: ' + escapeHtml(r.created_at||'') + ' oleh ' + escapeHtml(r.created_by||'') + '<br>' +
+          'Transfer tercatat: Rp' + (r.transfer_amount||0) + ' ' + escapeHtml(r.transfer_note||'') + '<br>' +
+          'Paket: ' + escapeHtml(JSON.stringify(r.pack_ids||[])) + '<br>' +
+          'Terakhir dipakai: ' + escapeHtml(r.last_used_at||'-') + ' · ' + escapeHtml(r.last_used_by||'-') + '<br>' +
+          'Riwayat (' + usages.length + '):<br>' + usages.slice(0,10).map(u =>
+            '- ' + escapeHtml(u.used_at) + ' · ' + escapeHtml(u.user_name||u.user_email||'') + ' · ' + escapeHtml(u.pack_id||'')
+          ).join('<br>');
+      };
+      const bEdit = document.createElement('button');
+      bEdit.type='button'; bEdit.className='btn-del'; bEdit.textContent='Edit kode';
+      bEdit.onclick = async () => {
+        const nc = prompt('Kode token baru', r.token_code);
+        if (!nc) return;
+        try { await SHSupabase.updateExamToken(r.id, { token_code: nc.trim() }); refreshTokenList(); }
+        catch(e){ alert(e.message); }
+      };
+      const bDel = document.createElement('button');
+      bDel.type='button'; bDel.className='btn-del'; bDel.textContent='Hapus';
+      bDel.onclick = async () => {
+        if (!confirm('Hapus token?')) return;
+        try { await SHSupabase.deleteExamToken(r.id); refreshTokenList(); } catch(e){ alert(e.message); }
+      };
+      div.appendChild(bEdit); div.appendChild(bDel); list.appendChild(div);
+    });
+  } catch(e) { st.textContent = e.message; }
+}
+
+async function onCreateToken() {
+  const st = document.getElementById('tok-status');
+  try {
+    const code = document.getElementById('tok-code').value.trim() || ('QI-' + Math.random().toString(36).slice(2,8).toUpperCase());
+    const users = document.getElementById('tok-users').value.split(',').map(s=>s.trim()).filter(Boolean);
+    const packs = document.getElementById('tok-packs').value.split(',').map(s=>s.trim()).filter(Boolean);
+    const exp = document.getElementById('tok-exp').value;
+    await SHSupabase.createExamToken({
+      token_code: code,
+      product_id: (config && config.productId) || 'quizit',
+      label: document.getElementById('tok-label').value.trim(),
+      scope_type: document.getElementById('tok-scope').value,
+      allowed_users: users,
+      allowed_class: document.getElementById('tok-class').value.trim() || null,
+      pack_ids: packs,
+      max_uses: parseInt(document.getElementById('tok-max').value,10)||1,
+      transfer_amount: parseInt(document.getElementById('tok-amount').value,10)||0,
+      expires_at: exp ? new Date(exp).toISOString() : null
+    });
+    document.getElementById('tok-code').value = code;
+    st.textContent = 'Token dibuat: ' + code;
+    refreshTokenList();
+  } catch(e) { st.textContent = e.message; }
 }
 
 async function loadProctorSettings() {

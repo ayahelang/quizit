@@ -996,6 +996,161 @@
     return results;
   }
 
+
+  async function listExamTokens(productId) {
+    const q = productId
+      ? 'cbt_exam_tokens?product_id=eq.' + encodeURIComponent(productId) + '&select=*&order=created_at.desc'
+      : 'cbt_exam_tokens?select=*&order=created_at.desc';
+    return await sbFetch(q);
+  }
+
+  async function createExamToken(data) {
+    if (!currentAdmin) throw new Error('Belum login admin');
+    const code = String(data.token_code || '').trim();
+    if (code.length < 4) throw new Error('Kode token minimal 4 karakter');
+    const body = {
+      token_code: code,
+      product_id: data.product_id || 'quizit',
+      label: data.label || '',
+      scope_type: data.scope_type || 'single_user',
+      allowed_users: data.allowed_users || [],
+      allowed_class: data.allowed_class || null,
+      pack_ids: data.pack_ids || [],
+      max_uses: data.max_uses != null ? Number(data.max_uses) : 1,
+      transfer_amount: data.transfer_amount != null ? Number(data.transfer_amount) : 0,
+      transfer_note: data.transfer_note || '',
+      expires_at: data.expires_at || null,
+      active: true,
+      created_by: currentAdmin.username || ''
+    };
+    const rows = await sbFetch('cbt_exam_tokens', { method: 'POST', body: JSON.stringify(body) });
+    return Array.isArray(rows) ? rows[0] : rows;
+  }
+
+  async function updateExamToken(id, fields) {
+    if (!currentAdmin) throw new Error('Belum login admin');
+    await sbFetch('cbt_exam_tokens?id=eq.' + encodeURIComponent(id), {
+      method: 'PATCH', body: JSON.stringify(fields)
+    });
+  }
+
+  async function deleteExamToken(id) {
+    if (!currentAdmin) throw new Error('Belum login admin');
+    await sbFetch('cbt_exam_tokens?id=eq.' + encodeURIComponent(id), { method: 'DELETE' });
+  }
+
+  async function listTokenUsages(tokenId) {
+    return await sbFetch('cbt_token_usages?token_id=eq.' + encodeURIComponent(tokenId) + '&select=*&order=used_at.desc');
+  }
+
+  async function verifyExamToken(code, packId, userName, userEmail) {
+    const rows = await sbFetch('cbt_exam_tokens?token_code=eq.' + encodeURIComponent(String(code).trim()) + '&select=*');
+    if (!rows || !rows[0]) return { ok: false, reason: 'Token tidak ditemukan' };
+    const tok = rows[0];
+    if (tok.active === false) return { ok: false, reason: 'Token nonaktif' };
+    if (tok.expires_at && new Date(tok.expires_at).getTime() < Date.now()) return { ok: false, reason: 'Token kadaluarsa' };
+    if (tok.max_uses != null && tok.used_count >= tok.max_uses) return { ok: false, reason: 'Kuota token habis' };
+    const packs = Array.isArray(tok.pack_ids) ? tok.pack_ids : [];
+    if (packs.length && packId && !packs.includes(packId)) return { ok: false, reason: 'Token tidak berlaku untuk paket ini' };
+    if (tok.scope_type === 'single_user' && tok.allowed_users && tok.allowed_users.length) {
+      const okUser = tok.allowed_users.some(u => String(u).toLowerCase() === String(userName||'').toLowerCase() || String(u).toLowerCase() === String(userEmail||'').toLowerCase());
+      if (!okUser) return { ok: false, reason: 'Token hanya untuk pengguna tertentu' };
+    }
+    if (tok.scope_type === 'class' && tok.allowed_class) {
+      // class check optional at caller
+    }
+    return { ok: true, token: tok };
+  }
+
+  async function consumeExamToken(tokenId, meta) {
+    const rows = await sbFetch('cbt_exam_tokens?id=eq.' + encodeURIComponent(tokenId) + '&select=*');
+    if (!rows || !rows[0]) throw new Error('Token hilang');
+    const tok = rows[0];
+    await sbFetch('cbt_exam_tokens?id=eq.' + encodeURIComponent(tokenId), {
+      method: 'PATCH',
+      body: JSON.stringify({
+        used_count: (tok.used_count || 0) + 1,
+        last_used_at: new Date().toISOString(),
+        last_used_by: meta.user_name || meta.user_email || ''
+      })
+    });
+    await sbFetch('cbt_token_usages', {
+      method: 'POST',
+      body: JSON.stringify({
+        token_id: tokenId,
+        token_code: tok.token_code,
+        user_name: meta.user_name || '',
+        user_email: meta.user_email || '',
+        pack_id: meta.pack_id || '',
+        meta: meta || {}
+      })
+    });
+  }
+
+  async function saveCertificate(row) {
+    await sbFetch('cbt_certificates', { method: 'POST', body: JSON.stringify(row) });
+  }
+
+
+  async function loginWithGoogleEmail(email, profile) {
+    email = String(email || '').trim().toLowerCase();
+    if (!email) throw new Error('Email Google kosong');
+    const mainList = ((typeof config !== 'undefined' && config.mainAdminGoogleEmails) ||
+      (global.__CBT_CONFIG__ && global.__CBT_CONFIG__.mainAdminGoogleEmails) || []);
+    const mains = (mainList || []).map(e => String(e).toLowerCase());
+    if (mains.includes(email)) {
+      currentAdmin = {
+        username: 'main',
+        role: 'main',
+        display_name: (profile && profile.name) || 'Admin Utama',
+        google_email: email
+      };
+      return currentAdmin;
+    }
+    // secondary by google_email
+    const rows = await sbFetch('cbt_admins?google_email=ilike.' + encodeURIComponent(email) + '&select=*');
+    let row = rows && rows[0];
+    if (!row) {
+      // try exact filter alternative
+      const all = await sbFetch('cbt_admins?select=*');
+      row = (all || []).find(a => String(a.google_email || '').toLowerCase() === email);
+    }
+    if (!row) throw new Error('Email Google belum terhubung ke akun admin. Hubungkan dulu dari panel admin (login password sekali), atau minta admin utama.');
+    if (row.active === false) throw new Error('Akun admin nonaktif');
+    if (row.subscription_expires_at) {
+      const exp = new Date(row.subscription_expires_at);
+      if (!isNaN(exp.getTime()) && exp.getTime() < Date.now()) throw new Error('Langganan expired');
+    }
+    currentAdmin = {
+      username: row.username,
+      role: row.role || 'secondary',
+      display_name: row.display_name || row.username,
+      google_email: email,
+      id: row.id
+    };
+    return currentAdmin;
+  }
+
+  async function linkGoogleEmailToCurrentAdmin(email) {
+    if (!currentAdmin) throw new Error('Belum login');
+    email = String(email || '').trim().toLowerCase();
+    if (!email) throw new Error('Email kosong');
+    if (isMainAdmin()) {
+      // main is config-based; store optional preference not required
+      currentAdmin.google_email = email;
+      return currentAdmin;
+    }
+    const rows = await sbFetch('cbt_admins?username=eq.' + encodeURIComponent(currentAdmin.username) + '&select=id');
+    if (!rows || !rows[0]) throw new Error('Akun tidak ditemukan');
+    await sbFetch('cbt_admins?id=eq.' + encodeURIComponent(rows[0].id), {
+      method: 'PATCH',
+      body: JSON.stringify({ google_email: email })
+    });
+    currentAdmin.google_email = email;
+    currentAdmin.id = rows[0].id;
+    return currentAdmin;
+  }
+
   global.SHSupabase = {
     sbEnabled,
     loginSecondary,

@@ -7,6 +7,8 @@
     <link rel="apple-touch-icon" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>QuizIT</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <link rel="stylesheet" href="style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -51,7 +53,23 @@
               <p class="hint">Setiap paket ujian hanya boleh dikerjakan satu kali per nama (dicek via sistem).</p>
             </div>
 
-            <div class="form-group" id="password-group" style="display: none">
+            
+          <div class="form-group" id="exam-mode-group">
+            <label>Cara masuk ujian</label>
+            <select id="exam-mode">
+              <option value="registered">Peserta terdaftar (kelas + nama + password)</option>
+              <option value="token">Tamu / token (Google + token tes)</option>
+            </select>
+          </div>
+          <div id="guest-token-group" style="display:none">
+            <p class="hint">Peserta tidak terdaftar: masuk dengan Google, lalu isi token tes. Token didapat setelah konfirmasi transfer Gopay.</p>
+            <div id="google-btn-wrap" style="margin:8px 0"></div>
+            <div id="google-user-label" class="hint" style="margin-bottom:8px"></div>
+            <div class="form-group"><label>Nama lengkap (sertifikat)</label><input type="text" id="guest-name" placeholder="Nama pada sertifikat" /></div>
+            <div class="form-group"><label>Token tes</label><input type="text" id="exam-token" placeholder="Kode token" autocomplete="off" /></div>
+            <button type="button" id="btn-request-token" class="btn btn-secondary" style="width:100%;margin-bottom:10px">Minta token via WhatsApp (transfer Gopay min Rp5.000)</button>
+          </div>
+<div class="form-group" id="password-group" style="display: none">
               <label>Password Ujian</label>
               <input type="password" id="exam-password" placeholder="Masukkan password rombel" autocomplete="off" />
             </div>
@@ -82,6 +100,9 @@
             <input type="password" id="admin-password" placeholder="Password admin utama" autocomplete="off" />
           </div>
           <button id="btn-admin-enter" class="btn btn-primary">Masuk Admin Utama</button>
+          <p class="hint" style="margin:10px 0 6px;text-align:center">atau</p>
+          <div id="admin-google-btn" style="display:flex;justify-content:center;margin-bottom:8px"></div>
+          <p class="hint">Admin utama (Google): admin@silverhawk.web.id · ted834r@gmail.com</p>
           <hr style="border-color:var(--border);margin:16px 0" />
           <p class="hint" style="margin-bottom:8px">Atau admin tambahan</p>
           <div class="form-group">
@@ -117,6 +138,7 @@
           <button type="button" class="admin-tab" data-tab="upload">Upload Paket</button>
           <button type="button" class="admin-tab" data-tab="peserta-master">Kelola Peserta</button>
           <button type="button" class="admin-tab" data-tab="kelola-paket">Kelola Paket</button>
+          <button type="button" class="admin-tab" data-tab="tokens">Token Tes</button>
           <button type="button" class="admin-tab" data-tab="analisis">Analisis Butir</button>
           <button type="button" class="admin-tab" data-tab="proctor">Proctoring</button>
           <button type="button" class="admin-tab" data-tab="admins" id="tab-admins-btn">Kelola Admin</button>
@@ -126,7 +148,8 @@
         <div class="admin-tab-panel active" id="tab-hasil">
           <div class="admin-actions">
             <button id="btn-admin-refresh" class="btn btn-primary">Muat Data</button>
-            <button id="btn-admin-logout" class="btn btn-secondary">Keluar</button>
+            <button <button type="button" id="btn-link-google" class="btn-link" style="margin-right:12px">Hubungkan Google</button>
+          <button type="button" id="btn-admin-logout" class="btn btn-secondary">Keluar</button>
           </div>
           <div class="form-group" style="margin-bottom:12px">
             <label>Filter mapel</label>
@@ -210,7 +233,31 @@
           <div id="mc-member-status" class="admin-status"></div>
         </div>
         <!-- TAB KELOLA PAKET -->
-        <div class="admin-tab-panel" id="tab-kelola-paket" style="display:none">
+        
+        <div class="admin-tab-panel" id="tab-tokens" style="display:none">
+          <p class="hint">Generate token untuk tamu / bayar mandiri. Default: satu paket, kuota terbatas.</p>
+          <div class="form-group"><label>Kode token (boleh diubah agar mudah diketik)</label><input type="text" id="tok-code" placeholder="QI-XXXX" /></div>
+          <div class="form-group"><label>Label</label><input type="text" id="tok-label" placeholder="Transfer Gopay ..." /></div>
+          <div class="form-group"><label>Sifat token</label>
+            <select id="tok-scope">
+              <option value="open">Terbuka (siapa saja selama kuota)</option>
+              <option value="single_user">Satu user (isi nama/email di bawah)</option>
+              <option value="class">Satu kelas</option>
+              <option value="multi_user">Beberapa user (pisah koma)</option>
+            </select>
+          </div>
+          <div class="form-group"><label>User diizinkan (nama/email, koma)</label><input type="text" id="tok-users" /></div>
+          <div class="form-group"><label>Kelas diizinkan (opsional)</label><input type="text" id="tok-class" placeholder="51" /></div>
+          <div class="form-group"><label>ID paket (koma). Kosong = semua paket QuizIT</label><input type="text" id="tok-packs" placeholder="quizit-aws-cloud" /></div>
+          <div class="form-group"><label>Maks. pemakaian</label><input type="number" id="tok-max" value="1" min="1" /></div>
+          <div class="form-group"><label>Nominal transfer (Rp)</label><input type="number" id="tok-amount" value="5000" min="0" /></div>
+          <div class="form-group"><label>Kadaluarsa (opsional)</label><input type="datetime-local" id="tok-exp" /></div>
+          <button id="btn-tok-create" class="btn btn-primary" style="width:100%;margin-bottom:10px">Generate Token</button>
+          <div id="tok-status" class="admin-status"></div>
+          <div id="tok-list" class="admin-list"></div>
+          <div id="tok-detail" class="hint" style="margin-top:10px"></div>
+        </div>
+<div class="admin-tab-panel" id="tab-kelola-paket" style="display:none">
           <p class="hint" style="margin-bottom:12px">Paket milik Anda + paket yang diberi hak oleh admin utama. Rename hanya mengubah judul (ID tetap).</p>
           <button id="btn-refresh-manage-packs" class="btn btn-secondary" style="width:100%;margin-bottom:8px">Muat Daftar Paket</button>
           <button id="btn-sync-catalog-packs" class="btn btn-secondary" style="width:100%;margin-bottom:12px">Daftarkan paket lokal (Web Design, SMM, …) ke database</button>
@@ -398,7 +445,8 @@
         </div>
         <div class="result-details" id="result-details"></div>
         <div class="result-actions">
-          <button id="btn-download" class="btn btn-primary">Download Hasil (JSON)</button>
+          <button id="btn-download-cert" class="btn btn-primary">Download Sertifikat PDF</button>
+          <button id="btn-download" class="btn btn-secondary">Download Hasil (JSON)</button>
           <button id="btn-review" class="btn btn-secondary">Lihat Review PG</button>
           <button id="btn-back-home" class="btn btn-secondary">Kembali ke Login</button>
         </div>
