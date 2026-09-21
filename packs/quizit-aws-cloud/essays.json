@@ -1,0 +1,22 @@
+[
+  {
+    "id": "E1",
+    "question": "Jelaskan shared responsibility model untuk EC2 versus S3."
+  },
+  {
+    "id": "E2",
+    "question": "Rancang VPC sederhana 3-tier (public/private, IGW, NAT, security group)."
+  },
+  {
+    "id": "E3",
+    "question": "Mengapa multi-AZ penting untuk production? Beri contoh kegagalan yang dimitigasi."
+  },
+  {
+    "id": "E4",
+    "question": "Susun praktik aman IAM (user, role, policy, MFA, rotasi kunci)."
+  },
+  {
+    "id": "E5",
+    "question": "Bagaimana mengontrol biaya AWS pada proyek startup (tagging, budget, right-sizing)?"
+  }
+]

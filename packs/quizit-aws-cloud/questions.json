@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "question": "Shared responsibility model di AWS berarti…",
+    "options": [
+      "Keamanan dibagi antara AWS dan pelanggan sesuai jenis layanan",
+      "AWS menjamin semua password aplikasi pelanggan",
+      "Pelanggan tidak perlu mengatur IAM",
+      "Semua data otomatis publik",
+      "Firewall on-prem dilarang"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 2,
+    "question": "IAM di AWS terutama mengelola…",
+    "options": [
+      "Identitas, user/role/policy, dan izin ke resource",
+      "Hanya invoice PDF",
+      "Hanya warna konsol",
+      "Hanya kabel data center",
+      "Hanya tema dashboard"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 3,
+    "question": "Amazon S3 paling tepat disebut…",
+    "options": [
+      "Object storage scalable",
+      "Database OLTP relasional",
+      "DNS root internet",
+      "Load balancer Layer 7 saja",
+      "VPN hardware appliance"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 4,
+    "question": "Amazon EC2 menyediakan…",
+    "options": [
+      "Kapasitas compute berupa virtual machine",
+      "Hanya fungsi serverless tanpa opsi VM",
+      "Hanya tape offline",
+      "Hanya SMTP relay",
+      "Hanya sewa rack tanpa API"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 5,
+    "question": "VPC digunakan untuk…",
+    "options": [
+      "Jaringan virtual privat (subnet, route, gateway)",
+      "Mengganti IDE",
+      "Menyimpan secret di Git publik",
+      "Mengukur suhu GPU",
+      "Mencetak label"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 6,
+    "question": "Security Group bersifat…",
+    "options": [
+      "Stateful firewall pada level instance/ENI",
+      "Pengganti IAM",
+      "Pengganti CloudTrail",
+      "Hanya stateless di seluruh region tanpa exception",
+      "Pengganti S3 policy saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 7,
+    "question": "AWS CloudTrail berguna untuk…",
+    "options": [
+      "Audit panggilan API dan aktivitas akun",
+      "Menghapus kebutuhan MFA root",
+      "Menyembunyikan billing",
+      "Menonaktifkan flow logs",
+      "Mengganti Route 53"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 8,
+    "question": "Amazon RDS menyederhanakan…",
+    "options": [
+      "Pengelolaan database relasional terkelola",
+      "Bare-metal hypervisor saja",
+      "Patch panel fiber",
+      "KVM over IP",
+      "Thin client desktop"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 9,
+    "question": "Availability Zone (AZ) adalah…",
+    "options": [
+      "Lokasi terisolasi dalam region untuk high availability",
+      "Hanya edge location CloudFront",
+      "Hanya mata uang billing",
+      "Hanya support plan",
+      "Hanya nama AMI"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 10,
+    "question": "Least privilege pada IAM berarti…",
+    "options": [
+      "Memberi izin minimum yang diperlukan",
+      "Memberi AdministratorAccess ke semua role",
+      "Menonaktifkan MFA",
+      "Membuka 0.0.0.0/0 ke semua port",
+      "Menyimpan access key di repo publik"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 11,
+    "question": "Amazon CloudFront umumnya…",
+    "options": [
+      "CDN untuk mendekatkan konten ke pengguna",
+      "Database graph",
+      "Antrean pesan saja",
+      "Identity provider saja",
+      "Firewall fisik"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 12,
+    "question": "Elastic Load Balancing membantu…",
+    "options": [
+      "Membagi trafik ke beberapa target",
+      "Mengganti DNS root dunia",
+      "Menghapus subnet privat",
+      "Menonaktifkan auto scaling",
+      "Mengunci satu AZ saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 13,
+    "question": "Auto Scaling bertujuan…",
+    "options": [
+      "Menyesuaikan kapasitas terhadap beban",
+      "Mengunci jumlah instance permanen",
+      "Menghapus CloudWatch",
+      "Memaksa scaling manual tahunan",
+      "Menonaktifkan health check"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 14,
+    "question": "AWS Lambda adalah contoh…",
+    "options": [
+      "Serverless compute (Function as a Service)",
+      "Dedicated bare metal 3 tahun",
+      "Cluster GPU reserved saja",
+      "Firewall managed fisik",
+      "Tape gateway tanpa cloud"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 15,
+    "question": "Enkripsi S3 server-side melindungi…",
+    "options": [
+      "Data at rest pada object storage",
+      "Hanya metadata DNS",
+      "Hanya ICMP",
+      "Hanya tema konsol",
+      "Hanya chat support"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 16,
+    "question": "Amazon Route 53 adalah layanan…",
+    "options": [
+      "DNS scalable dengan opsi routing lanjutan",
+      "Object storage arsip dingin saja",
+      "IAM policy simulator saja",
+      "Instance store EC2 saja",
+      "Direct Connect kabel saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 17,
+    "question": "AWS Organizations berguna untuk…",
+    "options": [
+      "Mengelola banyak akun secara terpusat",
+      "Menggabungkan semua VPC jadi satu subnet",
+      "Mematikan CloudTrail di seluruh organisasi",
+      "Menghapus consolidated billing",
+      "Membuka root ke semua staf"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 18,
+    "question": "Well-Architected Framework menekankan pilar…",
+    "options": [
+      "Keamanan, keandalan, performa, biaya, operasional, sustainability",
+      "Hanya warna oranye UI",
+      "Hanya satu region maksimal",
+      "Hanya free tier selamanya",
+      "Hanya instance t2.micro untuk production"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 19,
+    "question": "Jika access key bocor, tindakan pertama…",
+    "options": [
+      "Rotasi/nonaktifkan kunci dan investigasi pemakaian",
+      "Biarkan jika console masih bisa login",
+      "Posting ke forum untuk dicek",
+      "Simpan di screenshot chat",
+      "Bagikan ke vendor tanpa NDA"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 20,
+    "question": "Subnet publik biasanya punya…",
+    "options": [
+      "Route menuju Internet Gateway",
+      "Tidak pernah punya IP privat",
+      "Tidak punya route table",
+      "Hanya untuk RDS privat",
+      "Hanya untuk Snowball"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 21,
+    "question": "AWS Config membantu…",
+    "options": [
+      "Menilai konfigurasi resource terhadap aturan kepatuhan",
+      "Mengganti CodeCommit",
+      "Menghapus IAM",
+      "Menyembunyikan temuan keamanan",
+      "Mematikan GuardDuty wajib"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 22,
+    "question": "EBS berbeda dari instance store karena…",
+    "options": [
+      "EBS umumnya persistent terhadap lifecycle instance",
+      "Instance store selalu lebih tahan lama dari EBS",
+      "EBS hanya volatile seperti RAM",
+      "EBS tidak bisa di-snapshot",
+      "EBS hanya untuk Lambda /tmp"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 23,
+    "question": "Tag pada resource penting untuk…",
+    "options": [
+      "Organisasi biaya, otomasi, dan kepemilikan",
+      "Mengubah generasi CPU otomatis",
+      "Menghapus VPC",
+      "Mematikan enkripsi",
+      "Membuka security group ke dunia"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 24,
+    "question": "CloudWatch alarm dapat memicu…",
+    "options": [
+      "Notifikasi atau tindakan otomatis saat metrik melewati ambang",
+      "Reboot DNS root",
+      "Hapus IAM user acak",
+      "Nonaktifkan billing",
+      "Ganti region akun"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 25,
+    "question": "Akun root AWS sebaiknya…",
+    "options": [
+      "Diproteksi MFA ketat dan jarang dipakai harian",
+      "Dipakai semua developer untuk deploy",
+      "Punya access key di laptop bersama",
+      "Password dibagikan via email",
+      "Tidak pernah diaudit"
+    ],
+    "answer": 0
+  }
+]

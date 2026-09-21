@@ -1,0 +1,22 @@
+[
+  {
+    "id": "E1",
+    "question": "Jelaskan perbedaan CI dan CD serta contoh pipeline aplikasi web."
+  },
+  {
+    "id": "E2",
+    "question": "Mengapa secret tidak boleh di repositori Git? Sebutkan alternatif aman."
+  },
+  {
+    "id": "E3",
+    "question": "Bandingkan blue-green, canary, dan rolling update dari sisi risiko."
+  },
+  {
+    "id": "E4",
+    "question": "Susun checklist rilis production (tes, approval, monitoring, rollback)."
+  },
+  {
+    "id": "E5",
+    "question": "Bagaimana observability mendeteksi rilis buruk lebih cepat?"
+  }
+]

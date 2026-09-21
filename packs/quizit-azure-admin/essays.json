@@ -1,0 +1,22 @@
+[
+  {
+    "id": "E1",
+    "question": "Jelaskan hubungan subscription, resource group, dan resource dengan contoh aplikasi web."
+  },
+  {
+    "id": "E2",
+    "question": "Bagaimana NSG dan Private Endpoint mengamankan akses ke Azure SQL atau Storage?"
+  },
+  {
+    "id": "E3",
+    "question": "Susun pendekatan RBAC + Managed Identity untuk App Service yang akses Key Vault."
+  },
+  {
+    "id": "E4",
+    "question": "Bedakan Region, Availability Zone, dan Availability Set untuk HA/DR."
+  },
+  {
+    "id": "E5",
+    "question": "Checklist offboarding karyawan terkait Entra ID, perangkat MFA, dan akses Azure."
+  }
+]

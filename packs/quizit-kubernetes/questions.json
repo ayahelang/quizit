@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "question": "Unit deploy terkecil yang dijadwalkan di Kubernetes biasanya…",
+    "options": [
+      "Pod",
+      "Bare metal tanpa abstraksi",
+      "Akun Docker Hub saja",
+      "Ingress DNS global tanpa cluster",
+      "etcd di laptop dev"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 2,
+    "question": "kube-apiserver berperan sebagai…",
+    "options": [
+      "Pintu API utama control plane",
+      "Runtime container pengganti CNI",
+      "Plugin Wi-Fi node",
+      "Tema dashboard saja",
+      "Museum chart Helm"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 3,
+    "question": "Deployment menyediakan…",
+    "options": [
+      "Replika Pod deklaratif dan rolling update",
+      "Satu Pod tanpa restart",
+      "Hanya StatefulSet database",
+      "Hanya Job sekali jalan",
+      "CRD untuk DNS root"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 4,
+    "question": "Service ClusterIP berguna untuk…",
+    "options": [
+      "Ekspos stabil di dalam cluster",
+      "NodePort ke internet tanpa kontrol",
+      "Mengganti Ingress selalu",
+      "Menghapus CoreDNS",
+      "Mematikan endpoints"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 5,
+    "question": "Namespace membantu…",
+    "options": [
+      "Isolasi logis resource dalam cluster",
+      "Menghapus kebutuhan RBAC",
+      "Menyatukan prod/dev tanpa batas",
+      "Mematikan NetworkPolicy",
+      "Menghapus snapshot etcd"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 6,
+    "question": "ConfigMap menyimpan…",
+    "options": [
+      "Konfigurasi non-rahasia untuk Pod",
+      "Private key produksi plain recommended",
+      "Password DB di annotation publik",
+      "Kubeconfig admin di default",
+      "Token cloud di label"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 7,
+    "question": "Secret sebaiknya…",
+    "options": [
+      "Dikelola dengan RBAC dan enkripsi at rest",
+      "Dikomit ke Git publik",
+      "Disimpan di annotation HTML",
+      "Dibagikan via chat tanpa vault",
+      "Ditaruh di layer image publik"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 8,
+    "question": "Ingress mengatur…",
+    "options": [
+      "Routing HTTP eksternal ke Service",
+      "BGP Layer 3 di node saja",
+      "Socket containerd saja",
+      "Snapshot CSI tanpa HTTP",
+      "Penjadwalan GPU saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 9,
+    "question": "etcd menyimpan…",
+    "options": [
+      "State cluster sebagai sumber kebenaran",
+      "Hanya stdout aplikasi",
+      "Hanya layer image",
+      "Hanya metrik remote",
+      "Hanya values Helm di laptop"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 10,
+    "question": "livenessProbe gagal biasanya…",
+    "options": [
+      "Container di-restart sesuai kebijakan",
+      "Namespace terhapus",
+      "Node di-cordon otomatis selalu",
+      "etcd di-reset",
+      "Ingress dihapus"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 11,
+    "question": "readinessProbe gagal menyebabkan…",
+    "options": [
+      "Pod dikeluarkan dari endpoints Service",
+      "Cluster langsung down",
+      "Semua node di-drain",
+      "API server berhenti",
+      "CNI di-uninstall"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 12,
+    "question": "RBAC mengatur…",
+    "options": [
+      "Izin user/ServiceAccount pada resource API",
+      "Hanya firewall host",
+      "Hanya enkripsi disk node",
+      "Hanya warna image",
+      "Hanya timezone"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 13,
+    "question": "HPA bereaksi terhadap…",
+    "options": [
+      "Metrik untuk menambah/mengurangi replica",
+      "Hari dalam seminggu tanpa metrik",
+      "Jumlah commit Git",
+      "Ukuran Dockerfile",
+      "Warna label"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 14,
+    "question": "StatefulSet cocok untuk…",
+    "options": [
+      "Aplikasi stateful dengan identitas/storage stabil",
+      "Website statis tanpa state",
+      "Job batch tanpa identitas",
+      "DaemonSet log saja",
+      "Bare Pod tanpa controller"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 15,
+    "question": "DaemonSet memastikan…",
+    "options": [
+      "Pod per node sesuai selektor (agen node)",
+      "Hanya satu Pod di seluruh cluster",
+      "Tidak ada Pod di worker",
+      "Hanya Windows control plane",
+      "Ingress hanya di master"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 16,
+    "question": "NetworkPolicy dapat…",
+    "options": [
+      "Membatasi trafik antar Pod",
+      "Mengganti sertifikat TLS otomatis",
+      "Mematikan kubelet",
+      "Menghapus DNS Service",
+      "Memaksa hostNetwork semua Pod"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 17,
+    "question": "Helm dipakai untuk…",
+    "options": [
+      "Mengemas dan men-deploy aplikasi sebagai chart",
+      "Mengganti runtime container wajib",
+      "Menghapus etcd",
+      "Menggambar diagram rak",
+      "Mengedit BIOS node"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 18,
+    "question": "Rolling update bertujuan…",
+    "options": [
+      "Pembaruan bertahap tanpa downtime penuh",
+      "Menghapus semua replica sekaligus",
+      "Mematikan API server",
+      "Mengganti CIDR otomatis",
+      "Menghapus semua PVC"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 19,
+    "question": "Requests vs Limits…",
+    "options": [
+      "Requests untuk scheduling; limits membatasi pemakaian",
+      "Keduanya selalu identik",
+      "Limits diabaikan scheduler",
+      "Requests hanya branding GPU",
+      "Limits hanya label UI"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 20,
+    "question": "kubelet berjalan di…",
+    "options": [
+      "Setiap node untuk mengelola Pod",
+      "Hanya laptop developer",
+      "Hanya runner CI tanpa node",
+      "Hanya bucket S3",
+      "Hanya DNS root"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 21,
+    "question": "CSI terkait…",
+    "options": [
+      "Interface plugin storage volume",
+      "Penandatanganan image saja",
+      "TLS Ingress saja",
+      "UI RBAC saja",
+      "Tema Metrics Server"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 22,
+    "question": "Admission/Pod Security membantu…",
+    "options": [
+      "Mencegah konfigurasi Pod berisiko",
+      "Menghapus NetworkPolicy selalu",
+      "Mematikan audit log",
+      "Membuka API anonym penuh",
+      "Menyimpan kubeconfig di ConfigMap publik"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 23,
+    "question": "Service mesh secara konsep menambah…",
+    "options": [
+      "Kebijakan trafik dan observabilitas antar service",
+      "Pengganti etcd wajib",
+      "Pengganti CNI selalu",
+      "Pengganti runtime",
+      "Pengganti kubectl"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 24,
+    "question": "CrashLoopBackOff menandakan…",
+    "options": [
+      "Container berulang kali crash lalu backoff",
+      "Cluster sepenuhnya sehat",
+      "Hanya image pull lambat",
+      "DNS selalu OK",
+      "PVC bound tanpa masalah app"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 25,
+    "question": "GitOps menekankan…",
+    "options": [
+      "Desired state mengikuti repositori Git",
+      "Klik dashboard tanpa audit",
+      "State hanya di laptop admin",
+      "Mematikan CI",
+      "Menghindari manifes deklaratif"
+    ],
+    "answer": 0
+  }
+]

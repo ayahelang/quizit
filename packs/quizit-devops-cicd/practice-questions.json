@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "question": "Continuous Integration menekankan…",
+    "options": [
+      "Integrasi kode sering plus build/test otomatis",
+      "Merge setahun sekali tanpa tes",
+      "Mematikan version control",
+      "Commit langsung ke production tanpa review",
+      "Artifact hanya di laptop"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 2,
+    "question": "Continuous Delivery/Deployment…",
+    "options": [
+      "Mengotomatisasi rilis ke lingkungan secara andal",
+      "Menghapus staging",
+      "SSH manual setiap malam",
+      "Mematikan rollback",
+      "Menghindari tes otomatis"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 3,
+    "question": "Pipeline CI/CD adalah…",
+    "options": [
+      "Tahapan otomatis dari kode ke artifact/rilis",
+      "Script di USB saja",
+      "Email tanpa build",
+      "Meeting standup saja",
+      "Kanban tanpa otomasi"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 4,
+    "question": "Infrastructure as Code memungkinkan…",
+    "options": [
+      "Infrastruktur didefinisikan dan diuji seperti kode",
+      "Klik konsol tanpa jejak",
+      "Konfigurasi hanya di wiki",
+      "Perubahan tanpa review",
+      "State hanya di chat"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 5,
+    "question": "Artifact repository menyimpan…",
+    "options": [
+      "Hasil build berversi yang dapat dilacak",
+      "Source mentah saja",
+      "Password environment plain",
+      "Screenshot UI",
+      "Catatan rapat"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 6,
+    "question": "Blue-green deployment bertujuan…",
+    "options": [
+      "Beralih trafik ke lingkungan baru dengan risiko terkendali",
+      "Matikan monitoring saat rilis",
+      "Deploy tanpa versi",
+      "Matikan health check",
+      "Dua versi tanpa strategi routing"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 7,
+    "question": "Canary release memaparkan…",
+    "options": [
+      "Perubahan ke sebagian kecil pengguna terlebih dulu",
+      "100% pengguna segera",
+      "Hanya server dev",
+      "Hanya dokumentasi",
+      "Feature flag off selamanya"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 8,
+    "question": "Feature flag memungkinkan…",
+    "options": [
+      "Mengaktifkan fitur tanpa redeploy penuh",
+      "Menghapus kebutuhan tes",
+      "Commit ke main tanpa CI",
+      "Menyembunyikan vulnerability",
+      "Mematikan log production"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 9,
+    "question": "Observability mencakup…",
+    "options": [
+      "Metrics, logs, dan traces",
+      "Hanya ping uptime",
+      "Hanya RGB kipas CPU",
+      "Hanya jumlah commit",
+      "Hanya star GitHub"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 10,
+    "question": "Error budget mengaitkan…",
+    "options": [
+      "Keandalan layanan dengan kecepatan perubahan",
+      "Larangan total deploy",
+      "Hapus monitoring",
+      "Abaikan insiden",
+      "Deploy tanpa rencana rollback"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 11,
+    "question": "Branch utama yang sehat biasanya…",
+    "options": [
+      "Dilindungi review dan CI wajib",
+      "Force push oleh semua orang",
+      "Tanpa pull request",
+      "Secret di-commit",
+      "Tag acak tanpa versi"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 12,
+    "question": "Immutable infrastructure menekankan…",
+    "options": [
+      "Mengganti image/instance daripada patch manual berkepanjangan",
+      "SSH harian membuat server snowflake",
+      "Drift dibiarkan",
+      "Tanpa otomasi",
+      "Golden image tidak pernah di-pipeline"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 13,
+    "question": "Image scanning membantu…",
+    "options": [
+      "Menemukan kerentanan dependensi pada image",
+      "Menghapus kebutuhan patch aplikasi",
+      "Menjamin zero bug bisnis",
+      "Mengganti WAF",
+      "Mematikan RBAC registry"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 14,
+    "question": "Secret di pipeline sebaiknya…",
+    "options": [
+      "Dari vault/secret store, bukan hardcode di repo",
+      "Di Dockerfile ENV publik",
+      "Di README",
+      "Via DM tanpa rotasi",
+      "File .env production di Git"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 15,
+    "question": "Rencana rollback wajib karena…",
+    "options": [
+      "Rilis bisa gagal dan layanan harus dipulihkan",
+      "Operasi berbasis harapan saja",
+      "Tes otomatis selalu sempurna",
+      "Canary tidak pernah gagal",
+      "IaC tidak pernah salah"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 16,
+    "question": "Shift-left security berarti…",
+    "options": [
+      "Keamanan dilibatkan lebih awal di CI/dev",
+      "Keamanan hanya audit tahunan produksi",
+      "Scan hanya setelah breach",
+      "Abaikan dependency check",
+      "Biarkan secret di log"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 17,
+    "question": "Trunk-based development mendorong…",
+    "options": [
+      "Integrasi ke mainline lebih sering dengan proteksi kualitas",
+      "Branch berumur bulan",
+      "Tanpa automated test",
+      "Hotfix tanpa jejak",
+      "Rilis hanya via USB"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 18,
+    "question": "Environment parity mengurangi…",
+    "options": [
+      "Bug 'works on my machine'",
+      "Kebutuhan container",
+      "Kebutuhan IaC",
+      "Kebutuhan observability",
+      "Kebutuhan versioning"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 19,
+    "question": "Metrik DORA mengukur…",
+    "options": [
+      "Kinerja delivery dan pemulihan",
+      "Hanya baris kode",
+      "Hanya jumlah rapat",
+      "Hanya ukuran tiket",
+      "Hanya clock CPU"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 20,
+    "question": "Policy as code mengekspresikan…",
+    "options": [
+      "Aturan yang dapat diuji otomatis",
+      "Hanya PDF kebijakan",
+      "Hanya poster SOP",
+      "Hanya kesepakatan lisan",
+      "Hanya spreadsheet tanpa penegakan"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 21,
+    "question": "Penandatanganan artifact membantu…",
+    "options": [
+      "Verifikasi integritas sebelum deploy",
+      "Menghapus HTTPS",
+      "Mematikan RBAC registry",
+      "Tag mutable tanpa audit",
+      "Hanya unsigned latest di prod"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 22,
+    "question": "ChatOps mengintegrasikan…",
+    "options": [
+      "Operasi dan notifikasi ke chat dengan kontrol akses",
+      "Berbagi password di channel publik",
+      "Deploy tanpa autentikasi",
+      "Perubahan produksi diam-diam",
+      "Mematikan channel insiden"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 23,
+    "question": "Postmortem blameless bertujuan…",
+    "options": [
+      "Belajar dari insiden tanpa budaya menyalahkan toksik",
+      "Menyembunyikan akar masalah",
+      "Menghukum on-call selalu",
+      "Menghapus timeline",
+      "Tanpa action item"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 24,
+    "question": "Progressive delivery mencakup…",
+    "options": [
+      "Canary, feature flag, rollout bertahap",
+      "Big-bang Jumat tanpa observasi",
+      "Matikan monitoring saat rilis",
+      "Abaikan error budget",
+      "Force push ke tag prod"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 25,
+    "question": "Platform engineering menyediakan…",
+    "options": [
+      "Platform internal self-service yang aman dan produktif",
+      "Tiket manual setiap ubah DNS",
+      "Akses root bersama",
+      "Spreadsheet inventori saja",
+      "VPN tanpa otomasi"
+    ],
+    "answer": 0
+  }
+]

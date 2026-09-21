@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "question": "Microsoft Entra ID (Azure AD) terutama untuk…",
+    "options": [
+      "Identitas dan akses cloud/hybrid",
+      "Hanya peering VNet tanpa identitas",
+      "Hanya Blob cold tier",
+      "Hanya kabel ExpressRoute",
+      "Hanya serial console"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 2,
+    "question": "Resource Group adalah…",
+    "options": [
+      "Kontainer logis pengelompokan resource",
+      "Hanya satu VM wajib",
+      "Hanya zona DNS global",
+      "Hanya mata uang langganan",
+      "Hanya nama region pair"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 3,
+    "question": "Azure Virtual Machine termasuk model…",
+    "options": [
+      "IaaS compute",
+      "SaaS email saja",
+      "Tape on-prem saja",
+      "Power BI gateway tanpa VM",
+      "Logic App tanpa compute"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 4,
+    "question": "NSG memfilter…",
+    "options": [
+      "Trafik jaringan menurut aturan ke/dari resource",
+      "Hanya Activity Log",
+      "Hanya harga reserved",
+      "Hanya nama tag",
+      "Hanya tema portal"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 5,
+    "question": "Azure Blob Storage cocok untuk…",
+    "options": [
+      "Data objek/file skala besar",
+      "Mengganti SQL OLTP selalu",
+      "Domain controller wajib",
+      "ExpressRoute peering saja",
+      "Serial console log saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 6,
+    "question": "Azure Policy membantu…",
+    "options": [
+      "Menegakkan aturan kepatuhan pada resource",
+      "Mengganti kebijakan password saja",
+      "Mematikan Activity Log",
+      "Membuka RDP publik otomatis",
+      "Menghapus resource lock"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 7,
+    "question": "Region pair terkait…",
+    "options": [
+      "Desain ketersediaan dan disaster recovery",
+      "Hanya warna peta portal",
+      "Hanya frekuensi tagihan",
+      "Hanya jumlah karyawan Microsoft",
+      "Hanya tema marketplace"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 8,
+    "question": "Managed Identity memungkinkan aplikasi…",
+    "options": [
+      "Akses resource tanpa menyimpan secret di kode",
+      "Menyimpan password plain di App Settings",
+      "Mematikan TLS",
+      "Membuka firewall ke dunia",
+      "Menghapus Key Vault"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 9,
+    "question": "Azure Key Vault menyimpan…",
+    "options": [
+      "Secret, kunci, dan sertifikat terkelola",
+      "Hanya image VM generik",
+      "Hanya flow log mentah",
+      "Hanya invoice PDF",
+      "Hanya JSON tema"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 10,
+    "question": "Azure App Service adalah…",
+    "options": [
+      "PaaS hosting aplikasi web",
+      "Sewa mainframe",
+      "Firewall fisik",
+      "Patch panel",
+      "KVM switch"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 11,
+    "question": "Azure Monitor dipakai untuk…",
+    "options": [
+      "Metrik, log, dan alert",
+      "Mengganti Entra ID",
+      "Menghapus NSG",
+      "Menyembunyikan Activity Log",
+      "Mematikan Backup vault"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 12,
+    "question": "Availability Zone mendukung…",
+    "options": [
+      "High availability antar datacenter dalam region",
+      "Single point of failure wajib",
+      "Hanya dev gratis",
+      "Hanya model classic",
+      "Hanya PowerShell lama"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 13,
+    "question": "RBAC mengatur…",
+    "options": [
+      "Siapa boleh apa pada scope resource",
+      "Hanya TTL DNS",
+      "Hanya tiering blob tanpa identitas",
+      "Hanya harga bandwidth",
+      "Hanya bahasa portal"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 14,
+    "question": "Azure Backup berguna untuk…",
+    "options": [
+      "Proteksi dan pemulihan workload",
+      "Mengganti NSG",
+      "Mematikan MFA",
+      "Membuka port manajemen ke internet",
+      "Menghapus soft delete"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 15,
+    "question": "Topologi hub-spoke umum untuk…",
+    "options": [
+      "Segmentasi jaringan enterprise di Azure",
+      "Satu broadcast besar ala LAN lama",
+      "Mematikan peering",
+      "Menghapus firewall bersama",
+      "Membuka semua RDP"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 16,
+    "question": "Azure Firewall di hub sering untuk…",
+    "options": [
+      "Kontrol trafik keluar/masuk terpusat",
+      "Mengganti Conditional Access sepenuhnya",
+      "Menyimpan secret di Git",
+      "Mematikan private endpoint",
+      "Menghapus DNS privat"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 17,
+    "question": "Private Endpoint membantu…",
+    "options": [
+      "Akses PaaS lewat IP privat di VNet",
+      "Mempublikasikan storage tanpa autentikasi",
+      "Mematikan TLS",
+      "Membuka SQL ke dunia",
+      "Menghapus NSG"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 18,
+    "question": "Azure Advisor memberi…",
+    "options": [
+      "Rekomendasi best practice biaya dan keamanan",
+      "Password root langganan",
+      "Kunci storage di chat",
+      "Nonaktifkan logging otomatis",
+      "Hardcode connection string"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 19,
+    "question": "Subscription Azure adalah…",
+    "options": [
+      "Batas penagihan dan administrasi resource",
+      "Hanya satu resource group selamanya",
+      "Hanya satu region global",
+      "Hanya uji coba gratis abadi",
+      "Hanya DNS"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 20,
+    "question": "Conditional Access dapat mensyaratkan…",
+    "options": [
+      "MFA, kondisi perangkat, atau lokasi saat login",
+      "Password 4 digit saja",
+      "NTLM legacy saja",
+      "Basic auth tanpa tinjauan",
+      "Shared mailbox tanpa kontrol"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 21,
+    "question": "Bicep/Terraform di Azure mendukung…",
+    "options": [
+      "Infrastructure as Code",
+      "Hanya klik portal tanpa jejak",
+      "Hanya classic ASM",
+      "Hanya XML Windows XP",
+      "Hanya edit registry"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 22,
+    "question": "Azure SQL Database adalah…",
+    "options": [
+      "Database relasional PaaS terkelola",
+      "CSV di Blob tanpa mesin DB",
+      "Mongo self-managed saja",
+      "Redis on-prem saja",
+      "File Access MDB"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 23,
+    "question": "Defender for Cloud membantu…",
+    "options": [
+      "Postur keamanan dan proteksi workload",
+      "Mengganti mata uang tagihan",
+      "Menghapus Activity Log",
+      "Menyembunyikan rekomendasi",
+      "Mematikan JIT tanpa alasan"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 24,
+    "question": "Cost Management membantu…",
+    "options": [
+      "Memantau dan mengendalikan pengeluaran",
+      "Menghapus invoice",
+      "Mematikan tag",
+      "Memaksa semua resource tanpa nama",
+      "Kredit tanpa batas otomatis"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 25,
+    "question": "Hybrid identity (Entra Connect) memungkinkan…",
+    "options": [
+      "Sinkronisasi identitas on-premises ke cloud",
+      "Menghapus domain controller tanpa rencana",
+      "Mematikan MFA permanen",
+      "Membuka LDAP anonym ke internet",
+      "Menyimpan hash di blog publik"
+    ],
+    "answer": 0
+  }
+]

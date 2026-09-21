@@ -1,0 +1,22 @@
+[
+  {
+    "id": "E1",
+    "question": "Mengapa izin tertulis dan rules of engagement wajib sebelum uji keamanan?"
+  },
+  {
+    "id": "E2",
+    "question": "Bedakan vulnerability scanning dan penetration testing."
+  },
+  {
+    "id": "E3",
+    "question": "Uraikan alur recon → enumeration → exploitation → post-exploitation → reporting."
+  },
+  {
+    "id": "E4",
+    "question": "Contoh temuan web (injection/XSS): dampak bisnis dan mitigasi."
+  },
+  {
+    "id": "E5",
+    "question": "Bagaimana memprioritaskan temuan critical/high untuk manajemen non-teknis?"
+  }
+]

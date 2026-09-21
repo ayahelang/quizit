@@ -1,0 +1,22 @@
+[
+  {
+    "id": "E1",
+    "question": "Jelaskan hubungan Pod, Deployment, dan Service untuk aplikasi web stateless."
+  },
+  {
+    "id": "E2",
+    "question": "Mengapa ConfigMap dan Secret dipisahkan? Sebutkan praktik aman Secret."
+  },
+  {
+    "id": "E3",
+    "question": "Bedakan liveness dan readiness probe serta dampaknya pada trafik."
+  },
+  {
+    "id": "E4",
+    "question": "Bagaimana RBAC least privilege untuk developer vs platform engineer?"
+  },
+  {
+    "id": "E5",
+    "question": "Susun strategi rolling update dan rollback jika rilis gagal."
+  }
+]

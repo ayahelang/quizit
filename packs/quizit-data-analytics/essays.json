@@ -1,0 +1,22 @@
+[
+  {
+    "id": "E1",
+    "question": "Bedakan basis data operasional (OLTP) dan data warehouse/analitik dengan contoh kantor."
+  },
+  {
+    "id": "E2",
+    "question": "Apa itu star schema? Contoh fact dan dimension untuk penjualan retail."
+  },
+  {
+    "id": "E3",
+    "question": "Bagaimana memastikan kualitas data sebelum dashboard dipakai manajemen?"
+  },
+  {
+    "id": "E4",
+    "question": "Langkah membangun laporan Power BI dari SQL hingga publish + RLS sederhana."
+  },
+  {
+    "id": "E5",
+    "question": "Mengapa konteks filter penting pada measure DAX? Contoh salah tafsir angka."
+  }
+]

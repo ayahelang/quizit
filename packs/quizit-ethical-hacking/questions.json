@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "question": "Engagement yang sah diawali dengan…",
+    "options": [
+      "Izin tertulis, scope, dan rules of engagement",
+      "Scan produksi tanpa pemberitahuan",
+      "Serangan ke pihak ketiga di luar kontrak",
+      "Dump password tanpa approval",
+      "DoS ke ISP pusat"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 2,
+    "question": "Reconnaissance pasif berbeda karena…",
+    "options": [
+      "Minim interaksi langsung ke target",
+      "Aktif selalu ilegal di semua yurisdiksi",
+      "Pasif butuh exploit kernel",
+      "Aktif hanya membaca lowongan kerja",
+      "Pasif hanya brute force"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 3,
+    "question": "OSINT digunakan untuk…",
+    "options": [
+      "Mengumpulkan informasi dari sumber terbuka",
+      "Mengganti rule firewall tanpa tiket",
+      "Menghapus log SIEM",
+      "Menyisipkan ransomware tanpa izin",
+      "Mematikan MFA massal"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 4,
+    "question": "CVE mengidentifikasi…",
+    "options": [
+      "Kerentanan publik dengan ID standar",
+      "Nama karyawan saja",
+      "SSID kantor saja",
+      "Warna rak server",
+      "Tema OS"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 5,
+    "question": "Privilege escalation bertujuan…",
+    "options": [
+      "Meningkatkan hak setelah kompromi awal",
+      "Menghapus kebutuhan pivoting",
+      "Mematikan logging agar 'lebih aman'",
+      "Membuka share anonym sebagai best practice",
+      "Menyimpan shell di banner printer"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 6,
+    "question": "Lateral movement adalah…",
+    "options": [
+      "Berpindah antar sistem setelah akses awal",
+      "Phishing sekali tanpa lanjutan",
+      "Scan localhost developer saja",
+      "Update CV di LinkedIn",
+      "Backup tape saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 7,
+    "question": "SQL injection memanfaatkan…",
+    "options": [
+      "Input tidak tervalidasi pada query basis data",
+      "Password Wi-Fi lemah saja",
+      "SNMP default printer saja",
+      "DNS rekursif terbuka saja",
+      "SPF yang hilang saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 8,
+    "question": "XSS terutama berdampak pada…",
+    "options": [
+      "Sesi/browser pengguna aplikasi web",
+      "Firmware BIOS server",
+      "Tekukan kabel fiber",
+      "Ripple PSU",
+      "Waktu rebuild RAID"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 9,
+    "question": "Hash password + salt penting agar…",
+    "options": [
+      "Sulit diserang dengan rainbow table",
+      "Password plain lebih cepat",
+      "Semua user memakai password sama",
+      "Log menampilkan password",
+      "Backup menyimpan password terbaca"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 10,
+    "question": "Nmap umum untuk…",
+    "options": [
+      "Penemuan host dan pemindaian port",
+      "Edit Group Policy langsung",
+      "Flash IOS switch wajib",
+      "Reset TPM",
+      "Render video"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 11,
+    "question": "Exploitation berbeda assessment karena…",
+    "options": [
+      "Exploitation mencoba memanfaatkan celah",
+      "Keduanya selalu sama",
+      "Assessment selalu menjalankan ransomware",
+      "Exploitation tanpa scope",
+      "Assessment melarang laporan"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 12,
+    "question": "Post-exploitation mencakup…",
+    "options": [
+      "Pertahankan akses, kumpulkan bukti, perluas sesuai scope",
+      "Publikasi data ke dark web sebagai laporan",
+      "Hapus log klien diam-diam",
+      "Ubah scope sendiri",
+      "Matikan SIEM klien"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 13,
+    "question": "Laporan temuan sebaiknya memuat…",
+    "options": [
+      "Severity, dampak, reproduksi, rekomendasi",
+      "Hanya meme",
+      "Hanya daftar tool",
+      "Password admin plain di email massal",
+      "Ancaman tanpa bukti"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 14,
+    "question": "WAF membantu melindungi…",
+    "options": [
+      "Aplikasi web dari serangan HTTP umum",
+      "Kabel tembaga dari EMI",
+      "UPS dari baterai lemah",
+      "DNS root dari meteor",
+      "GPU dari debu"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 15,
+    "question": "CSRF memanfaatkan…",
+    "options": [
+      "Sesi browser korban untuk request tidak diinginkan",
+      "Password RDP lemah saja",
+      "Telnet terbuka di lab saja",
+      "Community string printer",
+      "Disk tidak terenkripsi"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 16,
+    "question": "Buffer overflow klasik terkait…",
+    "options": [
+      "Penulisan memori di luar batas buffer",
+      "Salah padding CSS",
+      "Glyph font hilang",
+      "Pretty-print JSON",
+      "Tabel Markdown"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 17,
+    "question": "Simulasi phishing perusahaan bertujuan…",
+    "options": [
+      "Melatih kesadaran pengguna secara terukur",
+      "Menghukum tanpa edukasi",
+      "Menyebarkan malware nyata ke klien",
+      "Mematikan email gateway",
+      "Membuka relay terbuka"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 18,
+    "question": "Red team vs blue team…",
+    "options": [
+      "Red mensimulasikan serangan; blue bertahan dan mendeteksi",
+      "Keduanya hanya dokumentasi",
+      "Red selalu ilegal",
+      "Blue hanya antivirus rumahan",
+      "Tidak relevan di enterprise"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 19,
+    "question": "Scope creep berbahaya karena…",
+    "options": [
+      "Aktivitas keluar dari izin/kontrak",
+      "Mempercepat patch",
+      "Menghapus kebutuhan ROE",
+      "Laporan otomatis lebih legal",
+      "Asuransi tanpa klausul"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 20,
+    "question": "Metasploit adalah kerangka…",
+    "options": [
+      "Pengujian eksploitasi pada engagement yang sah",
+      "Pengganti IDE Java",
+      "Pengganti SIEM",
+      "Pengganti backup",
+      "Pengganti IAM"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 21,
+    "question": "Pass-the-hash memanfaatkan…",
+    "options": [
+      "Hash kredensial tanpa butuh plaintext",
+      "QR MFA saja",
+      "Biometrik gagal saja",
+      "PIN smart card saja",
+      "OTP SMS saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 22,
+    "question": "Hardening setelah temuan berarti…",
+    "options": [
+      "Perbaiki patch/konfigurasi sesuai prioritas risiko",
+      "Abaikan critical karena jarang diexploit",
+      "Sembunyikan temuan dari manajemen",
+      "Matikan monitoring agar terlihat bersih",
+      "Buka port manajemen ke internet"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 23,
+    "question": "Rate limiting login mengurangi…",
+    "options": [
+      "Brute force dan credential stuffing",
+      "Latency DNS saja",
+      "Fragmentasi IP saja",
+      "Jitter VoIP saja",
+      "Panjang kabel saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 24,
+    "question": "Responsible disclosure adalah…",
+    "options": [
+      "Melaporkan celah secara etis kepada pihak terkait",
+      "Menjual zero-day tanpa koordinasi",
+      "Publikasi exploit tanpa mitigasi",
+      "DoS untuk membuktikan poin",
+      "Phishing finance tanpa program"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 25,
+    "question": "Penanganan bukti pada pentest profesional…",
+    "options": [
+      "Menjaga integritas bukti dan kerahasiaan klien",
+      "Upload data sensitif ke repo demo publik",
+      "Share dump ke group chat besar",
+      "USB tanpa enkripsi di tas terbuka",
+      "Live stream serangan produksi"
+    ],
+    "answer": 0
+  }
+]

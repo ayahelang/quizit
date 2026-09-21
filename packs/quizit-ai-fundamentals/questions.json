@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "question": "LLM terutama dilatih untuk…",
+    "options": [
+      "Memprediksi token berikutnya dalam konteks",
+      "Mengganti switch ASIC",
+      "Mengelola konvergensi BGP",
+      "Mengganti PSU server",
+      "Meng-crimp RJ45"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 2,
+    "question": "Prompt engineering adalah…",
+    "options": [
+      "Merancang instruksi agar keluaran model lebih relevan",
+      "Mengompilasi kernel wajib",
+      "Mengatur QoS switch",
+      "Mengganti thermal paste",
+      "Mengukur daya optik"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 3,
+    "question": "Hallucination berarti…",
+    "options": [
+      "Model terdengar yakin tetapi informasinya tidak akurat",
+      "Model selalu menolak menjawab",
+      "Model hanya mengutip sumber hukum wajib",
+      "Model tidak bisa menulis kode",
+      "Model hanya offline air-gapped"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 4,
+    "question": "RAG menambahkan…",
+    "options": [
+      "Konteks dari dokumen/knowledge base ke prompt",
+      "Parameter GPU saja tanpa data",
+      "Penghapusan grounding",
+      "Fine-tune wajib tiap query",
+      "Embedding offline tanpa retrieval"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 5,
+    "question": "Token adalah…",
+    "options": [
+      "Unit potongan teks yang diproses model",
+      "Hanya API key cloud",
+      "Hanya password MFA",
+      "Hanya VLAN ID",
+      "Hanya alamat MAC"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 6,
+    "question": "Temperature tinggi cenderung…",
+    "options": [
+      "Keluaran lebih bervariasi/kreatif",
+      "Selalu lebih faktual tanpa trade-off",
+      "Mematikan sampling",
+      "Menghapus konteks",
+      "Memaksa jawaban satu token"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 7,
+    "question": "Fine-tuning berbeda prompting karena…",
+    "options": [
+      "Mengubah bobot model dengan data tambahan",
+      "Keduanya identik secara komputasi",
+      "Prompting selalu melatih ulang foundation model",
+      "Fine-tuning tanpa data",
+      "Prompting wajib cluster GPU"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 8,
+    "question": "Embeddings dipakai untuk…",
+    "options": [
+      "Representasi vektor semantik dan pencarian kemiripan",
+      "Mengganti sertifikat TLS",
+      "Mengatur NTP",
+      "Menghapus cache DNS",
+      "Mengukur RPM kipas"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 9,
+    "question": "Risiko kebocoran data terjadi jika…",
+    "options": [
+      "Data sensitif dimasukkan ke layanan AI tanpa kontrol",
+      "Model on-prem dengan kebijakan ketat",
+      "Prompt tanpa PII dan ditinjau",
+      "Keluaran difilter",
+      "Ada kontrak DPA jelas"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 10,
+    "question": "Kebijakan AI perusahaan sebaiknya mengatur…",
+    "options": [
+      "Penggunaan data, review manusia, dan batas use-case",
+      "Unggah seluruh database pelanggan ke chatbot publik",
+      "Larangan total dokumentasi",
+      "Berbagi password ke model",
+      "Mematikan log prompt untuk audit"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 11,
+    "question": "Human-in-the-loop penting pada…",
+    "options": [
+      "Keputusan berisiko tinggi yang perlu verifikasi manusia",
+      "Semua autocomplete spasi",
+      "Generate lorem ipsum saja",
+      "Ganti nama file saja",
+      "Ganti tema IDE saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 12,
+    "question": "Model multimodal dapat…",
+    "options": [
+      "Memproses lebih dari satu jenis input sesuai desain",
+      "Hanya teks 7-bit ASCII",
+      "Hanya suara modem",
+      "Hanya sinyal IR",
+      "Hanya barcode 1D tanpa ML"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 13,
+    "question": "Guardrails bertujuan…",
+    "options": [
+      "Membatasi perilaku/keluaran yang tidak diinginkan",
+      "Menghapus seluruh safety agar lebih cepat",
+      "Mematikan filter di support produksi tanpa tinjauan",
+      "Memaksa model mengabaikan hukum",
+      "Menyembunyikan bias tanpa evaluasi"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 14,
+    "question": "Dataset evaluasi membantu…",
+    "options": [
+      "Mengukur kualitas model/prompt secara berulang",
+      "Menghindari metrik",
+      "Menjamin zero hallucination tanpa uji",
+      "Mengganti monitoring produksi",
+      "Mematikan regresi"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 15,
+    "question": "Biaya API AI sering dipengaruhi…",
+    "options": [
+      "Jumlah token input/output dan harga model",
+      "Warna logo aplikasi",
+      "Jumlah ikon",
+      "Panjang nama repo",
+      "Mode gelap saja"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 16,
+    "question": "AI on-device vs cloud trade-off utama…",
+    "options": [
+      "Privasi/latency versus kapabilitas/skala",
+      "Cloud selalu lebih privat",
+      "On-device selalu lebih besar parameternya",
+      "Tidak ada beda biaya",
+      "On-device mematikan update model"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 17,
+    "question": "Isu hak cipta konten AI…",
+    "options": [
+      "Perlu kebijakan organisasi dan tinjauan legal",
+      "Selalu bebas komersial di semua negara",
+      "Tidak relevan untuk marketing",
+      "Melarang manusia mengedit keluaran",
+      "Menjamin merek dagang otomatis"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 18,
+    "question": "Prompt injection adalah…",
+    "options": [
+      "Manipulasi instruksi model lewat input berbahaya",
+      "Hanya SQL injection",
+      "Hanya XSS HTML statis",
+      "Hanya buffer overflow C",
+      "Hanya ARP spoof"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 19,
+    "question": "AI untuk helpdesk dapat…",
+    "options": [
+      "Membantu draf jawaban dengan supervisie knowledge base",
+      "Mengganti seluruh staf IT tanpa runbook",
+      "Menutup tiket tanpa verifikasi identitas",
+      "Memberi hak admin otomatis",
+      "Mematikan audit"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 20,
+    "question": "Model card memuat…",
+    "options": [
+      "Batasan, data, dan konteks pemakaian model",
+      "Hanya slogan marketing",
+      "Hanya harga GPU",
+      "Hanya wallpaper",
+      "Hanya daftar karyawan vendor"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 21,
+    "question": "Synthetic data berguna untuk…",
+    "options": [
+      "Latih/uji saat data nyata terbatas dengan caveat kualitas",
+      "Mengganti seluruh data sensitif tanpa validasi",
+      "Menghapus kebutuhan kualitas label",
+      "Menjamin fairness otomatis",
+      "Mematikan tinjauan privasi"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 22,
+    "question": "Latency inferensi penting pada…",
+    "options": [
+      "Chat real-time dan aplikasi interaktif",
+      "Batch offline bulanan tanpa SLA",
+      "Pelatihan setahun sekali",
+      "Penyimpanan tape",
+      "Pengiriman rak"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 23,
+    "question": "Quantization bertujuan…",
+    "options": [
+      "Mengurangi ukuran/biaya inferensi dengan trade-off akurasi",
+      "Menaikkan parameter tanpa batas",
+      "Menghapus embedding",
+      "Memaksa presisi ganda selalu",
+      "Mematikan GPU"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 24,
+    "question": "Agentic AI secara konsep menambah…",
+    "options": [
+      "Perencanaan dan pemakaian tool berulang untuk tugas kompleks",
+      "Satu completion tanpa tool",
+      "Penghapusan log tool",
+      "Akses root tanpa kebijakan",
+      "Otonomi tanpa evaluasi risiko"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 25,
+    "question": "Adopsi AI di kantor berhasil jika…",
+    "options": [
+      "Use-case jelas, data aman, dan review manusia",
+      "Hanya beli GPU termahal tanpa tujuan",
+      "Demo sekali tanpa change management",
+      "Abaikan pelatihan karyawan",
+      "Sembunyikan batasan model dari pemangku kepentingan"
+    ],
+    "answer": 0
+  }
+]

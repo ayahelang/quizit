@@ -1,0 +1,22 @@
+[
+  {
+    "id": "E1",
+    "question": "Risiko memasukkan data rahasia ke chatbot publik dan cara mitigasinya."
+  },
+  {
+    "id": "E2",
+    "question": "Apa itu RAG dan mengapa sering dipilih untuk knowledge internal?"
+  },
+  {
+    "id": "E3",
+    "question": "Susun kebijakan singkat GenAI untuk tim kantor (boleh/tidak, review, klasifikasi data)."
+  },
+  {
+    "id": "E4",
+    "question": "Bagaimana mengevaluasi kualitas jawaban AI sebelum ke pelanggan?"
+  },
+  {
+    "id": "E5",
+    "question": "Tiga use-case GenAI bernilai di IT support/office dan satu yang sebaiknya dihindari."
+  }
+]

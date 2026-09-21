@@ -10,7 +10,7 @@
   "supabaseUrl": "https://edaujcxmncoslykyddwf.supabase.co",
   "supabaseAnonKey": "sb_publishable_Mn4bLzBAG1W26QNUI1I24Q_TM2WWyuS",
   "schoolName": "Silverhawk IT",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "defaultDurationMinutes": 60,
   "defaultPracticeDurationMinutes": 30,
   "forceFullscreen": true,

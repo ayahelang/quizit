@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "question": "Perintah SQL SELECT digunakan untuk…",
+    "options": [
+      "Mengambil data dari tabel",
+      "Menghapus basis data selalu",
+      "Mengganti sistem operasi server",
+      "Mengedit Group Policy",
+      "Mem-flash firmware"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 2,
+    "question": "PRIMARY KEY menjamin…",
+    "options": [
+      "Nilai unik pengenal baris",
+      "Semua kolom boleh NULL tanpa batas",
+      "Duplikasi identitas dianjurkan",
+      "Tidak ada indeks",
+      "Join dilarang"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 3,
+    "question": "INNER JOIN mengembalikan…",
+    "options": [
+      "Baris yang cocok di kedua tabel",
+      "Semua baris kiri meski tidak cocok",
+      "Produk Cartesian tanpa syarat selalu lebih baik",
+      "Hanya metadata kolom",
+      "Hanya nama tabel"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 4,
+    "question": "Normalisasi bertujuan…",
+    "options": [
+      "Mengurangi redudansi dan anomali pemutakhiran",
+      "Menambah duplikasi tanpa alasan",
+      "Menghapus relasi",
+      "Menyimpan semua di satu kolom teks panjang",
+      "Mematikan constraint"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 5,
+    "question": "Indeks mempercepat…",
+    "options": [
+      "Pencarian pada kolom tertentu dengan trade-off tulis/storage",
+      "Setiap INSERT tanpa biaya",
+      "Hanya warna dashboard",
+      "Hanya ekspor CSV",
+      "Hanya backup tape"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 6,
+    "question": "OLTP versus OLAP…",
+    "options": [
+      "OLTP operasional transaksional; OLAP analitik",
+      "Keduanya selalu sama",
+      "OLAP hanya menyimpan password",
+      "OLTP hanya data lake objek",
+      "OLAP melarang SQL"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 7,
+    "question": "Star schema memuat…",
+    "options": [
+      "Tabel fakta dan dimensi",
+      "Hanya satu CSV tanpa model",
+      "Hanya log JSON mentah",
+      "Hanya graf sosial",
+      "Hanya key-value sesi"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 8,
+    "question": "ETL/ELT adalah…",
+    "options": [
+      "Proses memindahkan dan menyiapkan data untuk analisis",
+      "Menghapus data produksi tiap malam tanpa backup",
+      "Mengganti aturan firewall",
+      "Menyusun kabel rak",
+      "Mengatur MFA"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 9,
+    "question": "Power BI Desktop terutama untuk…",
+    "options": [
+      "Membuat model dan laporan interaktif",
+      "Mengganti domain controller",
+      "Mengedit registry server",
+      "Mengelola VLAN",
+      "Mengatur BGP"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 10,
+    "question": "Measure DAX berbeda dari calculated column karena…",
+    "options": [
+      "Measure dihitung menurut konteks filter visual",
+      "Keduanya selalu disimpan fisik identik",
+      "Measure tidak bisa agregat",
+      "Kolom tidak bisa di model",
+      "DAX hanya untuk Python"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 11,
+    "question": "Row-level security membantu…",
+    "options": [
+      "Membatasi baris data per pengguna/peran",
+      "Menghapus autentikasi",
+      "Membuka dataset ke publik anonym",
+      "Mematikan gateway",
+      "Menghindari pemisahan workspace"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 12,
+    "question": "On-premises data gateway dipakai saat…",
+    "options": [
+      "Laporan cloud membutuhkan data on-premises",
+      "Semua sumber sudah publik tanpa auth",
+      "Tidak ada refresh",
+      "Impor sekali via USB saja",
+      "Hanya screenshot"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 13,
+    "question": "Kardinalitas hubungan tinggi dapat…",
+    "options": [
+      "Mempengaruhi performa model dan ketepatan filter",
+      "Selalu mempercepat tanpa trade-off",
+      "Menghapus kebutuhan indeks sumber",
+      "Menjamin memori nol",
+      "Mematikan kompresi"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 14,
+    "question": "Masalah kualitas data contohnya…",
+    "options": [
+      "Duplikat, null tak terduga, format tidak konsisten",
+      "Hanya warna tema laporan",
+      "Hanya font judul",
+      "Hanya ukuran kanvas",
+      "Hanya posisi slicer"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 15,
+    "question": "Agregasi SUM/COUNT membingungkan jika…",
+    "options": [
+      "Granularity dan konteks filter tidak dipahami",
+      "Selalu salah di semua mesin SQL modern",
+      "Tidak pernah dipakai di BI",
+      "Hanya untuk NoSQL",
+      "Hanya CSV kecil"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 16,
+    "question": "Scheduled refresh memastikan…",
+    "options": [
+      "Laporan mendapat data baru secara berkala",
+      "Data membeku selamanya",
+      "Gateway dimatikan",
+      "Kredensial dihapus tiap jam",
+      "Workspace publik anonym"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 17,
+    "question": "Tabel fakta biasanya menyimpan…",
+    "options": [
+      "Ukuran kuantitatif pada grain tertentu",
+      "Hanya deskripsi produk panjang",
+      "Hanya warna logo",
+      "Hanya pemetaan font",
+      "Hanya tema laporan"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 18,
+    "question": "Tabel dimensi biasanya menyimpan…",
+    "options": [
+      "Atribut deskriptif untuk analisis slice/dice",
+      "Hanya angka transaksi tanpa konteks",
+      "Hanya PID sistem asing",
+      "Hanya level log",
+      "Hanya IP firewall"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 19,
+    "question": "LEFT JOIN mempertahankan…",
+    "options": [
+      "Semua baris tabel kiri",
+      "Hanya baris yang cocok seperti INNER",
+      "Hanya baris kanan",
+      "Hanya skema tanpa data",
+      "Hanya definisi indeks"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 20,
+    "question": "NULL pada agregasi…",
+    "options": [
+      "Perlu dipahami karena banyak fungsi mengabaikan NULL",
+      "Selalu dihitung 0 di semua mesin",
+      "Selalu error fatal",
+      "Selalu sama string kosong di semua SQL",
+      "Tidak pernah muncul di warehouse"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 21,
+    "question": "Data lineage membantu…",
+    "options": [
+      "Melacak asal dan transformasi data",
+      "Menghapus dokumentasi",
+      "Menyembunyikan sumber dari auditor",
+      "Menghindari katalog data",
+      "Mematikan quality check"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 22,
+    "question": "Terlalu banyak visual tidak fokus menyebabkan…",
+    "options": [
+      "Keputusan sulit karena noise tinggi",
+      "Insight selalu naik proporsional",
+      "Menghapus kebutuhan KPI",
+      "Menjamin data benar",
+      "Menghilangkan bias"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 23,
+    "question": "Incremental refresh berguna untuk…",
+    "options": [
+      "Dataset besar agar refresh lebih efisien",
+      "Full scan selalu lebih baik di semua kasus",
+      "Menghapus history tiap hari tanpa kebijakan",
+      "Menghindari partisi",
+      "Menghindari kolom tanggal"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 24,
+    "question": "Privasi data (mis. GDPR) relevan karena…",
+    "options": [
+      "Ada batasan pemakaian data pribadi dan hak subjek",
+      "Data pribadi boleh dipublikasikan bebas",
+      "Tidak ada sanksi di mana pun",
+      "Enkripsi dilarang",
+      "Akses anonym wajib ke data HR"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 25,
+    "question": "KPI yang baik bersifat…",
+    "options": [
+      "Terukur, relevan, dan actionable",
+      "Sebanyak mungkin tanpa prioritas",
+      "Hanya vanity metric",
+      "Tanpa pemilik",
+      "Tidak pernah ditinjau"
+    ],
+    "answer": 0
+  }
+]
