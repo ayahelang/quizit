@@ -308,11 +308,25 @@
     };
   }
 
+  function packMatchesProduct(p) {
+    const product = (typeof config !== 'undefined' && config.productId) ||
+      (global.__CBT_CONFIG__ && global.__CBT_CONFIG__.productId) || 'quizit';
+    const pid = p && (p.id || p.pack_id);
+    const pp = p && p.product_id;
+    if (product === 'quizit') {
+      return (pid && String(pid).startsWith('quizit-')) || pp === 'quizit';
+    }
+    if (pid && String(pid).startsWith('quizit-')) return false;
+    if (pp === 'quizit') return false;
+    return true;
+  }
+
   async function listManageablePacks() {
     const all = await listAllPacksAdmin();
-    if (isMainAdmin()) return (all || []).map(p => Object.assign({ _perm: { can_rename: true, can_edit_items: true, can_manage_participants: true, can_delete: true, is_owner: true } }, p));
+    const filtered = (all || []).filter(packMatchesProduct);
+    if (isMainAdmin()) return filtered.map(p => Object.assign({ _perm: { can_rename: true, can_edit_items: true, can_manage_participants: true, can_delete: true, is_owner: true, can_grant: true } }, p));
     const out = [];
-    for (const p of (all || [])) {
+    for (const p of filtered) {
       const perm = await getPackPermissions(p);
       if (perm.is_owner || perm.can_rename || perm.can_edit_items || perm.can_manage_participants || perm.can_delete) {
         out.push(Object.assign({ _perm: perm }, p));
@@ -954,6 +968,10 @@
     if (!id) throw new Error('Pack id wajib');
     const existing = await sbFetch('cbt_packs?id=eq.' + encodeURIComponent(id) + '&select=id,questions,owner_username');
     const hasExisting = existing && existing[0];
+    const product = (packMeta.product_id || packMeta.productId ||
+      (typeof config !== 'undefined' && config.productId) ||
+      (global.__CBT_CONFIG__ && global.__CBT_CONFIG__.productId) ||
+      (id && String(id).startsWith('quizit-') ? 'quizit' : 'cbt'));
     const body = {
       id: id,
       title: packMeta.title || id,
@@ -962,9 +980,10 @@
       duration_minutes: packMeta.durationMinutes || packMeta.duration_minutes || 60,
       practice_duration_minutes: packMeta.practiceDurationMinutes || packMeta.practice_duration_minutes || 30,
       enabled: packMeta.enabled !== false,
+      product_id: product,
       updated_at: new Date().toISOString(),
       updated_by: currentAdmin.username || 'main',
-      owner_username: (hasExisting && existing[0].owner_username) ? existing[0].owner_username : 'main'
+      owner_username: (hasExisting && existing[0].owner_username) ? existing[0].owner_username : (currentAdmin.username || 'main')
     };
     const existingQs = hasExisting && Array.isArray(existing[0].questions) ? existing[0].questions : [];
     if (!hasExisting || !existingQs.length || opts.forceOverwriteQuestions) {
@@ -1218,6 +1237,16 @@
     verifyPackPassword,
     packHasPasswords,
     isPackPasswordValid,
-    resolvePasswordExpiry
+    resolvePasswordExpiry,
+    listExamTokens,
+    createExamToken,
+    updateExamToken,
+    deleteExamToken,
+    listTokenUsages,
+    verifyExamToken,
+    consumeExamToken,
+    saveCertificate,
+    loginWithGoogleEmail,
+    linkGoogleEmailToCurrentAdmin
   };
 })(window);

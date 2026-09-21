@@ -919,3 +919,6 @@ body {
   margin-top: 2px;
   flex-shrink: 0;
 }
+
+/* tooltip hint */
+button[title], .btn[title] { cursor: help; }

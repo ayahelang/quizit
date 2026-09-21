@@ -310,8 +310,14 @@ async function init() {
     }
   } catch (err) {
     console.error(err);
-    document.getElementById('pack-list').innerHTML =
-      '<p class="hint">Gagal memuat catalog.json. Periksa file di repository.</p>';
+    const msg = (err && err.message) ? String(err.message) : String(err);
+    const el = document.getElementById('pack-list');
+    if (el) {
+      el.innerHTML =
+        '<p class="hint">Gagal memuat konfigurasi/data awal.</p>' +
+        '<p class="hint" style="font-size:0.8rem;opacity:.85">Detail: ' + msg.replace(/[<>&]/g,'') + '</p>' +
+        '<p class="hint" style="font-size:0.8rem;opacity:.85">Cek config.json (JSON valid?), catalog.json, dan students.json di repo.</p>';
+    }
   }
 }
 
@@ -2097,7 +2103,8 @@ async function syncLocalCatalogPacksToDb() {
           description: p.description,
           durationMinutes: p.durationMinutes,
           practiceDurationMinutes: p.practiceDurationMinutes,
-          enabled: p.enabled !== false
+          enabled: p.enabled !== false,
+          productId: (config && config.productId) || 'quizit'
         },
         questions: Array.isArray(questions) ? questions : [],
         essays: Array.isArray(essays) ? essays : [],
@@ -2616,7 +2623,7 @@ async function onMcImportLegacy() {
       st.textContent = 'File data awal tidak ditemukan. Tambah kelas/peserta manual di form bawah.';
       return;
     }
-    const institution = (config && config.schoolName) || 'SMA PMA';
+    const institution = 'SMA PMA 2024';
     const r = await SHSupabase.importLegacyStudents(legacy, institution);
     st.textContent = 'Impor selesai. Kelas baru: ' + r.classCount + ', peserta diproses: ' + r.memberCount + '. Lanjut atur peserta di Kelola Paket.';
     refreshMasterClasses();

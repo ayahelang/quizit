@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   </head>
-  <body>
+  <body data-shlock-mode="normal" data-shlock-domain="quizit.silverhawk.web.id" data-shlock-brand="Silverhawk QuizIT" data-shlock-social="https://www.tiktok.com/@enb_electronicsntools,https://www.tiktok.com/@belajarsmm,https://www.youtube.com/@amateursreleased">
     <div class="bg-overlay"></div>
 
     <!-- LOGIN SCREEN -->
@@ -215,7 +215,7 @@
         <!-- TAB MASTER PESERTA -->
         <div class="admin-tab-panel" id="tab-peserta-master" style="display:none">
           <p class="hint" style="margin-bottom:12px">Data master kelas &amp; peserta disimpan di database (bukan file JSON). Dikelola pembuat paket dan admin yang diberi hak.</p>
-          <button id="btn-mc-import-legacy" class="btn btn-secondary" style="width:100%;margin-bottom:12px">Impor data awal kelas 51 &amp; 52 (sekali)</button>
+          <button id="btn-mc-import-legacy" class="btn btn-secondary" style="width:100%;margin-bottom:12px" title="Membaca students.json lalu menyimpan kelas 51 &amp; 52 beserta nama peserta ke database. Aman diklik ulang: nama yang sama digabung, tidak menduplikasi. Setelah impor, atur peserta di tab Kelola Paket.">Impor data awal kelas 51 &amp; 52 (sekali)</button>
           <div id="mc-import-status" class="admin-status" style="margin-bottom:10px"></div>
           <div class="form-group"><label>Nama kelas</label><input type="text" id="mc-name" placeholder="Contoh: 11 DKV A" /></div>
           <div class="form-group"><label>Sekolah / instansi</label><input type="text" id="mc-institution" placeholder="Contoh: SMK Negeri 1 ..." /></div>
@@ -259,8 +259,8 @@
         </div>
 <div class="admin-tab-panel" id="tab-kelola-paket" style="display:none">
           <p class="hint" style="margin-bottom:12px">Paket milik Anda + paket yang diberi hak oleh admin utama. Rename hanya mengubah judul (ID tetap).</p>
-          <button id="btn-refresh-manage-packs" class="btn btn-secondary" style="width:100%;margin-bottom:8px">Muat Daftar Paket</button>
-          <button id="btn-sync-catalog-packs" class="btn btn-secondary" style="width:100%;margin-bottom:12px">Daftarkan paket lokal (Web Design, SMM, …) ke database</button>
+          <button id="btn-refresh-manage-packs" class="btn btn-secondary" style="width:100%;margin-bottom:8px" title="Menyinkronkan paket lokal QuizIT ke database (jika perlu), lalu menampilkan ulang paket yang bisa Anda kelola. Hanya menampilkan paket QuizIT, bukan paket CBT.">Muat Daftar Paket</button>
+          <button id="btn-sync-catalog-packs" class="btn btn-secondary" style="width:100%;margin-bottom:12px" title="Mendaftarkan semua paket dari catalog.json QuizIT (quizit-*) ke database agar muncul di daftar ini, bisa diatur pesertanya, dan dimuat cepat di beranda. Tidak menghapus paket CBT. Klik jika daftar paket QuizIT belum lengkap.">Daftarkan paket QuizIT (catalog) ke database</button>
           <div id="manage-packs-status" class="admin-status"></div>
           <div id="manage-packs-list" class="admin-list"></div>
           <hr style="border-color:var(--border);margin:16px 0" />
@@ -293,9 +293,9 @@
                     <h3 style="font-size:0.95rem;margin:12px 0 8px">Peserta paket</h3>
           <p class="hint">Wajib pilih minimal satu peserta. Centang kelas atau buka daftar untuk memilih sebagian nama.</p>
           <div id="mp-checkbox-tree" class="admin-list" style="max-height:280px"></div>
-          <button id="btn-mp-select-all-tree" class="btn btn-secondary" style="width:100%;margin:8px 0 4px">Centang semua di daftar</button>
-          <button id="btn-mp-assign-all-master" class="btn btn-secondary" style="width:100%;margin:4px 0">Pakai semua peserta master ke paket ini</button>
-          <button id="btn-mp-save-parts" class="btn btn-primary" style="width:100%;margin:10px 0">Simpan Pilihan Peserta Paket</button>
+          <button id="btn-mp-select-all-tree" class="btn btn-secondary" style="width:100%;margin:8px 0 4px" title="Mencentang semua kotak peserta yang terlihat di daftar di atas. Belum menyimpan — Anda masih harus klik Simpan Pilihan Peserta Paket.">Centang semua di daftar</button>
+          <button id="btn-mp-assign-all-master" class="btn btn-secondary" style="width:100%;margin:4px 0" title="Langsung memasukkan SELURUH peserta dari semua kelas di master database ke paket yang sedang dipilih, lalu menyimpan. Berguna untuk ujian bersama seluruh angkatan. Tidak hanya mencentang UI — data langsung tersimpan.">Pakai semua peserta master ke paket ini</button>
+          <button id="btn-mp-save-parts" class="btn btn-primary" style="width:100%;margin:10px 0" title="Menyimpan peserta yang dicentang ke database untuk paket ini. Wajib minimal satu peserta. Tanpa langkah ini, peserta tidak bisa memilih kelas/nama saat ujian.">Simpan Pilihan Peserta Paket</button>
           <div id="mp-part-status" class="admin-status"></div>
 
 
