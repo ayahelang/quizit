@@ -1484,7 +1484,7 @@ function setupAdminExtendedUi() {
       if (id === 'analisis') fillAnalisisPackOptions();
       if (id === 'kelola-paket') refreshManagePacksList();
       if (id === 'peserta-master') refreshMasterClasses();
-      if (id === 'tokens') refreshTokenList();
+      if (id === 'tokens') { refreshTokenList(); populateTokenDatalists(); }
     });
   });
 
@@ -2157,6 +2157,7 @@ async function refreshManagePacksList() {
     _managePacksCache.forEach(p => {
       const div = document.createElement('div');
       div.className = 'admin-row';
+      div.dataset.packId = p.id;
       const ownerLabel = nameMap[p.owner_username] || p.owner_username || 'Admin Utama';
       div.innerHTML = '<div class="info" style="flex:1;cursor:pointer"><strong>' + escapeHtml(p.title || p.id) +
         '</strong><br><small>Pemilik: ' + escapeHtml(ownerLabel) +
@@ -2167,16 +2168,26 @@ async function refreshManagePacksList() {
   } catch (e) { st.textContent = e.message; }
 }
 async function selectManagePack(p) {
+  const edit = document.getElementById('mp-edit-section');
+  if (edit) edit.style.display = 'block';
+  document.querySelectorAll('#manage-packs-list .admin-row').forEach(r => r.classList.remove('selected'));
+  // highlight clicked row if event target available via cache
+  const rows = document.querySelectorAll('#manage-packs-list .admin-row');
+  rows.forEach(r => {
+    if (r.dataset && r.dataset.packId === p.id) r.classList.add('selected');
+  });
   document.getElementById('mp-pack-id').value = p.id;
   document.getElementById('mp-pack-title').value = p.title || '';
-  document.getElementById('mp-edit-status').textContent = 'Paket dipilih: ' + p.id;
+  const st = document.getElementById('mp-edit-status');
+  if (st) st.textContent = 'Paket dipilih: ' + (p.title || p.id);
   const aclSec = document.getElementById('mp-acl-section');
   const perm = p._perm || {};
   const canGrant = SHSupabase.isMainAdmin() || perm.is_owner || perm.can_grant;
   if (aclSec) aclSec.style.display = canGrant ? 'block' : 'none';
-  await renderMpCheckboxTree(p.id);
-  await refreshMpPasswords(p.id);
-  if (canGrant) await refreshMpAcl(p.id);
+  try { await renderMpCheckboxTree(p.id); } catch (e) { console.warn(e); }
+  try { await refreshMpPasswords(p.id); } catch (e) { console.warn(e); }
+  if (canGrant) { try { await refreshMpAcl(p.id); } catch (e) { console.warn(e); } }
+  if (edit) edit.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 async function refreshMpParticipants(packId) {
   const list = document.getElementById('mp-part-list');
@@ -2610,22 +2621,27 @@ async function onMpAddPassword() {
 
 
 async function onMcImportLegacy() {
-  const st = document.getElementById('mc-import-status');
+  const st = document.getElementById('mc-status');
   try {
-    st.textContent = 'Mengimpor...';
-    // Baca students.json HANYA sebagai sumber impor sekali (bukan penyimpanan rutin)
-    let legacy = null;
-    try {
-      const res = await fetch('students.json', { cache: 'no-store' });
-      if (res.ok) legacy = await res.json();
-    } catch (_) {}
-    if (!legacy || typeof legacy !== 'object') {
-      st.textContent = 'File data awal tidak ditemukan. Tambah kelas/peserta manual di form bawah.';
-      return;
+    const res = await fetch('students.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('students.json tidak ditemukan');
+    const data = await res.json();
+    let totalClass = 0, totalMem = 0;
+    if (Array.isArray(data.cohorts)) {
+      for (const c of data.cohorts) {
+        const legacy = {};
+        legacy[c.className] = c.members || [];
+        const r = await SHSupabase.importLegacyStudents(legacy, c.institution || 'SMA PMA');
+        totalClass += r.classCount || 0;
+        totalMem += r.memberCount || 0;
+      }
+    } else {
+      const institution = (config && config.schoolName) || 'SMA PMA 2024';
+      const r = await SHSupabase.importLegacyStudents(data, institution);
+      totalClass = r.classCount || 0;
+      totalMem = r.memberCount || 0;
     }
-    const institution = 'SMA PMA 2024';
-    const r = await SHSupabase.importLegacyStudents(legacy, institution);
-    st.textContent = 'Impor selesai. Kelas baru: ' + r.classCount + ', peserta diproses: ' + r.memberCount + '. Lanjut atur peserta di Kelola Paket.';
+    st.textContent = 'Impor selesai (QuizIT). Kelas baru: ' + totalClass + ', peserta diproses: ' + totalMem + '. Lanjut atur di Kelola Paket.';
     refreshMasterClasses();
   } catch (e) {
     st.textContent = e.message || 'Gagal impor';
@@ -2657,6 +2673,59 @@ async function onMpAssignAllMaster() {
   }
 }
 
+
+
+async function populateTokenDatalists() {
+  try {
+    const users = new Set();
+    const classes = new Set();
+    if (window.SHSupabase && SHSupabase.sbEnabled()) {
+      const members = await SHSupabase.listAllMasterMembers();
+      (members || []).forEach(m => {
+        if (m.display_name) users.add(m.display_name);
+        if (m.student_name) users.add(m.student_name);
+      });
+      const cls = await SHSupabase.listAllClassesAdmin();
+      (cls || []).forEach(c => {
+        if (c.name) classes.add(c.name);
+        const label = (c.name || '') + (c.institution ? ' · ' + c.institution : '');
+        if (label) classes.add(label);
+      });
+    }
+    const uList = document.getElementById('tok-users-list');
+    const cList = document.getElementById('tok-class-list');
+    const pList = document.getElementById('tok-packs-list');
+    if (uList) {
+      uList.innerHTML = '';
+      [...users].sort().forEach(u => {
+        const o = document.createElement('option'); o.value = u; uList.appendChild(o);
+      });
+    }
+    if (cList) {
+      cList.innerHTML = '';
+      [...classes].sort().forEach(u => {
+        const o = document.createElement('option'); o.value = u; cList.appendChild(o);
+      });
+    }
+    if (pList) {
+      pList.innerHTML = '';
+      const packs = (validPacks || []).filter(p => p && p.id && String(p.id).startsWith('quizit-'));
+      packs.forEach(p => {
+        const o = document.createElement('option');
+        o.value = p.id;
+        o.label = p.title || p.id;
+        pList.appendChild(o);
+      });
+      // also from manage cache
+      (_managePacksCache || []).forEach(p => {
+        if (!packs.find(x => x.id === p.id)) {
+          const o = document.createElement('option');
+          o.value = p.id; o.label = p.title || p.id; pList.appendChild(o);
+        }
+      });
+    }
+  } catch (e) { console.warn('datalist', e); }
+}
 
 async function refreshTokenList() {
   const list = document.getElementById('tok-list');

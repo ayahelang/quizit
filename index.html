@@ -222,7 +222,7 @@
         <!-- TAB MASTER PESERTA -->
         <div class="admin-tab-panel" id="tab-peserta-master" style="display:none">
           <p class="hint" style="margin-bottom:12px">Data master kelas &amp; peserta disimpan di database (bukan file JSON). Dikelola pembuat paket dan admin yang diberi hak.</p>
-          <button id="btn-mc-import-legacy" class="btn btn-secondary" style="width:100%;margin-bottom:12px" title="Membaca students.json lalu menyimpan kelas 51 &amp; 52 beserta nama peserta ke database. Aman diklik ulang: nama yang sama digabung, tidak menduplikasi. Setelah impor, atur peserta di tab Kelola Paket.">Impor data awal kelas 51 &amp; 52 (sekali)</button>
+          <button id="btn-mc-import-legacy" class="btn btn-secondary" style="width:100%;margin-bottom:12px" title="Membaca students.json lalu menyimpan kelas 51 &amp; 52 beserta nama peserta ke database. Aman diklik ulang: nama yang sama digabung, tidak menduplikasi. Setelah impor, atur peserta di tab Kelola Paket.">Impor data awal 51 &amp; 52 angkatan 2024 + 2025</button>
           <div id="mc-import-status" class="admin-status" style="margin-bottom:10px"></div>
           <div class="form-group"><label>Nama kelas</label><input type="text" id="mc-name" placeholder="Contoh: 11 DKV A" /></div>
           <div class="form-group"><label>Sekolah / instansi</label><input type="text" id="mc-institution" placeholder="Contoh: SMK Negeri 1 ..." /></div>
@@ -253,9 +253,9 @@
               <option value="multi_user">Beberapa user (pisah koma)</option>
             </select>
           </div>
-          <div class="form-group"><label>User diizinkan (nama/email, koma)</label><input type="text" id="tok-users" /></div>
-          <div class="form-group"><label>Kelas diizinkan (opsional)</label><input type="text" id="tok-class" placeholder="51" /></div>
-          <div class="form-group"><label>ID paket (koma). Kosong = semua paket QuizIT</label><input type="text" id="tok-packs" placeholder="quizit-aws-cloud" /></div>
+          <div class="form-group"><label>User diizinkan (nama/email, koma — atau pilih dari list)</label><input type="text" id="tok-users" list="tok-users-list" placeholder="Ketik atau pilih nama" /><datalist id="tok-users-list"></datalist></div>
+          <div class="form-group"><label>Kelas diizinkan (opsional — pilih dari list)</label><input type="text" id="tok-class" list="tok-class-list" placeholder="51 atau 51 · SMA PMA 2025" /><datalist id="tok-class-list"></datalist></div>
+          <div class="form-group"><label>ID paket (koma). Kosong = semua paket QuizIT — pilih dari list</label><input type="text" id="tok-packs" list="tok-packs-list" placeholder="quizit-aws-cloud" /><datalist id="tok-packs-list"></datalist></div>
           <div class="form-group"><label>Maks. pemakaian</label><input type="number" id="tok-max" value="1" min="1" /></div>
           <div class="form-group"><label>Nominal transfer (Rp)</label><input type="number" id="tok-amount" value="5000" min="0" /></div>
           <div class="form-group"><label>Kadaluarsa (opsional)</label><input type="datetime-local" id="tok-exp" /></div>
