@@ -979,7 +979,15 @@ details.admin-fold:not([open]) > .admin-fold-title::after {
 .btn-google:hover { background: #f8fafc; }
 .btn-google .g-icon { display: flex; }
 
-.admin-row.selected {
-  outline: 2px solid #a78bfa;
-  background: rgba(167, 139, 250, 0.12);
+
+
+.admin-row.selected,
+.admin-row.is-selected {
+  outline: 2px solid #22d3ee;
+  background: rgba(34, 211, 238, 0.12);
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.8);
 }
+.admin-row:hover {
+  background: rgba(34, 211, 238, 0.06);
+}
+button[title], .btn[title] { cursor: help; }

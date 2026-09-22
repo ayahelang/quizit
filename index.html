@@ -214,7 +214,7 @@
           <button id="btn-upload-pack" class="btn btn-primary" style="width:100%">Upload / Update Paket</button>
           <div id="upload-status" class="admin-status" style="margin-top:10px"></div>
           <hr style="border-color:var(--border);margin:16px 0" />
-          <button id="btn-refresh-remote-packs" class="btn btn-secondary" style="width:100%">Muat Ulang Paket dari Database</button>
+          <button id="btn-refresh-remote-packs" class="btn btn-secondary" style="width:100%" title="Hanya MEMUAT ULANG daftar paket dari database ke layar admin (tidak menghapus, tidak menimpa soal). Aman. Dipakai jika paket baru diupload di perangkat lain agar list terbarui. Risiko: hampir tidak ada — hanya refresh tampilan.">Muat Ulang Paket dari Database</button>
         </div>
 
 
@@ -224,8 +224,8 @@
           <p class="hint" style="margin-bottom:12px">Data master kelas &amp; peserta disimpan di database (bukan file JSON). Dikelola pembuat paket dan admin yang diberi hak.</p>
           <button id="btn-mc-import-legacy" class="btn btn-secondary" style="width:100%;margin-bottom:12px" title="Membaca students.json lalu menyimpan kelas 51 &amp; 52 beserta nama peserta ke database. Aman diklik ulang: nama yang sama digabung, tidak menduplikasi. Setelah impor, atur peserta di tab Kelola Paket.">Impor data awal 51 &amp; 52 angkatan 2024 + 2025</button>
           <div id="mc-import-status" class="admin-status" style="margin-bottom:10px"></div>
-          <div class="form-group"><label>Nama kelas</label><input type="text" id="mc-name" placeholder="Contoh: 11 DKV A" /></div>
-          <div class="form-group"><label>Sekolah / instansi</label><input type="text" id="mc-institution" placeholder="Contoh: SMK Negeri 1 ..." /></div>
+          <div class="form-group"><label>Nama kelas</label><input type="text" id="mc-name" list="mc-name-list" placeholder="Ketik atau pilih" autocomplete="off" /><datalist id="mc-name-list"></datalist></div>
+          <div class="form-group"><label>Sekolah / instansi</label><input type="text" id="mc-institution" list="mc-inst-list" placeholder="Ketik atau pilih" autocomplete="off" /><datalist id="mc-inst-list"></datalist></div>
           <button id="btn-mc-add" class="btn btn-primary" style="width:100%;margin-bottom:10px">Tambah Kelas</button>
           <div id="mc-status" class="admin-status"></div>
           <div id="mc-class-list" class="admin-list"></div>
@@ -233,7 +233,7 @@
           <h3 style="font-size:0.95rem;margin-bottom:8px">Anggota kelas terpilih</h3>
           <input type="hidden" id="mc-selected-class-id" />
           <p id="mc-selected-label" class="hint" style="margin-bottom:8px">Pilih kelas di atas.</p>
-          <div class="form-group"><label>Nama peserta</label><input type="text" id="mc-member-name" /></div>
+          <div class="form-group"><label>Nama peserta</label><input type="text" id="mc-member-name" list="mc-member-name-list" placeholder="Ketik atau pilih nama" autocomplete="off" /><datalist id="mc-member-name-list"></datalist></div>
           <div class="form-group"><label>Nama tampilan (opsional)</label><input type="text" id="mc-member-display" /></div>
           <button id="btn-mc-add-member" class="btn btn-primary" style="width:100%;margin-bottom:8px">Tambah Peserta ke Kelas</button>
           <div id="mc-member-list" class="admin-list"></div>
@@ -268,7 +268,7 @@
         <div class="admin-tab-panel" id="tab-kelola-paket" style="display:none">
           <p class="hint" style="margin-bottom:12px">Paket milik Anda + paket yang diberi hak. Hanya paket QuizIT (terpisah dari CBT).</p>
           <button id="btn-refresh-manage-packs" class="btn btn-secondary" style="width:100%;margin-bottom:8px" title="Sinkron + tampilkan paket QuizIT yang bisa dikelola.">Muat Daftar Paket</button>
-          <button id="btn-sync-catalog-packs" class="btn btn-secondary" style="width:100%;margin-bottom:12px" title="Daftarkan semua paket catalog QuizIT ke database.">Daftarkan paket QuizIT (catalog) ke database</button>
+          <button id="btn-sync-catalog-packs" class="btn btn-secondary" style="width:100%;margin-bottom:12px" title="Menyalin/ mendaftarkan paket dari catalog.json (file di GitHub) ke database Supabase agar bisa dikelola peserta & password. Tidak menghapus paket CBT. Jika paket sudah ada di DB, soal bisa diperbarui dari file lokal. Risiko: menimpa isi soal di DB dengan versi catalog jika ID sama. Aman jika catalog adalah sumber kebenaran.">Daftarkan paket QuizIT (catalog) ke database</button>
           <div id="manage-packs-status" class="admin-status"></div>
           <div id="manage-packs-list" class="admin-list"></div>
 
@@ -337,10 +337,12 @@
                 <summary class="admin-fold-title">Hak admin lain</summary>
                 <div class="admin-fold-body">
                   <p class="hint">Hanya owner/admin utama. Hak hapus paket tidak bisa digrant.</p>
-                  <div class="form-group"><label>Username admin tambahan</label><input type="text" id="mp-acl-user" /></div>
+                  <div class="form-group"><label>Username admin tambahan</label><input type="text" id="mp-acl-user" list="mp-acl-user-list" placeholder="Pilih atau ketik username" autocomplete="off" /><datalist id="mp-acl-user-list"></datalist></div>
                   <label class="toggle-row"><input type="checkbox" id="mp-acl-rename" /><span>Rename judul</span></label>
                   <label class="toggle-row"><input type="checkbox" id="mp-acl-edit" /><span>Edit/tambah butir</span></label>
                   <label class="toggle-row"><input type="checkbox" id="mp-acl-part" /><span>Kelola peserta</span></label>
+                  <label class="toggle-row"><input type="checkbox" id="mp-acl-password" /><span>Kelola password pembuka ujian</span></label>
+                  <label class="toggle-row"><input type="checkbox" id="mp-acl-grant" /><span>Berikan hak ke admin lain</span></label>
                   <button id="btn-mp-acl-save" class="btn btn-primary" style="width:100%;margin-top:10px">Simpan Hak</button>
                   <div id="mp-acl-list" class="admin-list" style="margin-top:10px"></div>
                 </div>
