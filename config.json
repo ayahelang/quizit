@@ -24,5 +24,8 @@
   "mainAdminGoogleEmails": [
     "admin@silverhawk.web.id",
     "ted834r@gmail.com"
-  ]
+  ],
+  "geminiApiKey": "AQ.Ab8RN6Kihbg_fQzd-UvU2zU9E-rG3Zc031_98FoM38H3DknaBQ",
+  "essayAiEnabled": true,
+  "essayManualMode": false
 }
