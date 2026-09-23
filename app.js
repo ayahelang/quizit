@@ -55,11 +55,15 @@ function wireUploadPackIdAuto() {
   const idEl = document.getElementById('up-pack-id');
   if (!title || !idEl) return;
   idEl.addEventListener('input', () => { _upPackIdManual = true; });
-  title.addEventListener('input', () => {
+  const subj = document.getElementById('up-pack-subject');
+  function autoId() {
     if (_upPackIdManual && idEl.value.trim()) return;
-    idEl.value = slugifyPackId(title.value);
-    _upPackIdManual = false;
-  });
+    const base = [title.value, subj && subj.value].filter(Boolean).join(' ');
+    idEl.value = slugifyPackId(base);
+  }
+  title.addEventListener('input', autoId);
+  if (subj) subj.addEventListener('input', autoId);
+
 }
 
 
@@ -312,6 +316,48 @@ let examQuestions = [];
 let currentIndex = 0;
 let answers = {};
 let essayAnswers = {};
+let cheatLog = [];
+
+function examProgressKey() {
+  const pack = selectedPack && selectedPack.id ? selectedPack.id : 'unknown';
+  const nm = (studentName || '').trim().toLowerCase();
+  const cl = (studentClass || '').trim().toLowerCase();
+  return 'sh_exam_progress_v1:' + pack + ':' + cl + ':' + nm;
+}
+
+function persistExamProgress() {
+  if (isPracticeMode || examFinished || !selectedPack || !studentName) return;
+  try {
+    const payload = {
+      packId: selectedPack.id,
+      packTitle: selectedPack.title || '',
+      name: studentName,
+      class: studentClass,
+      answers: answers,
+      essayAnswers: essayAnswers,
+      currentIndex: currentIndex,
+      timeLeft: timeLeft,
+      tabSwitchCount: tabSwitchCount,
+      cheatLog: (typeof cheatLog !== 'undefined' ? cheatLog : []),
+      startedAt: window.__examStartedAt || null,
+      savedAt: new Date().toISOString()
+    };
+    localStorage.setItem(examProgressKey(), JSON.stringify(payload));
+  } catch (e) { console.warn('autosave', e); }
+}
+
+function loadExamProgress() {
+  try {
+    const raw = localStorage.getItem(examProgressKey());
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch (_) { return null; }
+}
+
+function clearExamProgress() {
+  try { localStorage.removeItem(examProgressKey()); } catch (_) {}
+}
+
 let studentName = '';
 let studentClass = '';
 let timerInterval = null;
@@ -917,6 +963,7 @@ function saveCurrentEssay() {
   if (!isEssayMode()) return;
   const essay = packEssays[getEssayIndex()];
   if (essay) essayAnswers[essay.id] = essayTextarea.value;
+  persistExamProgress();
 }
 
 function isAnswered(idx) {
@@ -1029,9 +1076,48 @@ function confirmSubmit() {
   if (confirm(msg)) finishExam(false);
 }
 
-function finishExam(auto = false) {
+
+async function gradeEssaysWithAi(essaySummary, packEssays) {
+  const key = (config && config.geminiApiKey) || '';
+  if (!key || (config && config.essayManualMode)) {
+    return essaySummary.map(e => ({ ...e, score: null, maxScore: 20, feedback: 'Menunggu penilaian manual / AI belum dikonfigurasi' }));
+  }
+  const graded = [];
+  for (const e of essaySummary) {
+    const meta = (packEssays || []).find(x => x.id === e.id) || {};
+    const prompt = 'Anda penilai ujian. Nilai jawaban essay 0-20. Balas JSON saja: {"score":number,"feedback":"..."}.\nSoal: ' +
+      (e.question || meta.question || '') + '\nKunci/materi: ' + (meta.answerKey || meta.key || meta.rubric || '(tidak ada)') +
+      '\nJawaban siswa: ' + (e.answer || '');
+    try {
+      const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + encodeURIComponent(key);
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+      const data = await res.json();
+      const text = (((data || {}).candidates || [])[0] || {}).content?.parts?.[0]?.text || '';
+      const m = text.match(/\{[\s\S]*\}/);
+      let score = null, feedback = text.slice(0, 300);
+      if (m) {
+        try {
+          const j = JSON.parse(m[0]);
+          score = Number(j.score);
+          feedback = j.feedback || feedback;
+        } catch (_) {}
+      }
+      graded.push({ ...e, score: isNaN(score) ? null : Math.max(0, Math.min(20, score)), maxScore: 20, feedback });
+    } catch (err) {
+      graded.push({ ...e, score: null, maxScore: 20, feedback: 'Gagal AI: ' + (err.message || '') });
+    }
+  }
+  return graded;
+}
+
+async function finishExam(auto = false) {
   if (examFinished) return;
   examFinished = true;
+  clearExamProgress();
   clearInterval(timerInterval);
   stopAntiCheat();
   stopFullscreenGuard();
@@ -1058,11 +1144,17 @@ function finishExam(auto = false) {
     ? (selectedPack?.practiceDurationMinutes || config.defaultPracticeDurationMinutes || 30)
     : (selectedPack?.durationMinutes || config.defaultDurationMinutes || 60);
 
-  const essaySummary = isPracticeMode ? [] : packEssays.map(e => ({
+  let essaySummary = isPracticeMode ? [] : packEssays.map(e => ({
     id: e.id,
     question: e.question,
-    answer: essayAnswers[e.id] || '(kosong)'
+    answer: essayAnswers[e.id] || '(kosong)',
+    answerKey: e.answerKey || e.key || ''
   }));
+  if (!isPracticeMode && essaySummary.length) {
+    try { essaySummary = await gradeEssaysWithAi(essaySummary, packEssays); } catch (e) { console.warn(e); }
+  }
+  const essayScoreSum = essaySummary.reduce((s, e) => s + (typeof e.score === 'number' ? e.score : 0), 0);
+  const essayScoreMax = essaySummary.reduce((s, e) => s + (e.maxScore || 20), 0);
 
   const resultData = {
     name: studentName,
@@ -1078,12 +1170,17 @@ function finishExam(auto = false) {
     isPractice: isPracticeMode,
     tabSwitchCount: tabSwitchCount,
     mcAnswers: detail,
-    essays: essaySummary
+    essays: essaySummary,
+    essayScore: essayScoreSum,
+    essayScoreMax: essayScoreMax,
+    startedAt: window.__examStartedAt || null,
+    cheatLog: cheatLog || [],
+    institution: (window.__studentInstitution || '')
   };
 
   // Simpan ke satu sumber utama agar tidak dobel di panel admin
   if (!isPracticeMode && window.SHSupabase && SHSupabase.sbEnabled()) {
-    SHSupabase.saveResult(resultData).catch(err => console.warn('Supabase save:', err));
+    SHSupabase.saveResult(resultData).catch(err => console.warn('DB save:', err));
   } else if (!isPracticeMode && config.googleScriptUrl && config.googleScriptUrl.trim() !== '') {
     sendToGoogleSheet(resultData);
   }
@@ -1107,7 +1204,7 @@ function finishExam(auto = false) {
     ? `<strong>Mode Latihan</strong> • ${packLabel}<br>Benar: ${correct} / ${TOTAL_MC}<br>Waktu: ${formatTime((durationMin * 60) - timeLeft)}<br>Tidak dikirim ke Sheet.`
     : `<strong>${studentName}</strong> • Kelas ${studentClass}<br>Paket: ${packLabel}<br>
       PG: ${correct} / ${TOTAL_MC}<br>
-      Essay: ${Object.keys(essayAnswers).filter(k => essayAnswers[k]?.trim()).length} / ${TOTAL_ESSAY} diisi<br>
+      Essay: ${Object.keys(essayAnswers).filter(k => essayAnswers[k]?.trim()).length} / ${TOTAL_ESSAY} diisi ${essayScoreMax ? '· Skor essay: ' + essayScoreSum + '/' + essayScoreMax : ''}<br>
       Waktu: ${formatTime((durationMin * 60) - timeLeft)}<br>
       Pindah tab terdeteksi: ${tabSwitchCount}x`;
 
@@ -1242,41 +1339,136 @@ function logoutAdmin() {
 }
 
 async function adminLoadData() {
-  if (!config.googleScriptUrl) {
-    alert('googleScriptUrl belum diisi');
-    return;
-  }
-  const status = document.getElementById('admin-status');
-  status.textContent = 'Memuat...';
-  document.getElementById('admin-list').innerHTML = '';
+  const st = document.getElementById('admin-status');
+  const list = document.getElementById('admin-list');
+  if (!list) return;
+  list.innerHTML = '';
+  st.textContent = 'Memuat hasil...';
   try {
-    const res = await fetch(config.googleScriptUrl + '?action=list');
-    const data = await res.json();
-    if (!data.rows || !data.rows.length) {
-      status.textContent = 'Belum ada data.';
-      window._adminRows = [];
-      return;
+    let rows = [];
+    if (window.SHSupabase && SHSupabase.sbEnabled()) {
+      rows = await SHSupabase.listResults() || [];
     }
-    window._adminRows = data.rows;
-    // tambah opsi mapel dari data sheet
-    const sel = document.getElementById('admin-pack-filter');
-    const seen = new Set([...(sel ? [...sel.options].map(o => o.value) : [])]);
-    data.rows.forEach(r => {
-      if (r.packId && !seen.has(r.packId)) {
-        seen.add(r.packId);
-        const opt = document.createElement('option');
-        opt.value = r.packId;
-        opt.textContent = r.packTitle || r.packId;
-        sel.appendChild(opt);
-      }
+    window.__adminResultsCache = rows;
+    // fill filters
+    const packs = new Set(), insts = new Set(), classes = new Set(), students = new Set();
+    rows.forEach(r => {
+      packs.add(r.pack_title || r.packTitle || r.pack_id || r.packId || '');
+      insts.add(r.institution || r.student_institution || '');
+      classes.add(r.student_class || r.class || '');
+      students.add(r.student_name || r.name || '');
     });
-    const filtered = getFilteredAdminRows();
-    status.textContent = `Menampilkan ${filtered.length} dari ${data.rows.length} data.`;
-    renderAdminList(filtered);
-  } catch (err) {
-    status.textContent = 'Gagal memuat. Pastikan Apps Script action=list sudah di-deploy.';
+    fillSelectFilter('admin-pack-filter', [...packs], 'Semua mapel');
+    fillSelectFilter('filter-institution', [...insts], 'Semua');
+    fillSelectFilter('filter-class', [...classes], 'Semua kelas');
+    fillSelectFilter('filter-student', [...students], 'Semua peserta');
+    renderAdminResultsFiltered();
+  } catch (e) {
+    st.textContent = e.message || 'Gagal memuat hasil';
   }
 }
+
+function fillSelectFilter(id, values, allLabel) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const cur = el.value;
+  el.innerHTML = '<option value="">' + allLabel + '</option>';
+  values.filter(Boolean).sort((a,b)=>String(a).localeCompare(String(b),'id')).forEach(v => {
+    const o = document.createElement('option'); o.value = v; o.textContent = v; el.appendChild(o);
+  });
+  if (cur) el.value = cur;
+}
+
+function renderAdminResultsFiltered() {
+  const st = document.getElementById('admin-status');
+  const list = document.getElementById('admin-list');
+  if (!list) return;
+  list.innerHTML = '';
+  let rows = window.__adminResultsCache || [];
+  const fp = (document.getElementById('admin-pack-filter') || {}).value || '';
+  const fi = (document.getElementById('filter-institution') || {}).value || '';
+  const fc = (document.getElementById('filter-class') || {}).value || '';
+  const fs = (document.getElementById('filter-student') || {}).value || '';
+  const sp = ((document.getElementById('filter-pack-search') || {}).value || '').toLowerCase();
+  const si = ((document.getElementById('filter-inst-search') || {}).value || '').toLowerCase();
+  const sc = ((document.getElementById('filter-class-search') || {}).value || '').toLowerCase();
+  const ss = ((document.getElementById('filter-student-search') || {}).value || '').toLowerCase();
+  rows = rows.filter(r => {
+    const pack = r.pack_title || r.packTitle || r.pack_id || '';
+    const inst = r.institution || '';
+    const cls = r.student_class || r.class || '';
+    const name = r.student_name || r.name || '';
+    if (fp && pack !== fp) return false;
+    if (fi && inst !== fi) return false;
+    if (fc && cls !== fc) return false;
+    if (fs && name !== fs) return false;
+    if (sp && !String(pack).toLowerCase().includes(sp)) return false;
+    if (si && !String(inst).toLowerCase().includes(si)) return false;
+    if (sc && !String(cls).toLowerCase().includes(sc)) return false;
+    if (ss && !String(name).toLowerCase().includes(ss)) return false;
+    return true;
+  });
+  st.textContent = rows.length + ' hasil.';
+  rows.forEach((r, idx) => {
+    const packTitle = r.pack_title || r.packTitle || r.pack_id || '-';
+    const name = r.student_name || r.name || '-';
+    const cls = r.student_class || r.class || '-';
+    const inst = r.institution || '-';
+    const score = r.score != null ? r.score : '-';
+    const total = r.total != null ? r.total : '-';
+    const essayScore = r.essay_score != null ? r.essay_score : (r.essayScore != null ? r.essayScore : '-');
+    const essayMax = r.essay_score_max != null ? r.essay_score_max : (r.essayScoreMax != null ? r.essayScoreMax : '');
+    const started = r.started_at || r.startedAt || '';
+    const finished = r.finished_at || r.finishedAt || r.created_at || '';
+    const dur = r.time_used_seconds != null ? Math.round(r.time_used_seconds/60) + ' mnt' : (r.timeUsedSeconds != null ? Math.round(r.timeUsedSeconds/60)+' mnt' : '-');
+    const cheats = r.cheat_log || r.cheatLog || [];
+    const tabN = r.tab_switch_count || r.tabSwitchCount || (Array.isArray(cheats) ? cheats.length : 0);
+    const div = document.createElement('div');
+    div.className = 'admin-row result-row';
+    div.innerHTML = '<div class="info" style="flex:1">' +
+      '<strong>' + escapeHtml(name) + '</strong> · ' + escapeHtml(cls) + ' · ' + escapeHtml(inst) +
+      '<br><small>' + escapeHtml(packTitle) + '</small>' +
+      '<br><small>Mulai: ' + escapeHtml(String(started).replace('T',' ').slice(0,19)) +
+      ' · Selesai: ' + escapeHtml(String(finished).replace('T',' ').slice(0,19)) +
+      ' · Durasi: ' + escapeHtml(String(dur)) + '</small>' +
+      '<br><button type="button" class="btn-link btn-pg-detail">Skor PG: ' + score + '/' + total + '</button> · ' +
+      '<button type="button" class="btn-link btn-es-detail">Skor Essay: ' + essayScore + (essayMax !== '' ? '/' + essayMax : '') + '</button>' +
+      (tabN ? '<br><small style="color:#f59e0b">Indikasi pindah tab: ' + tabN + (Array.isArray(cheats) && cheats[0] ? ' (mis. soal no ' + (cheats[0].questionNo||'?') + ')' : '') + '</small>' : '') +
+      '<div class="result-detail-pg" style="display:none;margin-top:8px"></div>' +
+      '<div class="result-detail-es" style="display:none;margin-top:8px"></div>' +
+      '</div>';
+    const pgBtn = div.querySelector('.btn-pg-detail');
+    const esBtn = div.querySelector('.btn-es-detail');
+    const pgBox = div.querySelector('.result-detail-pg');
+    const esBox = div.querySelector('.result-detail-es');
+    pgBtn.onclick = () => {
+      const open = pgBox.style.display !== 'none';
+      pgBox.style.display = open ? 'none' : 'block';
+      if (!open) {
+        const mc = r.mc_answers || r.mcAnswers || [];
+        pgBox.innerHTML = (mc.length ? mc : []).map((m,i) =>
+          '<details class="admin-fold"><summary class="admin-fold-title">PG ' + (i+1) + ' · ' + (m.isCorrect ? 'Benar' : 'Salah') + '</summary>' +
+          '<div class="admin-fold-body"><small>Soal: ' + escapeHtml(m.question||'') + '<br>Jawaban: ' + escapeHtml(m.userAnswer||'') +
+          '<br>Kunci: ' + escapeHtml(m.correctAnswer||'') + '</small></div></details>'
+        ).join('') || '<small>Tidak ada detail PG.</small>';
+      }
+    };
+    esBtn.onclick = () => {
+      const open = esBox.style.display !== 'none';
+      esBox.style.display = open ? 'none' : 'block';
+      if (!open) {
+        const es = r.essays || [];
+        esBox.innerHTML = (es.length ? es : []).map((e,i) =>
+          '<details class="admin-fold"><summary class="admin-fold-title">Essay ' + (i+1) + (e.score!=null ? ' · ' + e.score + '/' + (e.maxScore||20) : '') + '</summary>' +
+          '<div class="admin-fold-body"><small>Soal: ' + escapeHtml(e.question||'') + '<br>Jawaban siswa: ' + escapeHtml(e.answer||'') +
+          (e.feedback ? '<br>Catatan AI: ' + escapeHtml(e.feedback) : '') + '</small></div></details>'
+        ).join('') || '<small>Tidak ada detail essay.</small>';
+      }
+    };
+    list.appendChild(div);
+  });
+}
+
 
 async function adminDeleteRow(row) {
   // row: object dari list admin (bisa dari Supabase atau Sheet)
@@ -1383,6 +1575,15 @@ function onVisibilityChange() {
   if (!anticheatActive || examFinished || isPracticeMode) return;
   if (document.hidden) {
     tabSwitchCount++;
+    try {
+      cheatLog.push({
+        type: 'tab_switch',
+        at: new Date().toISOString(),
+        questionIndex: currentIndex,
+        questionNo: currentIndex + 1
+      });
+      persistExamProgress();
+    } catch (_) {}
     showAntiCheatWarning();
   }
 }
@@ -1976,7 +2177,7 @@ async function refreshAdminsList() {
   list.innerHTML = '';
   try {
     if (!SHSupabase.sbEnabled()) {
-      st.textContent = 'Layanan data belum dikonfigurasi.';
+      st.textContent = 'Layanan database belum dikonfigurasi.';
       return;
     }
     const rows = await SHSupabase.listAdmins();
@@ -2194,16 +2395,16 @@ async function refreshManagePacksList() {
   if (!list) return;
   list.innerHTML = '';
   try {
-    if (!window.SHSupabase || !SHSupabase.sbEnabled()) { st.textContent = 'Layanan data belum dikonfigurasi.'; return; }
+    if (!window.SHSupabase || !SHSupabase.sbEnabled()) { st.textContent = 'Layanan database belum dikonfigurasi.'; return; }
     if (!SHSupabase.getCurrentAdmin()) { st.textContent = 'Login admin dulu.'; return; }
     st.textContent = 'Menyinkronkan paket lokal ke database...';
     try {
       const syncRes = await syncLocalCatalogPacksToDb();
       const nNew = (syncRes || []).filter(x => x.ok && x.created).length;
       const nOk = (syncRes || []).filter(x => x.ok).length;
-      if (nOk) console.log('Catalog sync', syncRes);
+      if (nOk) console.log('Sinkron paket', syncRes);
     } catch (e) {
-      console.warn('Catalog sync', e);
+      console.warn('Sinkron paket', e);
     }
     _managePacksCache = await SHSupabase.listManageablePacks();
     if (!_managePacksCache.length) { st.textContent = 'Belum ada paket yang bisa dikelola.'; return; }
@@ -2503,7 +2704,7 @@ async function refreshMasterClasses() {
       const div = document.createElement('div');
       div.className = 'admin-row';
       div.innerHTML = '<div class="info" style="flex:1;cursor:pointer"><strong>' + escapeHtml(c.name) +
-        '</strong><br><small>' + escapeHtml(c.institution || '-') + '</small></div>';
+        '</strong><br><small>' + escapeHtml(c.institution || '-') + ' · ' + escapeHtml(c.product_id || config.productId || '') + '</small></div>';
       div.querySelector('.info').onclick = () => {
         document.querySelectorAll('#mc-class-list .admin-row, #master-class-list .admin-row').forEach(r => r.classList.remove('selected'));
         if (typeof div !== 'undefined' && div && div.classList) div.classList.add('selected');
@@ -2920,6 +3121,15 @@ function onFullscreenChange() {
     }
     if (proctorSettings.cheatAlarmSound) playCheatAlarm();
     tabSwitchCount++;
+    try {
+      cheatLog.push({
+        type: 'tab_switch',
+        at: new Date().toISOString(),
+        questionIndex: currentIndex,
+        questionNo: currentIndex + 1
+      });
+      persistExamProgress();
+    } catch (_) {}
   }
 }
 
