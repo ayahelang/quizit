@@ -991,3 +991,21 @@ details.admin-fold:not([open]) > .admin-fold-title::after {
   background: rgba(34, 211, 238, 0.06);
 }
 button[title], .btn[title] { cursor: help; }
+
+/* Class participant checkbox states */
+input[type="checkbox"].cb-class-all {
+  accent-color: #22d3ee;
+  outline: 2px solid #22d3ee;
+  outline-offset: 1px;
+}
+input[type="checkbox"].cb-class-partial {
+  accent-color: #94a3b8;
+  opacity: 0.85;
+}
+input[type="checkbox"].cb-class-none {
+  accent-color: #64748b;
+}
+.btn-icon-exit {
+  min-width: auto;
+  padding: 8px 12px;
+}

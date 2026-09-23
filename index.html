@@ -267,7 +267,14 @@
           </div>
           <div class="form-group"><label>User diizinkan (nama/email, koma — atau pilih dari list)</label><input type="text" id="tok-users" list="tok-users-list" placeholder="Ketik atau pilih nama" /><datalist id="tok-users-list"></datalist></div>
           <div class="form-group"><label>Kelas diizinkan (opsional — pilih dari list)</label><input type="text" id="tok-class" list="tok-class-list" placeholder="51 atau 51 · SMA PMA 2025" /><datalist id="tok-class-list"></datalist></div>
-          <div class="form-group"><label>ID paket (koma). Kosong = semua paket QuizIT — pilih dari list</label><input type="text" id="tok-packs" list="tok-packs-list" placeholder="quizit-aws-cloud" /><datalist id="tok-packs-list"></datalist></div>
+          <div class="form-group"><label>Paket soal (nama — bisa lebih dari satu)</label>
+              <select id="tok-packs-select" multiple size="4" style="width:100%"></select>
+              <p class="hint">Tahan Ctrl/Cmd untuk pilih beberapa. Kosong = semua paket produk ini.</p>
+              <input type="hidden" id="tok-packs" />
+            </div>
+            <div class="form-group"><label>Durasi menit sejak **pertama dipakai** (opsional)</label>
+              <input type="number" id="tok-duration-from-use" min="1" placeholder="Contoh: 120. Kosong = pakai kadaluarsa absolut di bawah" />
+            </div>
           <div class="form-group"><label>Maks. pemakaian</label><input type="number" id="tok-max" value="1" min="1" /></div>
           <div class="form-group"><label>Nominal transfer (Rp)</label><input type="number" id="tok-amount" value="5000" min="0" /></div>
           <div class="form-group"><label>Kadaluarsa (opsional)</label><input type="datetime-local" id="tok-exp" /></div>
@@ -324,7 +331,6 @@
                 <p class="hint">Wajib pilih minimal satu peserta. Centang kelas atau buka daftar untuk memilih sebagian nama.</p>
                 <div id="mp-checkbox-tree" class="admin-list" style="max-height:280px"></div>
                 <button id="btn-mp-select-all-tree" class="btn btn-secondary" style="width:100%;margin:8px 0 4px" title="Mencentang semua di daftar. Belum menyimpan.">Centang semua di daftar</button>
-                <button id="btn-mp-assign-all-master" class="btn btn-secondary" style="width:100%;margin:4px 0" title="Langsung menyimpan seluruh peserta master produk QuizIT ke paket ini.">Pakai semua peserta master ke paket ini</button>
                 <button id="btn-mp-save-parts" class="btn btn-primary" style="width:100%;margin:10px 0" title="Simpan centangan ke database. Wajib minimal satu.">Simpan Pilihan Peserta Paket</button>
                 <div id="mp-part-status" class="admin-status"></div>
               </div>
@@ -336,8 +342,15 @@
                 <p class="hint">Boleh lebih dari satu. Opsional: kadaluarsa tanggal/jam atau durasi menit.</p>
                 <div class="form-group"><label>Label (opsional)</label><input type="text" id="mp-pw-label" placeholder="Contoh: Sesi pagi" /></div>
                 <div class="form-group"><label>Password</label><input type="text" id="mp-pw-plain" placeholder="Minimal 4 karakter" autocomplete="off" /></div>
-                <div class="form-group"><label>Kadaluarsa (tanggal &amp; jam, opsional)</label><input type="datetime-local" id="mp-pw-expires" /></div>
-                <div class="form-group"><label>Atau durasi (menit dari sekarang, opsional)</label><input type="number" id="mp-pw-duration" min="1" placeholder="Contoh: 120" /></div>
+                <div class="form-group"><label>Berlaku mulai (opsional)</label><input type="datetime-local" id="mp-pw-valid-from" /></div>
+                <div class="form-group"><label>Berlaku sampai (opsional)</label><input type="datetime-local" id="mp-pw-expires" /></div>
+                <div class="form-group"><label>Atau durasi menit sejak dibuat (opsional)</label><input type="number" id="mp-pw-duration" min="1" placeholder="Contoh: 120" /></div>
+                <details class="admin-fold"><summary class="admin-fold-title">Batasi ke sekolah / kelas / peserta (opsional)</summary>
+                <div class="admin-fold-body">
+                  <div class="form-group"><label>Sekolah/instansi</label><input type="text" id="mp-pw-inst" list="mc-inst-list" placeholder="Kosong = semua" /></div>
+                  <div class="form-group"><label>Kelas (nama)</label><input type="text" id="mp-pw-class" list="mc-name-list" placeholder="Kosong = semua" /></div>
+                  <div class="form-group"><label>Peserta (nama, koma)</label><input type="text" id="mp-pw-users" list="mc-member-name-list" placeholder="Kosong = semua di kelas" /></div>
+                </div></details>
                 <button id="btn-mp-add-pw" class="btn btn-primary" style="width:100%;margin-bottom:8px">Tambah Password</button>
                 <div id="mp-pw-list" class="admin-list"></div>
                 <div id="mp-pw-status" class="admin-status"></div>

@@ -1078,41 +1078,49 @@ function confirmSubmit() {
 
 
 async function gradeEssaysWithAi(essaySummary, packEssays) {
-  const key = (config && config.geminiApiKey) || '';
-  if (!key || (config && config.essayManualMode)) {
-    return essaySummary.map(e => ({ ...e, score: null, maxScore: 20, feedback: 'Menunggu penilaian manual / AI belum dikonfigurasi' }));
+  if (config && config.essayManualMode) {
+    return (essaySummary || []).map(e => ({ ...e, score: null, maxScore: 20, feedback: 'Mode manual aktif' }));
   }
-  const graded = [];
-  for (const e of essaySummary) {
-    const meta = (packEssays || []).find(x => x.id === e.id) || {};
-    const prompt = 'Anda penilai ujian. Nilai jawaban essay 0-20. Balas JSON saja: {"score":number,"feedback":"..."}.\nSoal: ' +
-      (e.question || meta.question || '') + '\nKunci/materi: ' + (meta.answerKey || meta.key || meta.rubric || '(tidak ada)') +
-      '\nJawaban siswa: ' + (e.answer || '');
-    try {
-      const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + encodeURIComponent(key);
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-      });
-      const data = await res.json();
-      const text = (((data || {}).candidates || [])[0] || {}).content?.parts?.[0]?.text || '';
-      const m = text.match(/\{[\s\S]*\}/);
-      let score = null, feedback = text.slice(0, 300);
-      if (m) {
-        try {
-          const j = JSON.parse(m[0]);
-          score = Number(j.score);
-          feedback = j.feedback || feedback;
-        } catch (_) {}
-      }
-      graded.push({ ...e, score: isNaN(score) ? null : Math.max(0, Math.min(20, score)), maxScore: 20, feedback });
-    } catch (err) {
-      graded.push({ ...e, score: null, maxScore: 20, feedback: 'Gagal AI: ' + (err.message || '') });
+  const base = (config && config.supabaseUrl) || '';
+  const anon = (config && config.supabaseAnonKey) || '';
+  if (!base || !anon) {
+    return (essaySummary || []).map(e => ({ ...e, score: null, maxScore: 20, feedback: 'Database belum dikonfigurasi untuk AI' }));
+  }
+  const essays = (essaySummary || []).map(e => {
+    const meta = (packEssays || []).find(x => x && x.id === e.id) || {};
+    return {
+      id: e.id,
+      question: e.question || meta.question || '',
+      answer: e.answer || '',
+      answerKey: e.answerKey || meta.answerKey || meta.key || meta.rubric || ''
+    };
+  });
+  try {
+    const url = base.replace(/\/$/, '') + '/functions/v1/grade-essays';
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + anon,
+        'apikey': anon
+      },
+      body: JSON.stringify({ essays })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const msg = (data && data.error) || ('HTTP ' + res.status);
+      return essays.map(e => ({ ...e, score: null, maxScore: 20, feedback: String(msg) }));
     }
+    const graded = (data && data.graded) || [];
+    if (!graded.length) {
+      return essays.map(e => ({ ...e, score: null, maxScore: 20, feedback: 'Respons AI kosong' }));
+    }
+    return graded;
+  } catch (err) {
+    return essays.map(e => ({ ...e, score: null, maxScore: 20, feedback: 'Gagal memanggil layanan AI: ' + (err.message || err) }));
   }
-  return graded;
 }
+
 
 async function finishExam(auto = false) {
   if (examFinished) return;
@@ -1328,9 +1336,36 @@ function renderAdminList(rows) {
       <div class="score">${row.score}/${row.total} (${row.percent}%)</div>
       <button type="button" class="btn-del">Hapus</button>`;
     div.querySelector('.btn-del').addEventListener('click', () => adminDeleteRow(row));
+    const rg = div.querySelector('.btn-regrade-essay');
+    if (rg) {
+      rg.onclick = async () => {
+        rg.disabled = true; rg.textContent = 'Menilai...';
+        try {
+          await regradeResultEssays(r, rg);
+        } catch (e) { alert(e.message || e); rg.disabled = false; rg.textContent = 'Nilai essay dengan AI'; }
+      };
+    }
     list.appendChild(div);
   });
 }
+
+async function regradeResultEssays(row, btn) {
+  const essays = row.essays || row.essay_answers || [];
+  if (!essays.length) throw new Error('Tidak ada jawaban essay tersimpan pada hasil ini.');
+  const graded = await gradeEssaysWithAi(essays, essays);
+  const sum = graded.reduce((s, e) => s + (typeof e.score === 'number' ? e.score : 0), 0);
+  const max = graded.reduce((s, e) => s + (e.maxScore || 20), 0);
+  const id = row.id;
+  if (!id) throw new Error('ID hasil tidak ada — pastikan migrasi database hasil sudah dijalankan.');
+  await SHSupabase.updateResult(id, {
+    essays: graded,
+    essay_score: sum,
+    essay_score_max: max
+  });
+  if (btn) btn.textContent = 'Selesai · ' + sum + '/' + max;
+  await adminLoadData();
+}
+
 
 function logoutAdmin() {
   adminScreen.classList.remove('active');
@@ -1433,6 +1468,8 @@ function renderAdminResultsFiltered() {
       ' · Durasi: ' + escapeHtml(String(dur)) + '</small>' +
       '<br><button type="button" class="btn-link btn-pg-detail">Skor PG: ' + score + '/' + total + '</button> · ' +
       '<button type="button" class="btn-link btn-es-detail">Skor Essay: ' + essayScore + (essayMax !== '' ? '/' + essayMax : '') + '</button>' +
+      (essayScore === '-' || essayScore === null || essayScore === '' ?
+        '<br><button type="button" class="btn btn-secondary btn-regrade-essay" style="margin-top:6px">Nilai essay dengan AI</button>' : '') +
       (tabN ? '<br><small style="color:#f59e0b">Indikasi pindah tab: ' + tabN + (Array.isArray(cheats) && cheats[0] ? ' (mis. soal no ' + (cheats[0].questionNo||'?') + ')' : '') + '</small>' : '') +
       '<div class="result-detail-pg" style="display:none;margin-top:8px"></div>' +
       '<div class="result-detail-es" style="display:none;margin-top:8px"></div>' +
@@ -1465,9 +1502,36 @@ function renderAdminResultsFiltered() {
         ).join('') || '<small>Tidak ada detail essay.</small>';
       }
     };
+    const rg = div.querySelector('.btn-regrade-essay');
+    if (rg) {
+      rg.onclick = async () => {
+        rg.disabled = true; rg.textContent = 'Menilai...';
+        try {
+          await regradeResultEssays(r, rg);
+        } catch (e) { alert(e.message || e); rg.disabled = false; rg.textContent = 'Nilai essay dengan AI'; }
+      };
+    }
     list.appendChild(div);
   });
 }
+
+async function regradeResultEssays(row, btn) {
+  const essays = row.essays || row.essay_answers || [];
+  if (!essays.length) throw new Error('Tidak ada jawaban essay tersimpan pada hasil ini.');
+  const graded = await gradeEssaysWithAi(essays, essays);
+  const sum = graded.reduce((s, e) => s + (typeof e.score === 'number' ? e.score : 0), 0);
+  const max = graded.reduce((s, e) => s + (e.maxScore || 20), 0);
+  const id = row.id;
+  if (!id) throw new Error('ID hasil tidak ada — pastikan migrasi database hasil sudah dijalankan.');
+  await SHSupabase.updateResult(id, {
+    essays: graded,
+    essay_score: sum,
+    essay_score_max: max
+  });
+  if (btn) btn.textContent = 'Selesai · ' + sum + '/' + max;
+  await adminLoadData();
+}
+
 
 
 async function adminDeleteRow(row) {
@@ -2627,6 +2691,23 @@ async function renderMpCheckboxTree(packId) {
       body.style.paddingLeft = '22px';
       body.dataset.classId = c.id;
       const members = await SHSupabase.listClassMembers(c.id);
+
+      function updateClassCbState() {
+        const mems = body.querySelectorAll('input[data-role="member"]');
+        const n = mems.length;
+        let checked = 0;
+        mems.forEach(m => { if (m.checked) checked++; });
+        classCb.classList.remove('cb-class-all', 'cb-class-partial', 'cb-class-none');
+        if (n === 0) { classCb.checked = false; classCb.indeterminate = false; classCb.classList.add('cb-class-none'); return; }
+        if (checked === n) {
+          classCb.checked = true; classCb.indeterminate = false; classCb.classList.add('cb-class-all');
+        } else if (checked === 0) {
+          classCb.checked = false; classCb.indeterminate = false; classCb.classList.add('cb-class-none');
+        } else {
+          classCb.checked = false; classCb.indeterminate = true; classCb.classList.add('cb-class-partial');
+        }
+      }
+
       (members || []).forEach(m => {
         const row = document.createElement('label');
         row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:4px 0;font-size:0.85rem;cursor:pointer';
@@ -2641,10 +2722,12 @@ async function renderMpCheckboxTree(packId) {
         const k = c.id + '|' + m.participant_name;
         const k2 = c.name + '|' + m.participant_name;
         if (keys.has(k) || keys.has(k2)) cb.checked = true;
+        cb.addEventListener('change', () => updateClassCbState());
         row.appendChild(cb);
         row.appendChild(document.createTextNode(m.display_name || m.participant_name));
         body.appendChild(row);
       });
+      updateClassCbState();
       classCb.addEventListener('change', () => {
         body.querySelectorAll('input[data-role="member"]').forEach(cb => { cb.checked = classCb.checked; });
       });
@@ -2850,32 +2933,30 @@ async function refreshMpPasswords(packId) {
 }
 
 async function onMpAddPassword() {
-  const id = document.getElementById('mp-pack-id').value;
   const st = document.getElementById('mp-pw-status');
-  if (!id) { st.textContent = 'Pilih paket dulu.'; return; }
+  const packId = document.getElementById('mp-pack-id').value;
   const plain = document.getElementById('mp-pw-plain').value;
-  const label = document.getElementById('mp-pw-label').value.trim();
-  const expLocal = document.getElementById('mp-pw-expires').value;
-  const dur = document.getElementById('mp-pw-duration').value;
+  const label = (document.getElementById('mp-pw-label') || {}).value || '';
+  const validFrom = (document.getElementById('mp-pw-valid-from') || {}).value || '';
+  const expires = (document.getElementById('mp-pw-expires') || {}).value || '';
+  const duration = (document.getElementById('mp-pw-duration') || {}).value || '';
+  const inst = (document.getElementById('mp-pw-inst') || {}).value || '';
+  const cls = (document.getElementById('mp-pw-class') || {}).value || '';
+  const users = ((document.getElementById('mp-pw-users') || {}).value || '').split(',').map(s => s.trim()).filter(Boolean);
   try {
-    let expiresAt = null;
-    if (expLocal) {
-      expiresAt = new Date(expLocal).toISOString();
-    }
-    await SHSupabase.addPackPassword(id, plain, {
+    await SHSupabase.addPackPassword(packId, plain, {
       label,
-      expiresAt,
-      durationMinutes: dur ? parseInt(dur, 10) : null
+      validFrom: validFrom ? new Date(validFrom).toISOString() : null,
+      expiresAt: expires ? new Date(expires).toISOString() : null,
+      durationMinutes: duration ? parseInt(duration, 10) : null,
+      scopeInstitution: inst || null,
+      scopeClass: cls || null,
+      scopeUsers: users
     });
     document.getElementById('mp-pw-plain').value = '';
-    document.getElementById('mp-pw-label').value = '';
-    document.getElementById('mp-pw-expires').value = '';
-    document.getElementById('mp-pw-duration').value = '';
     st.textContent = 'Password ditambahkan.';
-    refreshMpPasswords(id);
-  } catch (e) {
-    st.textContent = e.message;
-  }
+    refreshMpPasswords(packId);
+  } catch (e) { st.textContent = e.message; }
 }
 
 
@@ -3035,10 +3116,17 @@ async function refreshTokenList() {
 async function onCreateToken() {
   const st = document.getElementById('tok-status');
   try {
-    const code = document.getElementById('tok-code').value.trim() || ('QI-' + Math.random().toString(36).slice(2,8).toUpperCase());
-    const users = document.getElementById('tok-users').value.split(',').map(s=>s.trim()).filter(Boolean);
-    const packs = document.getElementById('tok-packs').value.split(',').map(s=>s.trim()).filter(Boolean);
+    const code = document.getElementById('tok-code').value.trim() || ('QI-' + Math.random().toString(36).slice(2, 8).toUpperCase());
+    const users = document.getElementById('tok-users').value.split(',').map(s => s.trim()).filter(Boolean);
+    const sel = document.getElementById('tok-packs-select');
+    let packs = [];
+    if (sel) {
+      packs = [...sel.selectedOptions].map(o => o.value).filter(Boolean);
+    } else {
+      packs = document.getElementById('tok-packs').value.split(',').map(s => s.trim()).filter(Boolean);
+    }
     const exp = document.getElementById('tok-exp').value;
+    const durUse = parseInt((document.getElementById('tok-duration-from-use') || {}).value || '', 10);
     await SHSupabase.createExamToken({
       token_code: code,
       product_id: (config && config.productId) || 'quizit',
@@ -3047,14 +3135,15 @@ async function onCreateToken() {
       allowed_users: users,
       allowed_class: document.getElementById('tok-class').value.trim() || null,
       pack_ids: packs,
-      max_uses: parseInt(document.getElementById('tok-max').value,10)||1,
-      transfer_amount: parseInt(document.getElementById('tok-amount').value,10)||0,
-      expires_at: exp ? new Date(exp).toISOString() : null
+      max_uses: parseInt(document.getElementById('tok-max').value, 10) || 1,
+      transfer_amount: parseInt(document.getElementById('tok-amount').value, 10) || 0,
+      expires_at: exp ? new Date(exp).toISOString() : null,
+      duration_minutes_from_first_use: isNaN(durUse) ? null : durUse
     });
     document.getElementById('tok-code').value = code;
     st.textContent = 'Token dibuat: ' + code;
     refreshTokenList();
-  } catch(e) { st.textContent = e.message; }
+  } catch (e) { st.textContent = e.message; }
 }
 
 async function loadProctorSettings() {

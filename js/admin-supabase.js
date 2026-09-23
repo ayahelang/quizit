@@ -208,6 +208,14 @@
     for (const r of (rows || [])) await deleteResult(r.id);
   }
 
+  async function updateResult(id, fields) {
+    if (!currentAdmin) throw new Error('Belum login admin');
+    await sbFetch('cbt_results?id=eq.' + encodeURIComponent(id), {
+      method: 'PATCH',
+      body: JSON.stringify(fields)
+    });
+  }
+
   async function listResults() {
     if (!sbEnabled()) return [];
     return await sbFetch('cbt_results?select=*&order=created_at.desc&limit=2000');
@@ -887,6 +895,10 @@
         password_hash: hash,
         expires_at: expiresAt,
         duration_minutes: durationMinutes || null,
+        valid_from: opts.validFrom || null,
+        scope_institution: opts.scopeInstitution || null,
+        scope_class: opts.scopeClass || null,
+        scope_users: opts.scopeUsers || [],
         active: true,
         created_by: currentAdmin.username || ''
       })
@@ -1078,6 +1090,8 @@
       transfer_amount: data.transfer_amount != null ? Number(data.transfer_amount) : 0,
       transfer_note: data.transfer_note || '',
       expires_at: data.expires_at || null,
+      duration_minutes_from_first_use: data.duration_minutes_from_first_use != null ? Number(data.duration_minutes_from_first_use) : null,
+      first_used_at: null,
       active: true,
       created_by: currentAdmin.username || ''
     };
@@ -1124,13 +1138,20 @@
     const rows = await sbFetch('cbt_exam_tokens?id=eq.' + encodeURIComponent(tokenId) + '&select=*');
     if (!rows || !rows[0]) throw new Error('Token hilang');
     const tok = rows[0];
+    const patch = {
+      used_count: (tok.used_count || 0) + 1,
+      last_used_at: new Date().toISOString(),
+      last_used_by: meta.user_name || meta.user_email || ''
+    };
+    if (!tok.first_used_at) {
+      patch.first_used_at = new Date().toISOString();
+      if (tok.duration_minutes_from_first_use && Number(tok.duration_minutes_from_first_use) > 0) {
+        patch.expires_at = new Date(Date.now() + Number(tok.duration_minutes_from_first_use) * 60 * 1000).toISOString();
+      }
+    }
     await sbFetch('cbt_exam_tokens?id=eq.' + encodeURIComponent(tokenId), {
       method: 'PATCH',
-      body: JSON.stringify({
-        used_count: (tok.used_count || 0) + 1,
-        last_used_at: new Date().toISOString(),
-        last_used_by: meta.user_name || meta.user_email || ''
-      })
+      body: JSON.stringify(patch)
     });
     await sbFetch('cbt_token_usages', {
       method: 'POST',
@@ -1224,6 +1245,7 @@
     deleteResult,
     deleteResultsByStudent,
     listResults,
+    updateResult,
     uploadPack,
     listRemotePacks,
     listAllPacksAdmin,
